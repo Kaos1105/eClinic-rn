@@ -1,0 +1,122 @@
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import moment from 'moment';
+import { CampaignModel } from '../../models-demo';
+import { Theme } from '../../theme';
+import { Divider, HtmlView } from '../../components';
+import { useLocalization } from '../../localization';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackNavigationOptions } from '@react-navigation/stack';
+import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
+import AppConsts from '../../lib/appconst';
+import { Ionicons } from '@expo/vector-icons';
+
+type TProps = {};
+
+export const ClinicDetailScreen: React.FC<TProps> = (props) => {
+  const { getString } = useLocalization();
+  const route = useRoute();
+  const navigation = useNavigation();
+
+  const model = JSON.parse(route.params['model']) as EC_PHONGKHAM_ENTITY;
+
+  //navigation.setOptions({ title: model.title });
+
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
+      <View style={styles.headerContainer}>
+        <Image
+          source={{ uri: `${AppConsts.remoteServiceBaseUrl}/${model.hinhdaidien}` }}
+          style={styles.image}
+        />
+        <Text style={styles.doctorInfoFullName}>{model.phongkhaM_TENDAYDU}</Text>
+        <Text style={styles.doctorInfoTitle}>{model.chuyenkhoA_TEN}</Text>
+      </View>
+      <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Info</Text>
+        <View style={styles.infoContainer}>
+          <View style={styles.infoRow}>
+            <Ionicons name='person' color={Theme.colors.black} size={18} />
+            <Text style={styles.textInfo}>{model.bacsy}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Ionicons name='phone-portrait' color={Theme.colors.black} size={18} />
+            <Text style={styles.textInfo}>{model.dienthoaibacsy}</Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Details</Text>
+        <Divider />
+        <Text style={styles.aboutText}>{model.gioithieu}</Text>
+      </View>
+      <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Doctors</Text>
+        <Divider />
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  contentContainer: {
+    paddingVertical: 8,
+  },
+  imageWrapper: {
+    height: 120,
+    backgroundColor: Theme.colors.grayForBoxBackground,
+    borderRadius: 12,
+  },
+  image: { flex: 1, borderRadius: 12, width: 180, height: 180 },
+  headerContainer: { paddingHorizontal: 16, alignItems: 'center' },
+  doctorPreviewImage: {
+    width: 130,
+    height: 130,
+    borderRadius: 36,
+    borderWidth: 0.5,
+    borderColor: Theme.colors.primaryColor,
+  },
+  doctorInfoFullName: {
+    fontSize: 19,
+    fontWeight: '600',
+    color: Theme.colors.black,
+    marginTop: 22,
+  },
+  doctorInfoTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: Theme.colors.gray,
+    marginTop: 6,
+  },
+  divider: { marginHorizontal: 0, marginVertical: 12 },
+  sectionContainer: { paddingHorizontal: 16, marginTop: 12 },
+  sectionTitle: {
+    fontWeight: '600',
+    fontSize: 15,
+    paddingVertical: 8,
+    color: Theme.colors.black,
+  },
+  aboutText: {
+    paddingVertical: 8,
+    color: Theme.colors.black,
+    fontSize: 15,
+  },
+  infoContainer: {
+    width: '100%',
+    height: 250,
+    elevation: 4,
+    backgroundColor: 'white',
+    borderColor: Theme.colors.black,
+    borderRadius: 10,
+  },
+  infoRow: { flexDirection: 'row', padding: 5 },
+  textInfo: {
+    marginLeft: 8,
+  },
+});

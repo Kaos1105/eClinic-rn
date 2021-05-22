@@ -1,0 +1,411 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<head lang="en">
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+	<title>Medical & Hospital Mobile App Template</title>
+	<!-- Framework CSS -->
+	<link rel="stylesheet" href="assets/blueprint-css/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="assets/blueprint-css/print.css" type="text/css" media="print">
+	<!--[if lt IE 8]><link rel="stylesheet" href="assets/blueprint-css/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	<link rel="stylesheet" href="assets/blueprint-css/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
+	<style type="text/css" media="screen">
+		p, table, hr, .box { margin-bottom:25px; }
+		.box p { margin-bottom:10px; }
+	</style>
+</head>
+
+
+<body>
+	<div class="container">
+	
+		<h3 class="center alt">&ldquo;Medical & Hospital Mobile App Template&rdquo; Documentation by &ldquo;Huseyin Ozer&rdquo; v3.0</h3>
+		
+		<hr>
+		
+		<h1 class="center">&ldquo;Medical & Hospital Mobile App Template&rdquo;</h1>
+		
+		<div class="borderTop">
+			<div class="span-6 colborder info prepend-1">
+				<p class="prepend-top">
+					<strong>
+					Created: 21/02/2020<br>
+					Updated: 03/04/2020<br>
+					By: Huseyin Ozer<br>
+					Email: <a href="mailto:mshuseyinozer@gmail.com">mshuseyinozer@gmail.com</a>
+					</strong>
+				</p>
+			</div><!-- end div .span-6 -->		
+	
+			<div class="span-12 last">
+				<p class="prepend-top append-0">Thank you for purchasing my template. If you have any questions that are beyond the scope of this help file, please feel free to email via my user page contact form <a href="http://themeforest.net/user/huseyinozer">here</a>. Thanks so much!</p>
+			</div>
+		</div><!-- end div .borderTop -->
+		
+		<hr>
+		
+		<h2 id="toc" class="alt">Table of Contents</h2>
+		<ol class="alpha">
+			<li><a href="#installation">Installation And Run Project</a></li>
+			<li><a href="#directoryStructure">Directory Structure</a></li>
+			<li><a href="#components">Components</a></li>
+			<li><a href="#screens">Screens</a></li>
+			<li><a href="#localization">Localization</a></li>
+			<li><a href="#theme">Theme</a></li>
+			<li><a href="#typescript">Typescript Language</a></li>
+		</ol>
+		
+		<hr>
+		
+		<h3 id="installation"><strong>A) Installation And Run Project</strong> - <a href="#toc">top</a></h3>
+		
+		Medical & Hospital Mobile App is a React Native Template project. And the project work on Expo tool.
+		<br/>
+		<br/>
+		This project works with the following tools;
+		<br/>
+		<br/>
+		<ul>
+			<li><b>node</b></li>
+			<li><b>npm</b></li>
+			<li><b>expo@3.17.15</b></li>
+		</ul>
+		Download link for node and npm: <a href="https://nodejs.org/en/">https://nodejs.org/en/</a>
+		<br/>
+		<br/>
+		For Expo;
+		<pre>	npm install -g expo-cli@3.17.15</pre>
+	
+		<p>
+			<b>Run project;</b>
+		</p>
+		<p>
+			Run below command on project's root directory;
+			<pre>	yarn start</pre>
+		</p>
+
+		<h3 id="directoryStructure"><strong>B) App Configurations</strong> - <a href="#toc">top</a></h3>
+		<p>
+			<ul>
+				<li>
+					<p>
+						<b>Application Icon</b><br/>
+					If you want to change application icon, you can change "icon.png" file in assets.
+					</p>
+				</li>
+				<li>
+					<p>
+						<b>Splash Screen Image</b><br/>
+					If you want to change splash screen image, you can change "splash.png" file in assets.
+					</p>
+				</li>
+				<li>
+					<p>
+						<b>Toolbar Logo</b><br/>
+					If you want to change toolbar logo image, you can change "logo.png" file in assets.
+					</p>
+				</li>
+			</ul>
+			<b>App.json Configurations</b><br/>
+			If you want to see all configurations you can check app.json file in root directory. Fore more; <a href="https://docs.expo.io/versions/latest/workflow/configuration/" target="_blank">Expo Documentation</a>
+
+
+		<pre>
+{
+	"expo": {
+		"name": "medical",
+		"slug": "medical",
+		"privacy": "public",
+		"platforms": [
+		"ios",
+		"android",
+		"web"
+		],
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"splash": {
+		"image": "./assets/splash.png",
+		"resizeMode": "contain",
+		"backgroundColor": "#ffffff"
+		},
+		"updates": {
+		"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": [
+		"**/*"
+		],
+		"ios": {
+		"supportsTablet": true
+		}
+	}
+}				  
+</pre>
+
+		</p>
+		
+		<h3 id="directoryStructure"><strong>C) Directory Structure</strong> - <a href="#toc">top</a></h3>
+		<img src="assets/images/directory_structure.png" width="400px" alt="HTML Structure" />
+		<br/>
+		<br/>
+		In <b>"src"</b> directory;
+		<br/>
+		<ul>
+			<li>
+				<b>components</b><br/>
+				Contains UI components.
+			</li>
+			<li>
+				<b>datas</b><br/>
+				Dummy datas.
+			</li>
+			<li>
+				<b>models</b><br/>
+				Contains service models for screens.
+			</li>
+			<li>
+				<b>navigations</b><br/>
+				Contains navigation configurations.
+			</li>
+			<li>
+				<b>localization</b><br/>
+				Contains localization files.
+			</li>
+			<li>
+				<b>modals</b><br/>
+				Contains bottom sheet modals.
+			</li>
+			<li>
+				<b>screens</b><br/>
+				Contains all screens.
+			</li>
+			<li>
+				<b>theme</b><br/>
+				Contains theme defines.
+			</li>
+			<li>
+				<b>services</b><br/>
+				Dummy services for screens.
+			</li>
+		</ul>
+
+		<h3 id="components"><strong>D) Components</strong> - <a href="#toc">top</a></h3>
+		<p>
+			If you want to self component you can create a component file in components directory. For example <b>button/Button.tsx</b>;
+		</p>
+
+		<b>Button.tsx</b>
+		<pre>
+import React from "react";
+import { Text, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { Theme } from "../../theme";
+
+type TProps = {
+	title: string;
+	style?: ViewStyle;
+	type?: "default" | "outline";
+	size?: "default" | "small";
+	onPress?: () => void;
+};
+
+export const Button: React.FC<TProps> = props => {
+	return (
+	...
+	);
+};
+
+const styles = StyleSheet.create({
+	container: {
+	paddingHorizontal: 22,
+	paddingVertical: 10,
+	backgroundColor: Theme.colors.primaryColor,
+	borderRadius: 4,
+	alignItems: "center",
+	justifyContent: "center"
+	},
+	outlineContainer: {
+	backgroundColor: "transparent",
+	borderWidth: 0.5,
+	borderColor: Theme.colors.gray
+	},
+	text: { fontWeight: "600", fontSize: 15, color: "white" },
+	outlineText: {
+	color: Theme.colors.gray,
+	fontWeight: "400"
+	}
+});
+	</pre>
+
+	<p>And you must define component in "button/index.ts" file. Then you must define directory in "components/index.ts" file. Like;</p>
+	<b>components/index.ts</b>
+	<pre>
+	export * from "./calendar";
+	export * from "./avatar";
+	export * from "./dashboard";
+	export * from "./toolbar-brand-logo";
+	export * from "./divider";
+	export * from "./doctors";
+	export * from "./campaigns";
+	export * from "./html-view";
+	export * from "./touchable-highlight";
+	export * from "./departments";
+	export * from "./news-post";
+	export * from "./buttons";
+		</pre>
+
+
+		<h3 id="screens"><strong>E) Screens</strong> - <a href="#toc">top</a></h3>
+		<p>All screens defined in screens directory.</p>
+
+		<b>For example EventListScreen.tsx file;</b>
+		<pre>
+	export default class EventListScreen extends Component {
+		static navigationOptions = {
+			title: getString("events")
+		};
+		render() {
+			return (
+			<FlatList
+				data={eventList}
+				keyExtractor={(item, index) => `key${index}`}
+				ItemSeparatorComponent={() => <View style={{ marginVertical: 8 }} />}
+				contentContainerStyle={{ paddingVertical: 12 }}
+				renderItem={({ item }) => {
+				return (
+					...
+				);
+				}}
+			/>
+			);
+		}
+	}
+		</pre>
+		
+		<p>
+			You must define screen in "screens/index.ts" file.
+		</p>
+
+		<b>screen/index.ts</b>
+		<pre>
+	export * from "./appointment";
+	export * from "./calendar";
+	export * from "./home";
+	export * from "./media";
+	export * from "./menu";
+	export * from "./profile";
+	export * from "./campaign";
+	export * from "./departments";
+	export * from "./doctors";
+	export * from "./events";
+
+		</pre>
+
+		<h3 id="localization"><strong>F) Localization</strong> - <a href="#toc">top</a></h3>
+		<p>
+			You can find all texts in localization directory. All texts are defined in the "locales/en.json" and "locales/tr.json" files. 
+		</p>
+		<b>localization/locales/en.json</b>
+		<pre>
+{
+	"Home": "Home",
+	"Calendar": "Calendar",
+	"Media": "Media",
+	"Profile": "Profile",
+	"Menu": "Menu",
+	"Doctors": "Doctors",
+	
+	"View Full Profile": "View Full Profile",
+	"Latest reviews": "Latest reviews",
+	"Last": "Last",
+	"reviews": "reviews",
+	
+	"What are you looking for?": "What are you looking for?",
+	"See More": "See More",
+	"New Campaigns": "New Campaigns",
+	"All Specialists": "All Specialists",
+	"Our Departments": "Our Departments",
+	
+	"Book an Appoinment": "Book an Appoinment",
+	"6 Doctors are available": "6 Doctors are available",
+	"Lab Tests at Home": "Lab Tests at Home",
+	"92 Diagnostics are available": "92 Diagnostics are available",
+	"Online Healt Consultant": "Online Healt Consultant",
+	"+14 Consultants": "+14 Consultants",
+	
+	"Campaigns": "Campaigns",
+	"Last Date": "Last Date",
+	"Apply Campaign": "Apply Campaign",
+	"Recent Posts": "Recent Posts",
+	"Photos": "Photos",
+	...
+		</pre>
+
+		<b>Usage;</b>
+		<pre>
+	import { useLocalization } from "../../localization";
+	const { getString } = useLocalization();
+	var text = getString("profile")
+		</pre>
+
+		<h3 id="theme"><strong>G) Theme</strong> - <a href="#toc">top</a></h3>
+		<p>
+			You can define theme variables in "theme/Theme.ts" file.
+		</p>
+		<b>Theme.ts;</b>
+		<pre>
+	const PRIMARY_COLOR = "#73CEC1";
+	const PRIMARY_COLOR_DARK = "#5eada2";
+	
+	export const Theme = {
+		colors: {
+		primaryColor: PRIMARY_COLOR,
+		primaryColorDark: PRIMARY_COLOR_DARK,
+		tintColor: "#73CEC1",
+		black: "#404041",
+		grayForBoxBackground: "#F3F4F8",
+		gray: "#81848D",
+		grayForItemsMore: "#b0b0b0",
+		grayForItemsArrow: "#c2c2c2",
+		touchableHighlightUnderlayColor: "#f0f0f0",
+		dividerColor: "#f0f0f0",
+		formBackground: "#F3F4F5",
+		calendarItem: {
+			backgroundColor: "#18b4cb10",
+			leftColor: PRIMARY_COLOR,
+			timeColor: PRIMARY_COLOR_DARK
+		},
+		status: {
+			online: "#31BE70",
+			bussy: "#F93C1A"
+		}
+		},
+		buttons: {
+		colors: {
+			primary: PRIMARY_COLOR
+		}
+		}
+	};
+			
+		</pre>
+
+		<b>Usage;</b>
+
+		<pre>
+	import { Theme } from "../../theme";
+	console.log(Theme.colors.black);
+		</pre>
+
+		<h3 id="typescript"><strong>H) Typescript Language</strong> - <a href="#toc">top</a></h3>
+		
+		<p>We use typescript language in this template.</p>
+		<p>Link: <a href="https://facebook.github.io/react-native/docs/typescript">https://facebook.github.io/react-native/docs/typescript</a></p>
+
+		<br/>
+		
+		<p>Once again, thank you so much for purchasing this theme. As I said at the beginning, I'd be glad to help you if you have any questions relating to this theme. No guarantees, but I'll do my best to assist. If you have a more general question relating to the themes on ThemeForest, you might consider visiting the forums and asking your question in the "Item Discussion" section.</p> 
+		
+		<p class="append-bottom alt large"><strong>Huseyin Ozer</strong></p>
+		<p><a href="#toc">Go To Table of Contents</a></p>
+		
+		<hr class="space">
+	</div><!-- end div .container -->
+</body>
+</html>
