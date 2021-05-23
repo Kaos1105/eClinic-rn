@@ -1,18 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Linking } from 'react-native';
-import moment from 'moment';
-import { CampaignModel } from '../../models-demo';
+import { View, Text, StyleSheet, ScrollView, Image, Linking } from 'react-native';
 import { Theme } from '../../theme';
-import { Divider, HtmlView, Loading, Map } from '../../components';
+import { Button, Divider, Loading, Map } from '../../components';
 import { useLocalization } from '../../localization';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationOptions } from '@react-navigation/stack';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import AppConsts from '../../lib/appconst';
 import { Ionicons } from '@expo/vector-icons';
 import { RootStoreContext } from 'stores/rootStore';
 import { ICoordinateModel } from 'models/MapGeocoding';
 import agent from 'service/api/agent';
+import NavigationNames from 'navigations/NavigationNames';
 
 type TProps = {};
 
@@ -131,6 +129,12 @@ export const ClinicDetailScreen: React.FC<TProps> = (props) => {
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Doctors</Text>
         <Divider />
+        <Button
+          title='Doctor list screen'
+          onPress={() => {
+            navigation.navigate(NavigationNames.DoctorListScreen);
+          }}
+        />
       </View>
     </ScrollView>
   );

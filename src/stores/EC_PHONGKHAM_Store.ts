@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import agent from 'service/api/agent';
 import { RootStore } from './rootStore';
 
-const LIMIT = 10;
+const LIMIT = 5;
 
 export default class EC_PHONGKHAM_Store {
   _rootStore: RootStore;
@@ -35,7 +35,7 @@ export default class EC_PHONGKHAM_Store {
   };
 
   //List
-  @action loadList = async (input = new EC_PHONGKHAM_ENTITY()) => {
+  @action loadList = async (input = new EC_PHONGKHAM_ENTITY(), userLat = '', userLng = '') => {
     try {
       const result = await agent.EC_PHONGKHAM_API.list(input);
       const { totalCount, items } = result;

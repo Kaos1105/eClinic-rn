@@ -5,12 +5,14 @@ import moment from 'moment';
 import { useLocalization } from '../../localization';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import AppConsts from '../../lib/appconst';
+import { Divider } from '../../components';
+import { Ionicons } from '@expo/vector-icons';
 
 type TProps = {
   item: EC_PHONGKHAM_ENTITY;
 };
 
-export const DashboardClinicsListItem: React.FC<TProps> = (props) => {
+export const ClinicItemRow: React.FC<TProps> = (props) => {
   const { getString } = useLocalization();
   return (
     <View style={styles.container}>
@@ -20,25 +22,33 @@ export const DashboardClinicsListItem: React.FC<TProps> = (props) => {
           style={styles.image}
         />
       </View>
-      <Text style={styles.titleText}>{props.item.phongkhaM_TENDAYDU}</Text>
-      <Text style={styles.shortDescText}>{props.item.chuyenkhoA_TEN}</Text>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.titleText}>{props.item.phongkhaM_TENDAYDU}</Text>
+        <Text style={styles.shortDescText}>{props.item.chuyenkhoA_TEN}</Text>
+        <Divider style={{ margin: 5 }} />
+        <View style={styles.infoRow}>
+          <Ionicons name='location' color={Theme.colors.tintColor} size={18} />
+          <Text style={styles.textInfo}>{props.item.diachI_1}</Text>
+        </View>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: 120,
+    flexDirection: 'row',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
   imageWrapper: {
-    height: 120,
-    backgroundColor: Theme.colors.grayForBoxBackground,
+    height: 100,
+    width: 100,
     borderRadius: 12,
   },
   image: { flex: 1, borderRadius: 12 },
   titleText: {
     fontWeight: '600',
-    marginTop: 8,
     marginHorizontal: 4,
     color: Theme.colors.black,
     fontSize: 15,
@@ -48,5 +58,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 2,
     color: Theme.colors.gray,
+  },
+  infoRow: { flex: 1, flexDirection: 'row' },
+  textInfo: {
+    flexShrink: 1,
+    flexWrap: 'wrap',
   },
 });

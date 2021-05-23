@@ -4,7 +4,7 @@ export * from './dashboard';
 export * from './toolbar-brand-logo';
 export * from './divider';
 export * from './doctors';
-export * from './campaigns';
+export * from './clinics';
 export * from './html-view';
 export * from './touchable-highlight';
 export * from './departments';

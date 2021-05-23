@@ -179,8 +179,14 @@ const MapGeocoding = {
 };
 
 const EC_PHONGKHAM_API = {
-  list: (input: EC_PHONGKHAM_ENTITY): Promise<IPagedResultDtoOfEC_PHONGKHAM_ENTITY> =>
-    httpNetCore.post('/api/PhongKham/EC_PHONGKHAM_Search', input).then(responseBodyResult),
+  list: (
+    input: EC_PHONGKHAM_ENTITY,
+    lat = '',
+    lng = ''
+  ): Promise<IPagedResultDtoOfEC_PHONGKHAM_ENTITY> =>
+    httpNetCore
+      .post('/api/PhongKham/EC_PHONGKHAM_Search', { input: input, userLat: lat, userLong: lng })
+      .then(responseBodyResult),
   details: (inputId: string, lat = '', lng = ''): Promise<EC_PHONGKHAM_ENTITY> =>
     httpNetCore
       .get('/api/PhongKham/EC_PHONGKHAM_ById', {
