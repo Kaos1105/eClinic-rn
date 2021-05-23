@@ -105,6 +105,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     top: 65,
-    right: 0,
+    right: 15,
   },
 });

@@ -39,8 +39,6 @@ export default class CommonStore {
     },
   };
 
-  //Loading flag
-  @observable loadingInitial = false;
   constructor(rootStore: RootStore = null) {
     this._rootStore = rootStore;
     makeObservable(this);
@@ -123,11 +121,6 @@ export default class CommonStore {
     this.fireBaseToken = null;
     this.userId = null;
     this.expiryDate = null;
-  };
-
-  @action
-  setLoading = (isLoading: boolean) => {
-    this.loadingInitial = isLoading;
   };
 
   @action

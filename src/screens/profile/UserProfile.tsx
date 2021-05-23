@@ -14,13 +14,13 @@ export const UserProfile = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const { user } = rootStore.fireBaseAuthStore;
   const { editUser, getUser, currentUser } = rootStore.usersStore;
-  const { loadingInitial, setLoading, setToastToggle, setToastData } = rootStore.commonStore;
+  const { setToastToggle, setToastData } = rootStore.commonStore;
+  const [appLoaded, setAppLoaded] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     if (user)
       getUser(user.phoneNumber).then(() => {
-        setLoading(false);
+        setAppLoaded(true);
       });
   }, [currentUser]);
 
@@ -37,7 +37,7 @@ export const UserProfile = observer(() => {
     dateOfBirth: yup.string().required('Date of birth is required'),
   });
 
-  if (loadingInitial) return <Loading />;
+  if (!appLoaded) return <Loading />;
 
   return (
     <>

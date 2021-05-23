@@ -1,13 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
+import { StyleSheet, ScrollView, View, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
   UpcomingAppoinmentRow,
@@ -18,13 +10,13 @@ import {
   DoctorItemRow,
   DepartmentItem,
   TouchableHighlight,
+  Loading,
 } from '../../components';
 import { DashboardItemsModel } from '../../models-demo';
 import { DashboardService } from '../../services-demo';
 import { useLocalization } from '../../localization';
 import NavigationNames from '../../navigations/NavigationNames';
 import { HomeMenuItemType } from '../../types';
-import { Theme } from '../../theme';
 import { RootStoreContext } from 'stores/rootStore';
 
 const generateMenuItems = (getString: (key: string) => string): HomeMenuItemType[] => [
@@ -76,7 +68,7 @@ export const HomeScreen: React.FC<TProps> = (props) => {
   useEffect(() => {
     //Load data from backend
     initialRun();
-  }, [appLoaded]);
+  }, []);
 
   useEffect(() => {
     DashboardService.getDashboardItems().then((item) => {
@@ -99,11 +91,7 @@ export const HomeScreen: React.FC<TProps> = (props) => {
   };
 
   if (dashboardItem === null || !appLoaded) {
-    return (
-      <View style={styles.loadingScreen}>
-        <ActivityIndicator size='large' color={Theme.colors.primaryColor} />
-      </View>
-    );
+    return <Loading />;
   }
 
   return (
@@ -149,7 +137,7 @@ export const HomeScreen: React.FC<TProps> = (props) => {
               onPress={() =>
                 navigation.navigate(NavigationNames.ClinicDetailScreen, {
                   model: JSON.stringify(row.item),
-                  name: row.item.phongkhaM_TENDAYDU,
+                  title: row.item.phongkhaM_TENDAYDU,
                 })
               }
             >

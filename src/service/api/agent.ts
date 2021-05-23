@@ -15,6 +15,7 @@ import {
   IPagedResultDtoOfEC_PHONGKHAM_ENTITY,
 } from 'models/EC_PHONGKHAM_ENTITY';
 import { CM_EMPLOYEE_ENTITY, IPagedResultDtoOfCM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
+import { IMapGeocoding } from 'models/MapGeocoding';
 
 var qs = require('qs');
 //axios response error handler
@@ -37,12 +38,11 @@ const axiosResponseConfig = (error) => {
   throw error.response;
 };
 
-const fireBaseAuth = axios.create({
-  baseURL: 'https://identitytoolkit.googleapis.com',
-  timeout: 30000,
+//common SetUp
+axios.interceptors.response.use(undefined, (error) => {
+  axiosResponseConfig(error);
 });
-
-fireBaseAuth.interceptors.request.use(
+axios.interceptors.request.use(
   (response) => {
     return response;
   },
@@ -51,21 +51,37 @@ fireBaseAuth.interceptors.request.use(
   }
 );
 
-fireBaseAuth.interceptors.response.use(undefined, (error) => {
-  axiosResponseConfig(error);
+const fireBaseAuth = axios.create({
+  baseURL: 'https://identitytoolkit.googleapis.com',
+  timeout: 30000,
 });
 
-const http = axios.create({
+const httpFirebaseDb = axios.create({
   baseURL: AppConsts.fireBaseDb,
   timeout: 30000,
-  // paramsSerializer: function (params) {
-  //   return qs.stringify(params, {
-  //     encode: false,
-  //   });
-  // },
 });
 
-http.interceptors.request.use(
+const httpFirebaseSecure = axios.create({
+  baseURL: 'https://securetoken.googleapis.com',
+  timeout: 30000,
+});
+
+const googleMapApi = axios.create({
+  baseURL: 'https://maps.googleapis.com',
+  timeout: 30000,
+});
+
+const httpNetCore = axios.create({
+  baseURL: AppConsts.remoteServiceBaseUrl,
+  timeout: 30000,
+  paramsSerializer: function (params) {
+    return qs.stringify(params, {
+      encode: false,
+    });
+  },
+});
+
+httpFirebaseDb.interceptors.request.use(
   async (config) => {
     let token = await AsyncStorage.getItem('fireBaseToken');
     if (token) {
@@ -81,34 +97,6 @@ http.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-//error handle from response
-http.interceptors.response.use(undefined, (error) => {
-  axiosResponseConfig(error);
-});
-
-const httpFirebaseSecure = axios.create({
-  baseURL: 'https://securetoken.googleapis.com',
-  timeout: 30000,
-});
-
-httpFirebaseSecure.interceptors.request.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-httpFirebaseSecure.interceptors.response.use(undefined, (error) => {
-  axiosResponseConfig(error);
-});
-
-const httpNetCore = axios.create({
-  baseURL: AppConsts.remoteServiceBaseUrl,
-  timeout: 30000,
-});
 
 httpNetCore.interceptors.request.use(
   async function (config) {
@@ -131,22 +119,11 @@ httpNetCore.interceptors.request.use(
   }
 );
 
-//error handle from response
-httpNetCore.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    axiosResponseConfig(error);
-    return Promise.reject(error);
-  }
-);
-
 const responseBody = (response: AxiosResponse) => response.data;
 const responseBodyResult = (response: AxiosResponse) => response.data.result;
 
-const sleep = (ms: number) => (response: AxiosResponse) =>
-  new Promise<AxiosResponse>((resolve) => setTimeout(() => resolve(response), ms));
+// const sleep = (ms: number) => (response: AxiosResponse) =>
+//   new Promise<AxiosResponse>((resolve) => setTimeout(() => resolve(response), ms));
 
 // const requests = {
 //   get: (url: string) => axios.get(url).then(responseBody),
@@ -155,26 +132,25 @@ const sleep = (ms: number) => (response: AxiosResponse) =>
 //   delete: (url: string) => axios.delete(url).then(responseBody),
 // };
 
-const requests = {
-  get: (url: string) => http.get(url).then(responseBody),
-  post: (url: string, body: {}) => http.post(url, body).then(responseBody),
-  put: (url: string, body: {}) => http.put(url, body).then(responseBody),
-  delete: (url: string) => http.delete(url).then(responseBody),
-  postForm: (url: string, file: Blob) => {
-    let formData = new FormData();
-    formData.append('File', file);
-    return axios
-      .post(url, formData, { headers: { 'Content-type': 'multipart/form-data' } })
-      .then(responseBody);
-  },
-};
+// const requests = {
+//   get: (url: string) => http.get(url).then(responseBody),
+//   post: (url: string, body: {}) => http.post(url, body).then(responseBody),
+//   put: (url: string, body: {}) => http.put(url, body).then(responseBody),
+//   delete: (url: string) => http.delete(url).then(responseBody),
+//   postForm: (url: string, file: Blob) => {
+//     let formData = new FormData();
+//     formData.append('File', file);
+//     return axios
+//       .post(url, formData, { headers: { 'Content-type': 'multipart/form-data' } })
+//       .then(responseBody);
+//   },
+// };
 
 const Users = {
   details: (id: string): Promise<IUserData | undefined> =>
-    requests.get(`/users/${id}.json`).then((values) => {
-      return values;
-    }),
-  edit: (user: IUserData): Promise<IUserData> => http.put(`/users/${user.phoneNumber}.json`, user),
+    httpFirebaseDb.get(`/users/${id}.json`).then(responseBody),
+  edit: (user: IUserData): Promise<IUserData> =>
+    httpFirebaseDb.put(`/users/${user.phoneNumber}.json`, user),
 };
 
 const FireBaseAuth = {
@@ -194,9 +170,23 @@ const FireBaseAuth = {
       .then(responseBody),
 };
 
+const MapGeocoding = {
+  getCoordinate: (address: string): Promise<IMapGeocoding> =>
+    googleMapApi
+      .get(`/maps/api/geocode/json?address=${address}&key=${AppConsts.googleCloudApiKey}`)
+      .then(responseBody)
+      .then((value) => value.results[0]),
+};
+
 const EC_PHONGKHAM_API = {
   list: (input: EC_PHONGKHAM_ENTITY): Promise<IPagedResultDtoOfEC_PHONGKHAM_ENTITY> =>
     httpNetCore.post('/api/PhongKham/EC_PHONGKHAM_Search', input).then(responseBodyResult),
+  details: (inputId: string, lat = '', lng = ''): Promise<EC_PHONGKHAM_ENTITY> =>
+    httpNetCore
+      .get('/api/PhongKham/EC_PHONGKHAM_ById', {
+        params: { id: inputId, userLat: lat, userLong: lng },
+      })
+      .then(responseBodyResult),
 };
 
 const CM_EMPLOYEE_API = {
@@ -210,4 +200,5 @@ export default {
   FireBaseAuth,
   EC_PHONGKHAM_API,
   CM_EMPLOYEE_API,
+  MapGeocoding,
 };

@@ -1,3 +1,15 @@
+export interface IEC_PHONGKHAM_MAP_DTO {
+  duration?: {
+    value?: number;
+    text?: string;
+  };
+  distance?: {
+    value?: number;
+    text?: string;
+  };
+  status?: string | undefined;
+}
+
 export interface IEC_PHONGKHAM_ENTITY {
   phongkhaM_ID?: string | undefined;
   phongkhaM_TENTAT?: string | undefined;
@@ -17,6 +29,7 @@ export interface IEC_PHONGKHAM_ENTITY {
   diachI_2?: string | undefined;
   diachI_3?: string | undefined;
   hinhdaidien?: string | undefined;
+  maP_INFO?: IEC_PHONGKHAM_MAP_DTO;
   recorD_STATUS?: string | undefined;
   tenanT_ID?: string | undefined;
   totalCount?: number | undefined;
@@ -45,6 +58,7 @@ export class EC_PHONGKHAM_ENTITY implements IEC_PHONGKHAM_ENTITY {
   diachI_2?: string | undefined;
   diachI_3?: string | undefined;
   hinhdaidien?: string | undefined;
+  maP_INFO?: IEC_PHONGKHAM_MAP_DTO;
   recorD_STATUS?: string | undefined;
   tenanT_ID?: string | undefined;
   totalCount?: number | undefined;
