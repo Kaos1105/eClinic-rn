@@ -43,6 +43,7 @@ export default class EC_PHONGKHAM_Store {
         this.dataArray = items;
         this.totalCount = totalCount;
       });
+      return items;
     } catch (error) {
       Alert.prompt('Problem loading list data');
       console.log(error);

@@ -185,7 +185,9 @@ const EC_PHONGKHAM_API = {
     lng = ''
   ): Promise<IPagedResultDtoOfEC_PHONGKHAM_ENTITY> =>
     httpNetCore
-      .post('/api/PhongKham/EC_PHONGKHAM_Search', { input: input, userLat: lat, userLong: lng })
+      .post('/api/PhongKham/EC_PHONGKHAM_Search', input, {
+        params: { userLat: lat, userLong: lng },
+      })
       .then(responseBodyResult),
   details: (inputId: string, lat = '', lng = ''): Promise<EC_PHONGKHAM_ENTITY> =>
     httpNetCore

@@ -4,29 +4,34 @@ import { ClinicItemRow, Divider, Loading } from '../../components';
 import NavigationNames from '../../navigations/NavigationNames';
 import { useNavigation } from '@react-navigation/native';
 import { RootStoreContext } from 'stores/rootStore';
+import { observer } from 'mobx-react-lite';
+import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 
 type TProps = {};
 
-export const ClinicListScreen: React.FC<TProps> = (props) => {
+export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   const rootStore = useContext(RootStoreContext);
   const [appLoaded, setAppLoaded] = useState(false);
-  const {
-    loadList: loadListClinics,
-    dataArray: listClinics,
-    totalCount,
-  } = rootStore.eC_PHONGKHAM_Store;
-  const [lisData, setLisData] = useState(listClinics);
+  const [isFetching, setIsFetching] = useState(false);
+  const { loadList: loadListClinics, totalCount } = rootStore.eC_PHONGKHAM_Store;
+  const [listData, setListData] = useState<EC_PHONGKHAM_ENTITY[]>([]);
 
   const fetchMore = async () => {
-    await loadListClinics({ maxResultCount: 5, skipCount: lisData.length });
-    setLisData(lisData.concat(listClinics));
+    console.log(totalCount + '--' + listData.length);
+    if (isFetching || totalCount === listData.length) return;
+    setIsFetching(true);
+    let resultList = await loadListClinics({ maxResultCount: 5, skipCount: listData.length });
+    let tempArr = [...listData];
+    tempArr = tempArr.concat(resultList);
+    setListData(tempArr);
+    setIsFetching(false);
   };
 
   const initialRun = async () => {
     //get list data for home screen
-    if (listClinics.length > 0) return;
     try {
-      await loadListClinics({ maxResultCount: 5 });
+      let resultList = await loadListClinics({ maxResultCount: 5 });
+      setListData(resultList);
       setAppLoaded(true);
     } catch {
       Alert.prompt('Error', 'Can not connect to server');
@@ -42,8 +47,9 @@ export const ClinicListScreen: React.FC<TProps> = (props) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={listClinics}
-        onEndReachedThreshold={0.5}
+        data={listData}
+        onEndReachedThreshold={0.05}
+        scrollEventThrottle={16}
         onEndReached={fetchMore}
         renderItem={(row) => (
           <TouchableOpacity
@@ -58,7 +64,7 @@ export const ClinicListScreen: React.FC<TProps> = (props) => {
             <ClinicItemRow item={row.item} />
           </TouchableOpacity>
         )}
-        ListFooterComponent={totalCount === lisData.length ? null : Loading}
+        ListFooterComponent={isFetching ? Loading : null}
         ItemSeparatorComponent={() => <Divider style={styles.divider} />}
         keyExtractor={(item, index) => `key${index}ForClinic`}
         contentContainerStyle={styles.contentContainerStyle}
@@ -66,7 +72,7 @@ export const ClinicListScreen: React.FC<TProps> = (props) => {
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: { flex: 1 },

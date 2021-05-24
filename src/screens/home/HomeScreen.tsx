@@ -57,8 +57,8 @@ export const HomeScreen: React.FC<TProps> = (props) => {
   const initialRun = async () => {
     //get list data for home screen
     try {
-      await loadListClinics({ maxResultCount: 5 });
-      await loadListDoctors({ maxResultCount: 5 });
+      await loadListClinics({ maxResultCount: 4 });
+      await loadListDoctors({ maxResultCount: 4 });
       setAppLoaded(true);
     } catch {
       Alert.prompt('Error', 'Can not connect to server');
