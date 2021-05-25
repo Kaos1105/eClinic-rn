@@ -36,7 +36,6 @@ export default class FireBaseAuthStore {
 
   @action getRefreshToken = async (refreshToken: string) => {
     try {
-      console.log(refreshToken);
       const refreshTokenResp = await agent.FireBaseAuth.getRefreshToken(refreshToken);
       if (refreshTokenResp.id_token) {
         this._rootStore.commonStore.setAuthRefresh(refreshTokenResp);

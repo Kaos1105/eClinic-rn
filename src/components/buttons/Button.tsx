@@ -9,6 +9,7 @@ interface TProps {
   type?: 'default' | 'outline';
   size?: 'default' | 'small';
   onPress?: () => void;
+  children?: React.ReactNode;
 }
 
 export const Button: React.FC<TProps> = (props) => {
@@ -22,6 +23,7 @@ export const Button: React.FC<TProps> = (props) => {
       }
       onPress={props.onPress}
     >
+      {props.children}
       <Text
         style={[
           styles.text,
@@ -39,6 +41,7 @@ export const Button: React.FC<TProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
     paddingHorizontal: 22,
     paddingVertical: 10,
     backgroundColor: Theme.colors.primaryColor,

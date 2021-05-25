@@ -361,8 +361,6 @@ var abp = abp || {};
         if (logLevel != undefined && logLevel < abp.log.level) {
             return;
         }
-
-        console.log(logObject);
     };
 
     abp.log.debug = function (logObject) {
@@ -775,7 +773,6 @@ var abp = abp || {};
         try {
             const value = await AsyncStorage.getItem(key);
             if (value != null) {
-                console.log(value);
                 equalities = value.split('; ');
                 for (var i = 0; i < equalities.length; i++) {
                     if (!equalities[i]) {

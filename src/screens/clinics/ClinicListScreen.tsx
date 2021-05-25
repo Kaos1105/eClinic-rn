@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStoreContext } from 'stores/rootStore';
 import { observer } from 'mobx-react-lite';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
+import { FilterDoctorModal } from '../../modals';
 
 type TProps = {};
 
@@ -17,10 +18,9 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   const [listData, setListData] = useState<EC_PHONGKHAM_ENTITY[]>([]);
 
   const fetchMore = async () => {
-    console.log(totalCount + '--' + listData.length);
     if (isFetching || totalCount === listData.length) return;
     setIsFetching(true);
-    let resultList = await loadListClinics({ maxResultCount: 5, skipCount: listData.length });
+    const resultList = await loadListClinics({ maxResultCount: 5, skipCount: listData.length });
     let tempArr = [...listData];
     tempArr = tempArr.concat(resultList);
     setListData(tempArr);
@@ -30,7 +30,7 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   const initialRun = async () => {
     //get list data for home screen
     try {
-      let resultList = await loadListClinics({ maxResultCount: 5 });
+      const resultList = await loadListClinics({ maxResultCount: 5 });
       setListData(resultList);
       setAppLoaded(true);
     } catch {
@@ -46,6 +46,7 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
+      <FilterDoctorModal onSubmitFilter={() => {}} />
       <FlatList
         data={listData}
         onEndReachedThreshold={0.05}
