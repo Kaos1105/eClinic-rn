@@ -44,6 +44,10 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   }, []);
 
   const navigation = useNavigation();
+
+  if (!appLoaded) {
+    return <Loading />;
+  }
   return (
     <View style={styles.container}>
       <FilterDoctorModal onSubmitFilter={() => {}} />

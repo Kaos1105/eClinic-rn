@@ -13,7 +13,7 @@ export default class EC_PHONGKHAM_Store {
   }
 
   //Field observable
-  @observable dataArray = new Array<EC_PHONGKHAM_ENTITY>();
+  // @observable dataArray = new Array<EC_PHONGKHAM_ENTITY>();
 
   //Paging
   @observable totalCount = 0;
@@ -30,7 +30,7 @@ export default class EC_PHONGKHAM_Store {
   //Filtering option
   @action loadFilters = () => {
     this.page = 1;
-    this.dataArray = [];
+    // this.dataArray = [];
     this.loadList();
   };
 
@@ -40,7 +40,7 @@ export default class EC_PHONGKHAM_Store {
       const result = await agent.EC_PHONGKHAM_API.list(input);
       const { totalCount, items } = result;
       runInAction(() => {
-        this.dataArray = items;
+        // this.dataArray = items;
         this.totalCount = totalCount;
       });
       return items;

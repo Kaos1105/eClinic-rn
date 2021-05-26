@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-nativ
 import { Theme } from '../../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { Avatar } from '../avatar';
-import { DoctorDetailsBottomSheet } from '../../modals';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import AppConsts from '../../lib/appconst';
 import NavigationNames from 'navigations/NavigationNames';

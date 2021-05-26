@@ -18,6 +18,9 @@ import { useLocalization } from '../../localization';
 import NavigationNames from '../../navigations/NavigationNames';
 import { HomeMenuItemType } from '../../types';
 import { RootStoreContext } from 'stores/rootStore';
+import Reactotron from 'reactotron-react-native';
+import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
+import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 
 const generateMenuItems = (getString: (key: string) => string): HomeMenuItemType[] => [
   {
@@ -48,17 +51,21 @@ type TProps = {};
 export const HomeScreen: React.FC<TProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const [appLoaded, setAppLoaded] = useState(false);
-  const { loadList: loadListClinics, dataArray: listClinics } = rootStore.eC_PHONGKHAM_Store;
-  const { loadList: loadListDoctors, dataArray: listDoctors } = rootStore.cM_EMPLOYEE_Store;
+  const { loadList: loadListClinics } = rootStore.eC_PHONGKHAM_Store;
+  const { loadList: loadListDoctors } = rootStore.cM_EMPLOYEE_Store;
   const navigation = useNavigation();
   const { getString, changeLanguage } = useLocalization();
   const [dashboardItem, setDashboardItem] = useState<DashboardItemsModel>(null);
+  const [listClinics, setListClinics] = useState<EC_PHONGKHAM_ENTITY[]>([]);
+  const [listDoctors, setListDoctors] = useState<CM_EMPLOYEE_ENTITY[]>([]);
 
   const initialRun = async () => {
     //get list data for home screen
     try {
-      await loadListClinics({ maxResultCount: 4 });
-      await loadListDoctors({ maxResultCount: 4 });
+      const clinicList = await loadListClinics({ maxResultCount: 4 });
+      setListClinics(clinicList);
+      const doctorList = await loadListDoctors({ maxResultCount: 4 });
+      setListDoctors(doctorList);
       setAppLoaded(true);
     } catch {
       Alert.prompt('Error', 'Can not connect to server');
