@@ -13,7 +13,7 @@ export default class CM_EMPLOYEE_Store {
   }
 
   //Field observable
-  @observable dataArray = new Array<CM_EMPLOYEE_ENTITY>();
+  // @observable dataArray = new Array<CM_EMPLOYEE_ENTITY>();
 
   //Paging
   @observable totalCount = 0;
@@ -30,7 +30,7 @@ export default class CM_EMPLOYEE_Store {
   //Filtering option
   @action loadFilters = () => {
     this.page = 1;
-    this.dataArray = [];
+    // this.dataArray = [];
     this.loadList();
   };
 
@@ -40,9 +40,10 @@ export default class CM_EMPLOYEE_Store {
       const result = await agent.CM_EMPLOYEE_API.list(input);
       const { totalCount, items } = result;
       runInAction(() => {
-        this.dataArray = items;
+        // this.dataArray = items;
         this.totalCount = totalCount;
       });
+      return items;
     } catch (error) {
       Alert.alert('Problem loading list data');
       console.log(error);
