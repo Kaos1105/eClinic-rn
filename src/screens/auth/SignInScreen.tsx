@@ -49,11 +49,6 @@ export const SignInScreen = observer(() => {
         };
         login(result);
       });
-    // .then(()=>{
-    //   firebase.auth().currentUser.getIdToken().then((token)=>{
-    //     console.log(token)
-    //   })
-    // });
   };
 
   const phoneNumberValidationSchema = yup.object().shape({
