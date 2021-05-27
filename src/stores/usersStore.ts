@@ -80,7 +80,7 @@ export default class UsersStore {
         this.currentUser = user;
       });
     } catch (error) {
-      Alert.prompt('Problem editing user');
+      Alert.alert('Problem editing user');
       console.log(error);
     } finally {
     }

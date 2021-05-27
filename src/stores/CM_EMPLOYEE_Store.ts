@@ -44,7 +44,7 @@ export default class CM_EMPLOYEE_Store {
         this.totalCount = totalCount;
       });
     } catch (error) {
-      Alert.prompt('Problem loading list data');
+      Alert.alert('Problem loading list data');
       console.log(error);
     } finally {
     }

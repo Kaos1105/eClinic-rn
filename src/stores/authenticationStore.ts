@@ -7,6 +7,7 @@ import { RootStore } from './rootStore';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import abp from '../lib/abp';
+import { Alert } from 'react-native';
 
 class AuthenticationStore {
   _rootStore: RootStore;
@@ -24,20 +25,26 @@ class AuthenticationStore {
 
   @action
   public async login(model: LoginModel) {
-    let result = await tokenAuthService.authenticate({
-      userNameOrEmailAddress: model.userNameOrEmailAddress,
-      password: model.password,
-      rememberClient: model.rememberMe,
-    });
-    //var tokenExpireDate = model.rememberMe ? new Date(new Date().getTime() + 1000 * result.expireInSeconds) : undefined;
-    var tokenExpireDate = new Date(new Date().getTime() + 1000 * result.expireInSeconds);
-    abp.auth.setToken(result.accessToken, tokenExpireDate);
-    abp.utils.setCookieValue(
-      AppConsts.authorization.encrptedAuthTokenName,
-      result.encryptedAccessToken,
-      tokenExpireDate,
-      abp.appPath
-    );
+    try {
+      let result = await tokenAuthService.authenticate({
+        userNameOrEmailAddress: model.userNameOrEmailAddress,
+        password: model.password,
+        rememberClient: model.rememberMe,
+      });
+      //var tokenExpireDate = model.rememberMe ? new Date(new Date().getTime() + 1000 * result.expireInSeconds) : undefined;
+      var tokenExpireDate = new Date(new Date().getTime() + 1000 * result.expireInSeconds);
+      abp.auth.setToken(result.accessToken, tokenExpireDate);
+      abp.utils.setCookieValue(
+        AppConsts.authorization.encrptedAuthTokenName,
+        result.encryptedAccessToken,
+        tokenExpireDate,
+        abp.appPath
+      );
+      return true;
+    } catch (err) {
+      Alert.alert(err);
+      return false;
+    }
   }
 
   @action

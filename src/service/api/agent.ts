@@ -16,19 +16,21 @@ import {
 } from 'models/EC_PHONGKHAM_ENTITY';
 import { CM_EMPLOYEE_ENTITY, IPagedResultDtoOfCM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { IMapGeocoding } from 'models/MapGeocoding';
+import Reactotron from 'reactotron-react-native';
 
 var qs = require('qs');
 //axios response error handler
 const axiosResponseConfig = (error) => {
-  if (error.message === 'Network Error' && !error.response) {
-    Alert.alert('NETWORK ERROR-can not connect to sever network!');
+  if (error.message && !error.response) {
+    Alert.alert(error.message);
   }
   const { status, config } = error.response;
   if (status === 404) {
+    Alert.alert('Not found');
     RootNavigation.navigate(NavigationNames.HomeScreen);
   }
-  if (status === 400 && config.method === 'get' /*&& data.errors.hasOwnProperty('id')*/) {
-    Alert.prompt('Unauthorized request');
+  if (status === 400) {
+    Alert.alert('Unauthorized request');
     RootNavigation.navigate(NavigationNames.HomeScreen);
   }
   if (status === 500) {
@@ -39,21 +41,14 @@ const axiosResponseConfig = (error) => {
 };
 
 //common SetUp
-axios.interceptors.response.use(undefined, (error) => {
-  axiosResponseConfig(error);
-});
-axios.interceptors.request.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 const fireBaseAuth = axios.create({
   baseURL: 'https://identitytoolkit.googleapis.com',
   timeout: 30000,
+});
+
+fireBaseAuth.interceptors.response.use(undefined, (error) => {
+  axiosResponseConfig(error);
 });
 
 const httpFirebaseDb = axios.create({
@@ -61,14 +56,26 @@ const httpFirebaseDb = axios.create({
   timeout: 30000,
 });
 
+httpFirebaseDb.interceptors.response.use(undefined, (error) => {
+  axiosResponseConfig(error);
+});
+
 const httpFirebaseSecure = axios.create({
   baseURL: 'https://securetoken.googleapis.com',
   timeout: 30000,
 });
 
+httpFirebaseSecure.interceptors.response.use(undefined, (error) => {
+  axiosResponseConfig(error);
+});
+
 const googleMapApi = axios.create({
   baseURL: 'https://maps.googleapis.com',
   timeout: 30000,
+});
+
+googleMapApi.interceptors.response.use(undefined, (error) => {
+  axiosResponseConfig(error);
 });
 
 const httpNetCore = axios.create({
@@ -79,6 +86,10 @@ const httpNetCore = axios.create({
       encode: false,
     });
   },
+});
+
+httpNetCore.interceptors.response.use(undefined, (error) => {
+  axiosResponseConfig(error);
 });
 
 httpFirebaseDb.interceptors.request.use(
@@ -104,7 +115,7 @@ httpNetCore.interceptors.request.use(
     if (token != null) {
       config.headers.common['Authorization'] = 'Bearer ' + token;
     } else {
-      Alert.prompt('Error authenticate');
+      Alert.alert('Error authenticate');
       //return Promise.reject();
     }
     config.headers.common['.AspNetCore.Culture'] = abp.utils.getCookieValue(

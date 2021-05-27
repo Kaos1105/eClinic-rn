@@ -34,7 +34,7 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
       setListData(resultList);
       setAppLoaded(true);
     } catch {
-      Alert.prompt('Error', 'Can not connect to server');
+      Alert.alert('Error', 'Can not connect to server');
     }
   };
 

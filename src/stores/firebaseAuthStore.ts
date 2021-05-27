@@ -72,7 +72,7 @@ export default class FireBaseAuthStore {
 
   setLogoutTimer = (expirationTime: number) => {
     timer = setTimeout(() => {
-      Alert.prompt('Token expired, please sign in');
+      Alert.alert('Token expired, please sign in');
       this.logout();
     }, expirationTime);
   };

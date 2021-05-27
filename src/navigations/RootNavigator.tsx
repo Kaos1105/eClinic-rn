@@ -34,22 +34,23 @@ const App: React.FC = () => {
     loginModel.userNameOrEmailAddress = AppConsts.adminCredential.userName;
     loginModel.password = AppConsts.adminCredential.password;
     loginModel.rememberMe = true;
+    let loggedIn = await login(loginModel).catch((error) => {
+      Alert.alert('Error', 'Can not connect to server');
+    });
 
     //login firebase
     let asyncStorageLoaded = await loadAsyncStorage();
-    if (asyncStorageLoaded) {
+    if (asyncStorageLoaded && loggedIn) {
       checkExpireTime();
       if (fireBaseToken) {
         try {
           await getUser(fireBaseToken).catch(() => logout());
-          await login(loginModel).catch((error) => {
-            Alert.prompt('Error', 'Can not connect to server');
-          });
           setAppLoaded(true);
         } catch (error) {}
       } else if (fireBaseToken === null) {
         await getRefreshToken(fireBaseRefreshToken).catch((error) => {
-          Alert.prompt('Token expire', 'Please try to login again');
+          Alert.alert('Token expire', 'Please try to login again');
+          setAppLoaded(true);
         });
       }
     }

@@ -61,7 +61,7 @@ export const HomeScreen: React.FC<TProps> = (props) => {
       await loadListDoctors({ maxResultCount: 4 });
       setAppLoaded(true);
     } catch {
-      Alert.prompt('Error', 'Can not connect to server');
+      Alert.alert('Error', 'Can not connect to server');
     }
   };
 

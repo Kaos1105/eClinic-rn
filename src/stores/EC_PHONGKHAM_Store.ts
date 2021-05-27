@@ -45,7 +45,7 @@ export default class EC_PHONGKHAM_Store {
       });
       return items;
     } catch (error) {
-      Alert.prompt('Problem loading list data');
+      Alert.alert('Problem loading list data');
       console.log(error);
     } finally {
     }
