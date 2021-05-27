@@ -19,13 +19,13 @@ export default class CM_EMPLOYEE_Store {
   @observable totalCount = 0;
   @observable page = 1;
 
-  @computed getTotalPages() {
-    return Math.ceil(this.totalCount / LIMIT);
-  }
+  // @computed getTotalPages() {
+  //   return Math.ceil(this.totalCount / LIMIT);
+  // }
 
-  @action setPages = (page: number) => {
-    this.page = page;
-  };
+  // @action setPages = (page: number) => {
+  //   this.page = page;
+  // };
 
   //Filtering option
   @action loadFilters = () => {
