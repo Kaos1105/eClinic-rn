@@ -6,7 +6,6 @@ import { IUserData } from 'models/userData';
 import { RootNavigation } from '../../navigations';
 import { NavigationNames } from '../../navigations';
 import { Alert } from 'react-native';
-import { string } from 'yup/lib/locale';
 import { AuthData, RefreshTokenResp } from 'models/firebaseAuth';
 import CommonStore from 'stores/commonStore';
 import abp from '../../lib/abp';
@@ -17,6 +16,10 @@ import {
 import { CM_EMPLOYEE_ENTITY, IPagedResultDtoOfCM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { IMapGeocoding } from 'models/MapGeocoding';
 import Reactotron from 'reactotron-react-native';
+import {
+  DM_CHUYENKHOA_ENTITY,
+  IPagedResultDtoOfDM_CHUYENKHOA_ENTITY,
+} from 'models/DM_CHUYENKHOA_ENTITY';
 
 var qs = require('qs');
 //axios response error handler
@@ -213,11 +216,17 @@ const CM_EMPLOYEE_API = {
     httpNetCore.post('/api/Employee/CM_EMPLOYEE_Search_Admin', input).then(responseBodyResult),
 };
 
+const DM_CHUYENKHOA_API = {
+  list: (input: DM_CHUYENKHOA_ENTITY): Promise<IPagedResultDtoOfDM_CHUYENKHOA_ENTITY> =>
+    httpNetCore.post('/api/ChuyenKhoa/DM_CHUYENKHOA_Search', input).then(responseBodyResult),
+};
+
 export default {
   httpNetCore,
   Users,
   FireBaseAuth,
   EC_PHONGKHAM_API,
   CM_EMPLOYEE_API,
+  DM_CHUYENKHOA_API,
   MapGeocoding,
 };

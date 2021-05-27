@@ -1,4 +1,5 @@
 import { action, computed, observable, runInAction } from 'mobx';
+import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { Alert } from 'react-native';
 import agent from 'service/api/agent';
@@ -6,7 +7,7 @@ import { RootStore } from './rootStore';
 
 const LIMIT = 5;
 
-export default class EC_PHONGKHAM_Store {
+export default class DM_CHUYENKHOA_Store {
   _rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this._rootStore = rootStore;
@@ -35,9 +36,9 @@ export default class EC_PHONGKHAM_Store {
   };
 
   //List
-  @action loadList = async (input = new EC_PHONGKHAM_ENTITY(), userLat = '', userLng = '') => {
+  @action loadList = async (input = new DM_CHUYENKHOA_ENTITY()) => {
     try {
-      const result = await agent.EC_PHONGKHAM_API.list(input);
+      const result = await agent.DM_CHUYENKHOA_API.list(input);
       const { totalCount, items } = result;
       runInAction(() => {
         // this.dataArray = items;

@@ -50,7 +50,7 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   }
   return (
     <View style={styles.container}>
-      <FilterDoctorModal onSubmitFilter={() => {}} />
+      <FilterDoctorModal filterClinic filterSpecialty onSubmitFilter={() => {}} />
       <FlatList
         data={listData}
         onEndReachedThreshold={0.05}

@@ -7,6 +7,7 @@ import FireBaseAuthStore from './firebaseAuthStore';
 import CommonStore from './commonStore';
 import UsersStore from './usersStore';
 import EC_PHONGKHAM_Store from './EC_PHONGKHAM_Store';
+import DM_CHUYENKHOA_Store from './DM_CHUYENKHOA_Store';
 
 configure({ enforceActions: 'always' });
 
@@ -18,6 +19,7 @@ export class RootStore {
   commonStore: CommonStore;
   usersStore: UsersStore;
   eC_PHONGKHAM_Store: EC_PHONGKHAM_Store;
+  dM_CHUYENKHOA_Store: DM_CHUYENKHOA_Store;
 
   constructor() {
     this.cM_EMPLOYEE_Store = new CM_EMPLOYEE_Store(this);
@@ -27,6 +29,7 @@ export class RootStore {
     this.commonStore = new CommonStore(this);
     this.usersStore = new UsersStore(this);
     this.eC_PHONGKHAM_Store = new EC_PHONGKHAM_Store(this);
+    this.dM_CHUYENKHOA_Store = new DM_CHUYENKHOA_Store(this);
   }
 }
 
