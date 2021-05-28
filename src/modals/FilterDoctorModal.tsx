@@ -1,16 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TextInput, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import { ReactNativeModal } from 'react-native-modal';
 import { useLocalization } from '../localization';
 import { Theme } from '../theme';
 import { Button } from '../components/buttons/Button';
 import { Divider, Loading } from '../components';
 import { Ionicons } from '@expo/vector-icons';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { RootStoreContext } from 'stores/rootStore';
 import { observer } from 'mobx-react-lite';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
+import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
+import reactotron from 'reactotron-react-native';
+import { color } from 'react-native-reanimated';
 interface TProps {
   filterClinic?: boolean;
   filterSpecialty?: boolean;
@@ -31,6 +42,8 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
   const [listSpecialties, setListSpecialties] = useState<DM_CHUYENKHOA_ENTITY[]>([]);
   const [isFetchingClinic, setIsFetchingClinic] = useState(false);
   const [isFetchingSpecialty, setIsFetchingSpecialty] = useState(false);
+
+  const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
 
   const { getString } = useLocalization();
 
@@ -89,7 +102,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
   return (
     <>
       <View style={styles.searchBar}>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{ flex: 9, justifyContent: 'center' }}>
           <TextInput style={styles.searchTextInput} />
           <Ionicons name='search' size={18} color='black' style={styles.searchIcon} />
         </View>
@@ -106,30 +119,61 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
           onBackdropPress={() => setIsModalVisible(false)}
         >
           <SafeAreaView style={styles.safeAreaContainer}>
-            <Ionicons
-              name='backspace-outline'
-              style={{ alignSelf: 'flex-end', marginHorizontal: 10 }}
-              size={35}
-              color='black'
-              onPress={() => setIsModalVisible(false)}
-            />
+            <View style={styles.filterHeader}>
+              <View style={styles.filterItemWrapper}>
+                {filterItem.chuyenkhoA_TEN && (
+                  <Text style={styles.filterTag}>
+                    {filterItem.chuyenkhoA_TEN}
+                    <Ionicons name='checkmark' size={18} color='white' />
+                  </Text>
+                )}
+                {filterItem.phongkhaM_TEN && (
+                  <Text style={styles.filterTag}>
+                    {filterItem.phongkhaM_TEN}
+                    <Ionicons name='checkmark' size={18} color='white' />
+                  </Text>
+                )}
+              </View>
+              <Ionicons
+                name='backspace-outline'
+                style={styles.closeButton}
+                size={35}
+                color='black'
+                onPress={() => setIsModalVisible(false)}
+              />
+            </View>
             <ScrollView style={styles.filterContainer}>
               {props.filterSpecialty && (
                 <View style={styles.sectionContainer}>
                   <Text style={styles.sectionTitle}>Specialty</Text>
                   <Divider />
-                  <View
-                    style={{
-                      paddingTop: 10,
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                    }}
-                  >
+                  <View style={styles.filterListWrapper}>
                     {listSpecialties.map((item, index) => (
-                      <View key={index} style={styles.filterItem}>
-                        <Text>{item.chuyenkhoA_TEN}</Text>
-                      </View>
+                      <TouchableOpacity
+                        key={index}
+                        style={
+                          item.chuyenkhoA_ID === filterItem.chuyenkhoA_ID
+                            ? [styles.filterItem, styles.filterSelectedItem]
+                            : styles.filterItem
+                        }
+                        onPress={() => {
+                          setFilterItem({
+                            ...filterItem,
+                            chuyenkhoA_ID: item.chuyenkhoA_ID,
+                            chuyenkhoA_TEN: item.chuyenkhoA_TEN,
+                          });
+                        }}
+                      >
+                        <Text
+                          style={
+                            item.chuyenkhoA_ID === filterItem.chuyenkhoA_ID
+                              ? { color: 'white' }
+                              : { color: 'black' }
+                          }
+                        >
+                          {item.chuyenkhoA_TEN}
+                        </Text>
+                      </TouchableOpacity>
                     ))}
                   </View>
                   {specialtiesCount !== listSpecialties.length && (
@@ -146,18 +190,33 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
                 <View style={styles.sectionContainer}>
                   <Text style={styles.sectionTitle}>Clinic</Text>
                   <Divider />
-                  <View
-                    style={{
-                      paddingTop: 10,
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                    }}
-                  >
+                  <View style={styles.filterListWrapper}>
                     {listClinics.map((item, index) => (
-                      <View key={index} style={styles.filterItem}>
-                        <Text>{item.phongkhaM_TENDAYDU}</Text>
-                      </View>
+                      <TouchableOpacity
+                        key={index}
+                        style={
+                          item.phongkhaM_ID === filterItem.tenanT_ID
+                            ? [styles.filterItem, styles.filterSelectedItem]
+                            : styles.filterItem
+                        }
+                        onPress={() => {
+                          setFilterItem({
+                            ...filterItem,
+                            tenanT_ID: item.phongkhaM_ID,
+                            phongkhaM_TEN: item.phongkhaM_TENDAYDU,
+                          });
+                        }}
+                      >
+                        <Text
+                          style={
+                            item.phongkhaM_ID === filterItem.tenanT_ID
+                              ? { color: 'white' }
+                              : { color: 'black' }
+                          }
+                        >
+                          {item.phongkhaM_TENDAYDU}
+                        </Text>
+                      </TouchableOpacity>
                     ))}
                   </View>
                   {clinicsCount !== listClinics.length && (
@@ -174,7 +233,11 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
             <View style={styles.buttonContainer}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                 <Button title={getString('CONFIRM')} onPress={() => setIsModalVisible(false)} />
-                <Button title={getString('CANCEL')} type='outline' />
+                <Button
+                  title={getString('RESET')}
+                  type='outline'
+                  onPress={() => setFilterItem(new CM_EMPLOYEE_ENTITY())}
+                />
               </View>
             </View>
           </SafeAreaView>
@@ -229,11 +292,37 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: '48%',
     padding: 4,
-    alignItems: 'center',
-    textAlign: 'center',
     borderRadius: 10,
     borderColor: Theme.colors.primaryColorDark,
     margin: 2,
     marginBottom: 10,
   },
+  filterSelectedItem: {
+    backgroundColor: Theme.colors.primaryColor,
+  },
+  filterItemWrapper: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+  },
+  filterTag: {
+    margin: 5,
+    marginLeft: 15,
+    borderRadius: 10,
+    backgroundColor: Theme.colors.tintColor,
+    padding: 5,
+  },
+  filterListWrapper: {
+    paddingTop: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  filterHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomColor: Theme.colors.gray,
+    borderBottomWidth: 1,
+  },
+  closeButton: { alignSelf: 'flex-start', marginHorizontal: 10 },
 });
