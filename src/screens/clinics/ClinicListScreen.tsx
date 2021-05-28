@@ -7,6 +7,8 @@ import { RootStoreContext } from 'stores/rootStore';
 import { observer } from 'mobx-react-lite';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { FilterDoctorModal } from '../../modals';
+import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
+import reactotron from 'reactotron-react-native';
 
 type TProps = {};
 
@@ -17,10 +19,16 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   const { loadList: loadListClinics, totalCount } = rootStore.eC_PHONGKHAM_Store;
   const [listData, setListData] = useState<EC_PHONGKHAM_ENTITY[]>([]);
 
+  const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
+
   const fetchMore = async () => {
     if (isFetching || totalCount === listData.length) return;
     setIsFetching(true);
-    const resultList = await loadListClinics({ maxResultCount: 5, skipCount: listData.length });
+    const resultList = await loadListClinics({
+      maxResultCount: 5,
+      skipCount: listData.length,
+      chuyenkhoA_ID: filterItem.chuyenkhoA_ID,
+    });
     let tempArr = [...listData];
     tempArr = tempArr.concat(resultList);
     setListData(tempArr);
@@ -38,6 +46,17 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
     }
   };
 
+  const fetchWithFilter = async (input: CM_EMPLOYEE_ENTITY) => {
+    setFilterItem({ ...input });
+    setAppLoaded(false);
+    const resultList = await loadListClinics({
+      maxResultCount: 5,
+      chuyenkhoA_ID: input.chuyenkhoA_ID,
+    });
+    setListData(resultList);
+    setAppLoaded(true);
+  };
+
   useEffect(() => {
     //Load data from backend
     initialRun();
@@ -45,36 +64,37 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
 
   const navigation = useNavigation();
 
-  if (!appLoaded) {
-    return <Loading />;
-  }
   return (
     <View style={styles.container}>
-      <FilterDoctorModal filterClinic filterSpecialty onSubmitFilter={() => {}} />
-      <FlatList
-        data={listData}
-        onEndReachedThreshold={0.05}
-        scrollEventThrottle={16}
-        onEndReached={fetchMore}
-        renderItem={(row) => (
-          <TouchableOpacity
-            style={styles.rowItem}
-            onPress={() =>
-              navigation.navigate(NavigationNames.ClinicDetailScreen, {
-                model: JSON.stringify(row.item),
-                title: row.item.phongkhaM_TENDAYDU,
-              })
-            }
-          >
-            <ClinicItemRow item={row.item} />
-          </TouchableOpacity>
-        )}
-        ListFooterComponent={isFetching ? Loading : null}
-        ItemSeparatorComponent={() => <Divider style={styles.divider} />}
-        keyExtractor={(item, index) => `key${index}ForClinic`}
-        contentContainerStyle={styles.contentContainerStyle}
-        showsVerticalScrollIndicator={false}
-      />
+      <FilterDoctorModal filterClinic filterSpecialty onSubmitFilter={fetchWithFilter} />
+      {!appLoaded ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={listData}
+          onEndReachedThreshold={0.05}
+          scrollEventThrottle={16}
+          onEndReached={fetchMore}
+          renderItem={(row) => (
+            <TouchableOpacity
+              style={styles.rowItem}
+              onPress={() =>
+                navigation.navigate(NavigationNames.ClinicDetailScreen, {
+                  model: JSON.stringify(row.item),
+                  title: row.item.phongkhaM_TENDAYDU,
+                })
+              }
+            >
+              <ClinicItemRow item={row.item} />
+            </TouchableOpacity>
+          )}
+          ListFooterComponent={isFetching ? Loading : null}
+          ItemSeparatorComponent={() => <Divider style={styles.divider} />}
+          keyExtractor={(item, index) => `key${index}ForClinic`}
+          contentContainerStyle={styles.contentContainerStyle}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 });

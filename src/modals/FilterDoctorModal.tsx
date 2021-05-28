@@ -25,7 +25,7 @@ import { color } from 'react-native-reanimated';
 interface TProps {
   filterClinic?: boolean;
   filterSpecialty?: boolean;
-  onSubmitFilter: () => void;
+  onSubmitFilter: (input: CM_EMPLOYEE_ENTITY) => void;
 }
 
 const ICON_TOP = 8;
@@ -101,16 +101,33 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
   }
   return (
     <>
-      <View style={styles.searchBar}>
-        <View style={{ flex: 9, justifyContent: 'center' }}>
-          <TextInput style={styles.searchTextInput} />
-          <Ionicons name='search' size={18} color='black' style={styles.searchIcon} />
+      <View style={{ elevation: 10, backgroundColor: 'white', padding: 2 }}>
+        <View style={styles.searchBar}>
+          <View style={{ flex: 9, justifyContent: 'center' }}>
+            <TextInput style={styles.searchTextInput} />
+            <Ionicons name='search' size={18} color='black' style={styles.searchIcon} />
+          </View>
+          <TouchableOpacity style={styles.filterButton} onPress={() => setIsModalVisible(true)}>
+            <Ionicons name='filter' style={{ marginHorizontal: 5 }} size={20} color='black' />
+            <Text>Filter</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setIsModalVisible(true)}>
-          <Ionicons name='filter' style={{ marginHorizontal: 5 }} size={20} color='black' />
-          <Text>Filter</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', paddingHorizontal: 10, flexWrap: 'wrap' }}>
+          {filterItem.chuyenkhoA_TEN && (
+            <Text style={styles.previewFilterTag}>
+              {filterItem.chuyenkhoA_TEN}
+              <Ionicons name='checkmark' size={14} color='white' />
+            </Text>
+          )}
+          {filterItem.phongkhaM_TEN && (
+            <Text style={styles.previewFilterTag}>
+              {filterItem.phongkhaM_TEN}
+              <Ionicons name='checkmark' size={14} color='white' />
+            </Text>
+          )}
+        </View>
       </View>
+
       <View style={{ width: '100%' }}>
         <ReactNativeModal
           propagateSwipe
@@ -232,11 +249,21 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
             </ScrollView>
             <View style={styles.buttonContainer}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                <Button title={getString('CONFIRM')} onPress={() => setIsModalVisible(false)} />
+                <Button
+                  title={getString('CONFIRM')}
+                  onPress={() => {
+                    setIsModalVisible(false);
+                    props.onSubmitFilter(filterItem);
+                  }}
+                />
                 <Button
                   title={getString('RESET')}
                   type='outline'
-                  onPress={() => setFilterItem(new CM_EMPLOYEE_ENTITY())}
+                  onPress={() => {
+                    setFilterItem(new CM_EMPLOYEE_ENTITY());
+                    setIsModalVisible(false);
+                    props.onSubmitFilter(new CM_EMPLOYEE_ENTITY());
+                  }}
                 />
               </View>
             </View>
@@ -304,6 +331,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'baseline',
+  },
+  previewFilterTag: {
+    margin: 2,
+    padding: 2,
+    fontSize: 12,
+    borderRadius: 10,
+    backgroundColor: Theme.colors.tintColor,
   },
   filterTag: {
     margin: 5,
