@@ -8,7 +8,6 @@ import { observer } from 'mobx-react-lite';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { FilterDoctorModal } from '../../modals';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
-import reactotron from 'reactotron-react-native';
 
 type TProps = {};
 
@@ -28,6 +27,7 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
       maxResultCount: 5,
       skipCount: listData.length,
       chuyenkhoA_ID: filterItem.chuyenkhoA_ID,
+      phongkhaM_TENDAYDU: filterItem.phongkhaM_TENDAYDU,
     });
     let tempArr = [...listData];
     tempArr = tempArr.concat(resultList);
@@ -47,7 +47,6 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   };
 
   const fetchWithFilter = async (input: CM_EMPLOYEE_ENTITY) => {
-    reactotron.log(input);
     setFilterItem({ ...input, phongkhaM_TENDAYDU: input.phongkhaM_TENDAYDU });
     setAppLoaded(false);
     const resultList = await loadListClinics({
@@ -69,8 +68,8 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   return (
     <View style={styles.container}>
       <FilterDoctorModal
-        filterClinic
         filterSpecialty
+        filterClinic={false}
         onSubmitFilter={fetchWithFilter}
         parentName={NavigationNames.ClinicListScreen}
       />

@@ -2,9 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, ViewStyle } from 'react-native';
 import { Theme } from '../../theme';
 import { DepartmentModel } from '../../models-demo';
+import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
+import AppConsts from '../../lib/appconst';
 
 type TProps = {
-  item: DepartmentModel;
+  item: DM_CHUYENKHOA_ENTITY;
   style?: ViewStyle;
   showShortDesc?: boolean;
 };
@@ -14,17 +16,17 @@ export const DepartmentItem: React.FC<TProps> = (props) => {
     <View style={[styles.container, props.style]}>
       <Image
         source={{
-          uri: props.item.imageUrl,
+          uri: `${props.item.logo}`,
         }}
         style={styles.image}
       />
       <View style={styles.textContainer}>
         <Text style={styles.title} numberOfLines={2}>
-          {props.item.title}
+          {props.item.chuyenkhoA_TEN}
         </Text>
         {props.showShortDesc && (
           <Text style={styles.shortDesc} numberOfLines={2}>
-            {props.item.shortDescription}
+            {props.item.notes}
           </Text>
         )}
       </View>
@@ -34,8 +36,7 @@ export const DepartmentItem: React.FC<TProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 'auto',
-    minWidth: 110,
+    width: 120,
     backgroundColor: 'white',
     borderRadius: 16,
     borderWidth: 1,
@@ -49,12 +50,15 @@ const styles = StyleSheet.create({
     },
   },
   image: {
-    height: 84,
+    tintColor: Theme.colors.tintColor,
+    height: 80,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    resizeMode: 'contain',
   },
   textContainer: {
-    padding: 12,
+    padding: 4,
+    minHeight: 60,
     marginBottom: 2,
   },
   title: {
@@ -64,7 +68,6 @@ const styles = StyleSheet.create({
   },
   shortDesc: {
     color: Theme.colors.gray,
-    marginTop: 2,
     fontSize: 13,
   },
 });

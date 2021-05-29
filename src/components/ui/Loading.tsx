@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, ActivityIndicator, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Theme } from '../../theme';
 
-export const Loading = () => {
+interface TProps {
+  color?: string;
+}
+
+export const Loading = (props: TProps) => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size='large' color={Theme.colors.primaryColor} />
+      <ActivityIndicator size='large' color={props.color ?? Theme.colors.primaryColor} />
     </View>
   );
 };

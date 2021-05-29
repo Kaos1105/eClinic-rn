@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: Theme.colors.grayForBoxBackground,
+    borderColor: Theme.colors.dividerColor,
     shadowColor: Theme.colors.grayForBoxBackground,
     shadowRadius: 2,
     padding: 5,

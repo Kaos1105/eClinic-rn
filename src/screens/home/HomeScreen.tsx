@@ -21,6 +21,7 @@ import { RootStoreContext } from 'stores/rootStore';
 import Reactotron from 'reactotron-react-native';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
+import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
 
 const generateMenuItems = (getString: (key: string) => string): HomeMenuItemType[] => [
   {
@@ -53,11 +54,13 @@ export const HomeScreen: React.FC<TProps> = (props) => {
   const [appLoaded, setAppLoaded] = useState(false);
   const { loadList: loadListClinics } = rootStore.eC_PHONGKHAM_Store;
   const { loadList: loadListDoctors } = rootStore.cM_EMPLOYEE_Store;
+  const { loadList: loadListSpecialties } = rootStore.dM_CHUYENKHOA_Store;
   const navigation = useNavigation();
   const { getString, changeLanguage } = useLocalization();
   const [dashboardItem, setDashboardItem] = useState<DashboardItemsModel>(null);
   const [listClinics, setListClinics] = useState<EC_PHONGKHAM_ENTITY[]>([]);
   const [listDoctors, setListDoctors] = useState<CM_EMPLOYEE_ENTITY[]>([]);
+  const [listSpecialties, setListSpecialties] = useState<DM_CHUYENKHOA_ENTITY[]>([]);
 
   const initialRun = async () => {
     //get list data for home screen
@@ -66,6 +69,8 @@ export const HomeScreen: React.FC<TProps> = (props) => {
       setListClinics(clinicList);
       const doctorList = await loadListDoctors({ maxResultCount: 4 });
       setListDoctors(doctorList);
+      const specialist = await loadListSpecialties({ maxResultCount: 4 });
+      setListSpecialties(specialist);
       setAppLoaded(true);
     } catch {
       Alert.alert('Error', 'Can not connect to server');
@@ -177,7 +182,7 @@ export const HomeScreen: React.FC<TProps> = (props) => {
           rightAction={() => navigation.navigate(NavigationNames.DepartmentListScreen)}
         />
         <FlatList
-          data={dashboardItem.departments}
+          data={listSpecialties}
           renderItem={(row) => (
             <TouchableOpacity
               onPress={() =>

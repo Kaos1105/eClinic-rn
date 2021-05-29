@@ -28,25 +28,16 @@ const App: React.FC = () => {
     rootStore.fireBaseAuthStore;
   const { login } = rootStore.authenticationStore;
 
-  const initialRun = async () => {
-    //login as Admin
-    let loginModel = new LoginModel();
-    loginModel.userNameOrEmailAddress = AppConsts.adminCredential.userName;
-    loginModel.password = AppConsts.adminCredential.password;
-    loginModel.rememberMe = true;
-    let loggedIn = await login(loginModel).catch((error) => {
-      Alert.alert('Error', 'Can not connect to server');
-    });
+  const [loggedInServer, setLoggedInServer] = useState(false);
 
+  const logInFirebase = async () => {
     //login firebase
     let asyncStorageLoaded = await loadAsyncStorage();
-    if (asyncStorageLoaded && loggedIn) {
+    if (asyncStorageLoaded) {
       checkExpireTime();
       if (fireBaseToken) {
-        try {
-          await getUser(fireBaseToken).catch(() => logout());
-          setAppLoaded(true);
-        } catch (error) {}
+        await getUser(fireBaseToken).catch(() => logout());
+        setAppLoaded(true);
       } else if (fireBaseToken === null) {
         await getRefreshToken(fireBaseRefreshToken).catch((error) => {
           Alert.alert('Token expire', 'Please try to login again');
@@ -56,8 +47,24 @@ const App: React.FC = () => {
     }
   };
 
+  const logInBackend = async () => {
+    //login as Admin
+    let loginModel = new LoginModel();
+    loginModel.userNameOrEmailAddress = AppConsts.adminCredential.userName;
+    loginModel.password = AppConsts.adminCredential.password;
+    loginModel.rememberMe = true;
+    let loggedIn = await login(loginModel).catch((error) => {
+      Alert.alert('Error', 'Can not connect to server');
+    });
+    setLoggedInServer(loggedInServer);
+  };
+
   useEffect(() => {
-    initialRun();
+    logInBackend();
+  }, []);
+
+  useEffect(() => {
+    logInFirebase();
   }, [fireBaseToken]);
 
   useEffect(() => {

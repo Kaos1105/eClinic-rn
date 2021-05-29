@@ -141,11 +141,15 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
   }, []);
 
   if (!appLoaded) {
-    return <Loading />;
+    return (
+      <View style={{ maxHeight: 100, paddingTop: 20 }}>
+        <Loading color='gray' />
+      </View>
+    );
   }
   return (
     <>
-      <View style={{ elevation: 10, backgroundColor: 'white', padding: 2 }}>
+      <View style={styles.container}>
         <View style={styles.searchBar}>
           <View style={{ flex: 9, justifyContent: 'center' }}>
             <TextInput
@@ -163,13 +167,13 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
           </TouchableOpacity>
         </View>
         <View style={{ flexDirection: 'row', paddingHorizontal: 10, flexWrap: 'wrap' }}>
-          {filterItem.chuyenkhoA_TEN && (
+          {filterItem.chuyenkhoA_TEN && props.filterSpecialty && (
             <Text style={styles.previewFilterTag}>
               {filterItem.chuyenkhoA_TEN}
               <Ionicons name='checkmark' size={14} color='white' />
             </Text>
           )}
-          {filterItem.phongkhaM_TEN && (
+          {filterItem.phongkhaM_TEN && props.filterClinic && (
             <Text style={styles.previewFilterTag}>
               {filterItem.phongkhaM_TEN}
               <Ionicons name='checkmark' size={14} color='white' />
@@ -325,6 +329,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
 });
 
 const styles = StyleSheet.create({
+  container: { elevation: 10, backgroundColor: 'white', padding: 2 },
   searchBar: {
     flexDirection: 'row',
     paddingVertical: 10,
