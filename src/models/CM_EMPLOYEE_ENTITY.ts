@@ -23,6 +23,7 @@ export class CM_EMPLOYEE_ENTITY implements ICM_EMPLOYEE_ENTITY {
   chuyenkhoA_ID?: string | undefined;
   chuyenkhoA_TEN?: string | undefined;
   phongkhaM_TEN?: string | undefined;
+  phongkhaM_TENDAYDU?: string | undefined;
   recorD_STATUS?: string | undefined;
   hinhdaidien?: string | undefined;
   notes?: string | undefined;

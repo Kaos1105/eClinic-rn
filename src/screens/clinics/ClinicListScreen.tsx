@@ -47,11 +47,13 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   };
 
   const fetchWithFilter = async (input: CM_EMPLOYEE_ENTITY) => {
-    setFilterItem({ ...input });
+    reactotron.log(input);
+    setFilterItem({ ...input, phongkhaM_TENDAYDU: input.phongkhaM_TENDAYDU });
     setAppLoaded(false);
     const resultList = await loadListClinics({
       maxResultCount: 5,
       chuyenkhoA_ID: input.chuyenkhoA_ID,
+      phongkhaM_TENDAYDU: input.phongkhaM_TENDAYDU,
     });
     setListData(resultList);
     setAppLoaded(true);
@@ -66,7 +68,12 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
 
   return (
     <View style={styles.container}>
-      <FilterDoctorModal filterClinic filterSpecialty onSubmitFilter={fetchWithFilter} />
+      <FilterDoctorModal
+        filterClinic
+        filterSpecialty
+        onSubmitFilter={fetchWithFilter}
+        parentName={NavigationNames.ClinicListScreen}
+      />
       {!appLoaded ? (
         <Loading />
       ) : (

@@ -22,10 +22,12 @@ import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import reactotron from 'reactotron-react-native';
 import { color } from 'react-native-reanimated';
+import NavigationNames from 'navigations/NavigationNames';
 interface TProps {
   filterClinic?: boolean;
   filterSpecialty?: boolean;
   onSubmitFilter: (input: CM_EMPLOYEE_ENTITY) => void;
+  parentName: string;
 }
 
 const ICON_TOP = 8;
@@ -46,6 +48,48 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
 
   const { getString } = useLocalization();
+
+  const searchPlaceholder = () => {
+    switch (props.parentName) {
+      case NavigationNames.ClinicListScreen:
+        return 'Clinic name';
+      case NavigationNames.DepartmentListScreen:
+        return 'Specialty name';
+      case NavigationNames.DoctorListScreen:
+        return 'Doctor name';
+      default:
+        break;
+    }
+  };
+
+  const setFilterName = (searchText: string) => {
+    let tempFilterItem = new CM_EMPLOYEE_ENTITY();
+    switch (props.parentName) {
+      case NavigationNames.ClinicListScreen:
+        tempFilterItem = {
+          ...filterItem,
+          phongkhaM_TENDAYDU: searchText,
+        };
+        break;
+      case NavigationNames.DepartmentListScreen:
+        tempFilterItem = {
+          ...filterItem,
+          chuyenkhoA_TEN: searchText,
+        };
+        break;
+      case NavigationNames.DoctorListScreen:
+        tempFilterItem = {
+          ...filterItem,
+          emP_NAME: searchText,
+        };
+        break;
+      default:
+        break;
+    }
+    setFilterItem(tempFilterItem);
+    reactotron.log(tempFilterItem);
+    props.onSubmitFilter(tempFilterItem);
+  };
 
   const initialRun = async () => {
     //get list data for home screen
@@ -104,7 +148,13 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
       <View style={{ elevation: 10, backgroundColor: 'white', padding: 2 }}>
         <View style={styles.searchBar}>
           <View style={{ flex: 9, justifyContent: 'center' }}>
-            <TextInput style={styles.searchTextInput} />
+            <TextInput
+              placeholder={searchPlaceholder()}
+              style={styles.searchTextInput}
+              onSubmitEditing={(e) => {
+                setFilterName(e.nativeEvent.text);
+              }}
+            />
             <Ionicons name='search' size={18} color='black' style={styles.searchIcon} />
           </View>
           <TouchableOpacity style={styles.filterButton} onPress={() => setIsModalVisible(true)}>
