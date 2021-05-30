@@ -188,6 +188,7 @@ export const HomeScreen: React.FC<TProps> = (props) => {
               onPress={() =>
                 navigation.navigate(NavigationNames.DepartmentDetailScreen, {
                   model: JSON.stringify(row.item),
+                  title: row.item.chuyenkhoA_TEN,
                 })
               }
             >

@@ -25,7 +25,9 @@ import { color } from 'react-native-reanimated';
 import NavigationNames from 'navigations/NavigationNames';
 interface TProps {
   filterClinic?: boolean;
+  paramClinic?: string;
   filterSpecialty?: boolean;
+  paramSpecialty?: DM_CHUYENKHOA_ENTITY;
   onSubmitFilter: (input: CM_EMPLOYEE_ENTITY) => void;
   parentName: string;
 }
@@ -101,9 +103,17 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
         setListClinics(clinicsList);
       }
       if (props.filterSpecialty) {
-        const specialtiesList = await loadListSpecialties({
-          maxResultCount: 4,
-        });
+        let filterObject = { maxResultCount: 4, chuyenkhoA_ID: null };
+
+        if (props.paramSpecialty) {
+          filterObject.chuyenkhoA_ID = props.paramSpecialty.chuyenkhoA_ID;
+          setFilterItem({
+            chuyenkhoA_ID: filterObject.chuyenkhoA_ID,
+            chuyenkhoA_TEN: props.paramSpecialty.chuyenkhoA_TEN,
+          });
+        }
+
+        const specialtiesList = await loadListSpecialties({ ...filterObject });
         setListSpecialties(specialtiesList);
       }
       setAppLoaded(true);

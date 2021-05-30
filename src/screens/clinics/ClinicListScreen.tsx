@@ -2,23 +2,31 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { ClinicItemRow, Divider, Loading } from '../../components';
 import NavigationNames from '../../navigations/NavigationNames';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { RootStoreContext } from 'stores/rootStore';
 import { observer } from 'mobx-react-lite';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { FilterDoctorModal } from '../../modals';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
+import reactotron from 'reactotron-react-native';
+import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
 
 type TProps = {};
 
 export const ClinicListScreen: React.FC<TProps> = observer((props) => {
+  //Hook
   const rootStore = useContext(RootStoreContext);
+  const { loadList: loadListClinics, totalCount } = rootStore.eC_PHONGKHAM_Store;
+  const route = useRoute();
+
+  //State
   const [appLoaded, setAppLoaded] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const { loadList: loadListClinics, totalCount } = rootStore.eC_PHONGKHAM_Store;
   const [listData, setListData] = useState<EC_PHONGKHAM_ENTITY[]>([]);
-
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
+
+  //Params
+  const param = JSON.parse(route.params['param']) as DM_CHUYENKHOA_ENTITY;
 
   const fetchMore = async () => {
     if (isFetching || totalCount === listData.length) return;
@@ -38,7 +46,12 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   const initialRun = async () => {
     //get list data for home screen
     try {
-      const resultList = await loadListClinics({ maxResultCount: 5 });
+      setFilterItem({ chuyenkhoA_ID: param.chuyenkhoA_ID });
+
+      const resultList = await loadListClinics({
+        chuyenkhoA_ID: param.chuyenkhoA_ID,
+        maxResultCount: 5,
+      });
       setListData(resultList);
       setAppLoaded(true);
     } catch {
@@ -69,6 +82,7 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
     <View style={styles.container}>
       <FilterDoctorModal
         filterSpecialty
+        paramSpecialty={param}
         filterClinic={false}
         onSubmitFilter={fetchWithFilter}
         parentName={NavigationNames.ClinicListScreen}

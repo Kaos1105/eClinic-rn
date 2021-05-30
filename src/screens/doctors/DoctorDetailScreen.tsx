@@ -1,24 +1,17 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
-  FlatList,
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import numeral from 'numeral';
 import { Avatar, Divider } from '../../components';
 import { Theme } from '../../theme';
-import { AirbnbRating } from 'react-native-ratings';
-import { DoctorReviewItemRow } from '../../components/reviews';
-import { Ionicons } from '@expo/vector-icons';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import AppConsts from '../../lib/appconst';
-import { Rating } from 'react-native-ratings';
 
 type TProps = {};
 
@@ -76,7 +69,7 @@ export const DoctorDetailScreen: React.FC<TProps> = (props) => {
         <Text style={styles.aboutText}>{model.notes}</Text>
       </View>
 
-      <View style={styles.sectionContainer}>
+      {/* <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Rating</Text>
         <Divider />
         <View style={styles.ratingContainer}>
@@ -94,18 +87,18 @@ export const DoctorDetailScreen: React.FC<TProps> = (props) => {
           <Text style={styles.rateButtonTitle}>Rate & Write Message</Text>
           <Ionicons name='ios-arrow-forward' color={Theme.colors.black} size={26} />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
-      <View style={styles.sectionContainer}>
+      {/* <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Reviews</Text>
         <Divider />
-        {/* {model.reviews.map((item, index) => (
+        {model.reviews.map((item, index) => (
           <View style={{ paddingVertical: 16 }}>
             <DoctorReviewItemRow item={item} key={`key${index}ForReview`} />
             <Divider style={styles.divider} />
           </View>
-        ))} */}
-      </View>
+        ))}
+      </View> */}
     </ScrollView>
   );
 };
@@ -141,28 +134,28 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 15,
     paddingVertical: 8,
-    color: Theme.colors.black,
+    color: Theme.colors.primaryColorDark,
   },
   aboutText: {
     paddingVertical: 8,
     color: Theme.colors.black,
     fontSize: 15,
   },
-  ratingContainer: { flexDirection: 'row', paddingVertical: 16 },
-  ratingNumberText: {
-    alignSelf: 'center',
-    fontSize: 32,
-    fontWeight: '600',
-    marginEnd: 12,
-  },
-  rateButtonContainer: {
-    paddingVertical: 8,
-    flexDirection: 'row',
-  },
-  rateButtonTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    flex: 1,
-    color: Theme.colors.black,
-  },
+  // ratingContainer: { flexDirection: 'row', paddingVertical: 16 },
+  // ratingNumberText: {
+  //   alignSelf: 'center',
+  //   fontSize: 32,
+  //   fontWeight: '600',
+  //   marginEnd: 12,
+  // },
+  // rateButtonContainer: {
+  //   paddingVertical: 8,
+  //   flexDirection: 'row',
+  // },
+  // rateButtonTitle: {
+  //   fontSize: 18,
+  //   fontWeight: '600',
+  //   flex: 1,
+  //   color: Theme.colors.black,
+  // },
 });

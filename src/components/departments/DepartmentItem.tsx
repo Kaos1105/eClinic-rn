@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     },
   },
   image: {
-    tintColor: Theme.colors.tintColor,
+    tintColor: Theme.colors.primaryColorDark,
     height: 80,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,

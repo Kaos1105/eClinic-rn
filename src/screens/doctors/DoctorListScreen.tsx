@@ -11,10 +11,13 @@ import reactotron from 'reactotron-react-native';
 type TProps = {};
 
 export const DoctorListScreen: React.FC<TProps> = () => {
+  //Hook
   const rootStore = useContext(RootStoreContext);
+  const { loadList: loadListDoctors, totalCount } = rootStore.cM_EMPLOYEE_Store;
+
+  //State
   const [appLoaded, setAppLoaded] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const { loadList: loadListDoctors, totalCount } = rootStore.cM_EMPLOYEE_Store;
   const [listData, setListData] = useState<CM_EMPLOYEE_ENTITY[]>([]);
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
 

@@ -12,10 +12,13 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { DepartmentModel } from '../../models-demo';
 import { Theme } from '../../theme';
-import { HtmlView, Divider, NewsPostItemRow, TouchableHighlight } from '../../components';
+import { HtmlView, Divider, NewsPostItemRow, TouchableHighlight, Button } from '../../components';
 import { useLocalization } from '../../localization';
 import moment from 'moment';
 import { PhotoViewerModal } from '../../modals';
+import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
+import NavigationNames from 'navigations/NavigationNames';
+import reactotron from 'reactotron-react-native';
 
 type TProps = {};
 
@@ -32,99 +35,33 @@ export const DepartmentDetailScreen: React.FC<TProps> = (props) => {
   const route = useRoute();
 
   // Params
-  const model = JSON.parse(route.params['model']) as DepartmentModel;
-
-  navigation.setOptions({ title: model.title });
+  const model = JSON.parse(route.params['model']) as DM_CHUYENKHOA_ENTITY;
 
   return (
     <>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <Image source={{ uri: model.imageUrl }} style={styles.headerImage} />
+        <Image source={{ uri: `${model.logo}` }} style={styles.headerImage} />
         <View style={styles.content}>
-          <Text style={styles.titleText}>{model.title}</Text>
-          <Text style={styles.shortDescText}>{model.shortDescription}</Text>
-          <View style={styles.htmlContent}>
-            <HtmlView htmlContent={model.htmlContent} imagesMaxWidthOffset={32} />
-          </View>
+          <Text style={styles.titleText}>{model.chuyenkhoA_TEN}</Text>
         </View>
-        <Divider />
-        <View style={styles.content}>
-          <Text style={styles.sectionTitleText}>{getString('Department Services')}</Text>
-          <FlatList
-            data={model.departmentServices}
-            keyExtractor={(item, index) => `key${index}ForDepartmentService`}
-            renderItem={({ item }) => (
-              <View style={styles.servicesItemContainer}>
-                <View style={{ marginTop: 1 }}>
-                  <Ionicons
-                    name='ios-checkmark-circle'
-                    color={Theme.colors.primaryColor}
-                    size={18}
-                  />
-                </View>
-                <View style={styles.servicesItemTextContainer}>
-                  <Text style={styles.servicesItemTitle}>{item.title}</Text>
-                  <Text style={styles.servicesItemDesc}>{item.shortDescription}</Text>
-                </View>
-              </View>
-            )}
-            style={styles.departmentsFlatList}
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Details</Text>
+          <Divider />
+          <Text style={styles.aboutText}>{model.mota}</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Doctors</Text>
+          <Divider />
+          <Button
+            title='Clinic list screen'
+            onPress={() => {
+              navigation.navigate(NavigationNames.ClinicListScreen, {
+                param: JSON.stringify(model),
+              });
+            }}
           />
-        </View>
-        <Divider />
-        <View style={styles.content}>
-          <Text style={styles.sectionTitleText}>{getString('Recent Posts')}</Text>
-          <FlatList
-            data={model.newsPosts}
-            keyExtractor={(item, index) => `key${index}ForNewsPost`}
-            renderItem={({ item }) => <NewsPostItemRow item={item} />}
-            style={{ marginTop: 12 }}
-          />
-        </View>
-        <Divider />
-        <View style={[styles.content, { paddingHorizontal: 0 }]}>
-          <Text style={[styles.sectionTitleText, { marginStart: 16 }]}>{getString('Photos')}</Text>
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollImageList}
-          >
-            <View style={styles.viewContentImageList}>
-              {model.images.map((item, index) => {
-                return (
-                  <TouchableOpacity
-                    key={`imageListItemKey${index}`}
-                    onPress={() => {
-                      setPhotoViewerConfig({
-                        selectedPhotoIndex: index,
-                        isShowed: true,
-                      });
-                    }}
-                  >
-                    <Image
-                      style={styles.imagesItem}
-                      source={{
-                        uri: item.imageUrl,
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </ScrollView>
         </View>
       </ScrollView>
-      <PhotoViewerModal
-        items={model.images}
-        selectedImageIndex={photoViewerConfig.selectedPhotoIndex}
-        visible={photoViewerConfig.isShowed}
-        onSwipeDown={() => {
-          setPhotoViewerConfig({
-            ...photoViewerConfig,
-            isShowed: false,
-          });
-        }}
-      />
     </>
   );
 };
@@ -133,56 +70,28 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   headerImage: {
     height: 180,
+    resizeMode: 'contain',
+    tintColor: Theme.colors.primaryColorDark,
   },
   content: {
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
   titleText: {
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: '600',
     color: Theme.colors.black,
   },
-  shortDescText: {
-    fontWeight: '600',
-    color: Theme.colors.black,
-    marginTop: 12,
-  },
-  htmlContent: { marginTop: 8 },
-  departmentsFlatList: { marginTop: 12 },
-  sectionTitleText: {
+  sectionContainer: { paddingHorizontal: 16, marginTop: 12 },
+  sectionTitle: {
     fontWeight: '600',
     fontSize: 15,
-    color: Theme.colors.black,
+    paddingVertical: 8,
+    color: Theme.colors.primaryColorDark,
   },
-  servicesItemContainer: {
-    flexDirection: 'row',
-    paddingVertical: 6,
-  },
-  servicesItemTextContainer: {
-    flex: 1,
-    marginStart: 12,
-  },
-  servicesItemTitle: {
+  aboutText: {
+    paddingVertical: 8,
     color: Theme.colors.black,
     fontSize: 15,
-  },
-  servicesItemDesc: {
-    fontSize: 13,
-    color: Theme.colors.gray,
-    marginTop: 2,
-  },
-  scrollImageList: {
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-  },
-  viewContentImageList: {
-    flexDirection: 'row',
-  },
-  imagesItem: {
-    width: 100,
-    height: 100,
-    marginHorizontal: 4,
-    borderRadius: 12,
   },
 });

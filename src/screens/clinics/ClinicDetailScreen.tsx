@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Linking, Alert } from 'react-native';
 import { Theme } from '../../theme';
 import { Button, Divider, Loading, Map } from '../../components';
 import { useLocalization } from '../../localization';
@@ -15,12 +15,15 @@ import NavigationNames from 'navigations/NavigationNames';
 type TProps = {};
 
 export const ClinicDetailScreen: React.FC<TProps> = (props) => {
+  //Hook
   const rootStore = useContext(RootStoreContext);
   const { currentUserLocation, getUserLocation } = rootStore.usersStore;
   const { getString } = useLocalization();
   const [appLoaded, setAppLoaded] = useState(false);
   const route = useRoute();
   const navigation = useNavigation();
+
+  //State
   const [clinicLocation, setClinicLocation] = useState<ICoordinateModel>(undefined);
   const [clinicAddress, setClinicAddress] = useState('');
   const [distanceToClinic, setDistanceToClinic] = useState('');
@@ -40,8 +43,12 @@ export const ClinicDetailScreen: React.FC<TProps> = (props) => {
         setDistanceToClinic(clinicById.maP_INFO.distance.text);
       }
       let result = await agent.MapGeocoding.getCoordinate(model.diachI_1);
-      setClinicLocation(result.geometry.location);
-      setClinicAddress(result.formatted_address);
+      if (result) {
+        setClinicLocation(result.geometry.location);
+        setClinicAddress(result.formatted_address);
+      } else {
+        Alert.alert('Location can not be found');
+      }
       setAppLoaded(true);
     } catch {}
   };

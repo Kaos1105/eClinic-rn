@@ -57,6 +57,7 @@ const HomeTabStack = () => {
       <Stack.Screen
         name={NavigationNames.DepartmentDetailScreen}
         component={DepartmentDetailScreen}
+        options={({ route }) => ({ title: route.params['title'] })}
       />
       <Stack.Screen
         name={NavigationNames.NewAppointmentScreen}

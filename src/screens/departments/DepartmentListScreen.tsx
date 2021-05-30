@@ -14,10 +14,13 @@ const SCREEN_WIDTH = Dimensions.get('screen').width;
 type TProps = {};
 
 export const DepartmentListScreen: React.FC<TProps> = (props) => {
+  //Hook
   const rootStore = useContext(RootStoreContext);
+  const { loadList: loadListSpecialties, totalCount } = rootStore.dM_CHUYENKHOA_Store;
+
+  //State
   const [appLoaded, setAppLoaded] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const { loadList: loadListSpecialties, totalCount } = rootStore.dM_CHUYENKHOA_Store;
   const [listData, setListData] = useState<DM_CHUYENKHOA_ENTITY[]>([]);
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
 
@@ -86,6 +89,7 @@ export const DepartmentListScreen: React.FC<TProps> = (props) => {
               onPress={() =>
                 navigation.navigate(NavigationNames.DepartmentDetailScreen, {
                   model: JSON.stringify(row.item),
+                  title: row.item.chuyenkhoA_TEN,
                 })
               }
             >
