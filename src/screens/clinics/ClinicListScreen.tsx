@@ -24,9 +24,28 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   const [isFetching, setIsFetching] = useState(false);
   const [listData, setListData] = useState<EC_PHONGKHAM_ENTITY[]>([]);
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
-
+  const [param, setParam] = useState<DM_CHUYENKHOA_ENTITY>(null);
   //Params
-  const param = JSON.parse(route.params['param']) as DM_CHUYENKHOA_ENTITY;
+  const initialRun = async () => {
+    //get Param
+    let parseParam = new DM_CHUYENKHOA_ENTITY();
+    if (route.params && route.params['param']) {
+      parseParam = { ...(JSON.parse(route.params['param']) as DM_CHUYENKHOA_ENTITY) };
+    }
+    setParam(parseParam);
+    try {
+      setFilterItem({ chuyenkhoA_ID: parseParam.chuyenkhoA_ID });
+
+      const resultList = await loadListClinics({
+        chuyenkhoA_ID: parseParam.chuyenkhoA_ID,
+        maxResultCount: 5,
+      });
+      setListData(resultList);
+      setAppLoaded(true);
+    } catch {
+      Alert.alert('Error', 'Can not connect to server');
+    }
+  };
 
   const fetchMore = async () => {
     if (isFetching || totalCount === listData.length) return;
@@ -41,22 +60,6 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
     tempArr = tempArr.concat(resultList);
     setListData(tempArr);
     setIsFetching(false);
-  };
-
-  const initialRun = async () => {
-    //get list data for home screen
-    try {
-      setFilterItem({ chuyenkhoA_ID: param.chuyenkhoA_ID });
-
-      const resultList = await loadListClinics({
-        chuyenkhoA_ID: param.chuyenkhoA_ID,
-        maxResultCount: 5,
-      });
-      setListData(resultList);
-      setAppLoaded(true);
-    } catch {
-      Alert.alert('Error', 'Can not connect to server');
-    }
   };
 
   const fetchWithFilter = async (input: CM_EMPLOYEE_ENTITY) => {

@@ -22,6 +22,7 @@ import Reactotron from 'reactotron-react-native';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
+import { observer } from 'mobx-react-lite';
 
 const generateMenuItems = (getString: (key: string) => string): HomeMenuItemType[] => [
   {
@@ -49,7 +50,7 @@ const generateMenuItems = (getString: (key: string) => string): HomeMenuItemType
 
 type TProps = {};
 
-export const HomeScreen: React.FC<TProps> = (props) => {
+export const HomeScreen: React.FC<TProps> = observer((props) => {
   const rootStore = useContext(RootStoreContext);
   const [appLoaded, setAppLoaded] = useState(false);
   const { loadList: loadListClinics } = rootStore.eC_PHONGKHAM_Store;
@@ -204,7 +205,7 @@ export const HomeScreen: React.FC<TProps> = (props) => {
       </ScrollView>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

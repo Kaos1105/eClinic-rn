@@ -12,10 +12,11 @@ import { Avatar, Divider } from '../../components';
 import { Theme } from '../../theme';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import AppConsts from '../../lib/appconst';
+import { observer } from 'mobx-react-lite';
 
 type TProps = {};
 
-export const DoctorDetailScreen: React.FC<TProps> = (props) => {
+export const DoctorDetailScreen: React.FC<TProps> = observer((props) => {
   const route = useRoute();
   const navigation = useNavigation();
 
@@ -101,7 +102,7 @@ export const DoctorDetailScreen: React.FC<TProps> = (props) => {
       </View> */}
     </ScrollView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: { flex: 1 },

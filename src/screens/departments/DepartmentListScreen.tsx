@@ -8,12 +8,13 @@ import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { FilterDoctorModal } from '../../modals';
 import reactotron from 'reactotron-react-native';
+import { observer } from 'mobx-react-lite';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
 type TProps = {};
 
-export const DepartmentListScreen: React.FC<TProps> = (props) => {
+export const DepartmentListScreen: React.FC<TProps> = observer((props) => {
   //Hook
   const rootStore = useContext(RootStoreContext);
   const { loadList: loadListSpecialties, totalCount } = rootStore.dM_CHUYENKHOA_Store;
@@ -104,7 +105,7 @@ export const DepartmentListScreen: React.FC<TProps> = (props) => {
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: { flex: 1 },

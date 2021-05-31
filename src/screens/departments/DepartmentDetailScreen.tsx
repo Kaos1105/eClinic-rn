@@ -19,10 +19,11 @@ import { PhotoViewerModal } from '../../modals';
 import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
 import NavigationNames from 'navigations/NavigationNames';
 import reactotron from 'reactotron-react-native';
+import { observer } from 'mobx-react-lite';
 
 type TProps = {};
 
-export const DepartmentDetailScreen: React.FC<TProps> = (props) => {
+export const DepartmentDetailScreen: React.FC<TProps> = observer((props) => {
   // States
   const [photoViewerConfig, setPhotoViewerConfig] = useState({
     selectedPhotoIndex: 0,
@@ -64,7 +65,7 @@ export const DepartmentDetailScreen: React.FC<TProps> = (props) => {
       </ScrollView>
     </>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: { flex: 1 },

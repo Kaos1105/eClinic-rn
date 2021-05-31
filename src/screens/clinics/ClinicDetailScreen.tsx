@@ -11,10 +11,11 @@ import { RootStoreContext } from 'stores/rootStore';
 import { ICoordinateModel } from 'models/MapGeocoding';
 import agent from 'service/api/agent';
 import NavigationNames from 'navigations/NavigationNames';
+import { observer } from 'mobx-react-lite';
 
 type TProps = {};
 
-export const ClinicDetailScreen: React.FC<TProps> = (props) => {
+export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
   //Hook
   const rootStore = useContext(RootStoreContext);
   const { currentUserLocation, getUserLocation } = rootStore.usersStore;
@@ -139,13 +140,15 @@ export const ClinicDetailScreen: React.FC<TProps> = (props) => {
         <Button
           title='Doctor list screen'
           onPress={() => {
-            navigation.navigate(NavigationNames.DoctorListScreen);
+            navigation.navigate(NavigationNames.DoctorListScreen, {
+              param: JSON.stringify(model),
+            });
           }}
         />
       </View>
     </ScrollView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: { flex: 1 },

@@ -25,7 +25,7 @@ import { color } from 'react-native-reanimated';
 import NavigationNames from 'navigations/NavigationNames';
 interface TProps {
   filterClinic?: boolean;
-  paramClinic?: string;
+  paramClinic?: EC_PHONGKHAM_ENTITY;
   filterSpecialty?: boolean;
   paramSpecialty?: DM_CHUYENKHOA_ENTITY;
   onSubmitFilter: (input: CM_EMPLOYEE_ENTITY) => void;
@@ -89,8 +89,25 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
         break;
     }
     setFilterItem(tempFilterItem);
-    reactotron.log(tempFilterItem);
     props.onSubmitFilter(tempFilterItem);
+  };
+
+  const setParamClinic = () => {
+    if (props.paramClinic) {
+      setFilterItem({
+        tenanT_ID: props.paramClinic.phongkhaM_ID,
+        phongkhaM_TEN: props.paramClinic.phongkhaM_TENDAYDU,
+      });
+    }
+  };
+
+  const setParamSpecialty = () => {
+    if (props.paramSpecialty) {
+      setFilterItem({
+        chuyenkhoA_ID: props.paramSpecialty.chuyenkhoA_ID,
+        chuyenkhoA_TEN: props.paramSpecialty.chuyenkhoA_TEN,
+      });
+    }
   };
 
   const initialRun = async () => {
@@ -103,17 +120,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
         setListClinics(clinicsList);
       }
       if (props.filterSpecialty) {
-        let filterObject = { maxResultCount: 4, chuyenkhoA_ID: null };
-
-        if (props.paramSpecialty) {
-          filterObject.chuyenkhoA_ID = props.paramSpecialty.chuyenkhoA_ID;
-          setFilterItem({
-            chuyenkhoA_ID: filterObject.chuyenkhoA_ID,
-            chuyenkhoA_TEN: props.paramSpecialty.chuyenkhoA_TEN,
-          });
-        }
-
-        const specialtiesList = await loadListSpecialties({ ...filterObject });
+        const specialtiesList = await loadListSpecialties({ maxResultCount: 4 });
         setListSpecialties(specialtiesList);
       }
       setAppLoaded(true);
@@ -145,10 +152,20 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
     setIsFetchingSpecialty(false);
   };
 
+  //UseEffect
+
   useEffect(() => {
     //Load data from backend
     initialRun();
   }, []);
+
+  useEffect(() => {
+    setParamClinic();
+  }, [props.paramClinic]);
+
+  useEffect(() => {
+    setParamSpecialty();
+  }, [props.paramSpecialty]);
 
   if (!appLoaded) {
     return (
