@@ -1,7 +1,8 @@
-import { DoctorModel } from "./DoctorModel";
+import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
+import { DoctorModel } from './DoctorModel';
 
 export type AppointmentTimeModal = {
-  doctor?: DoctorModel;
+  doctor?: CM_EMPLOYEE_ENTITY;
   time: string;
   available: boolean;
 };

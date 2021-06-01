@@ -15,11 +15,6 @@ const getMenuItems = (getString: (key: string) => string) => [
     navigateToScreen: NavigationNames.EventListScreen,
   },
   {
-    title: getString('Appointment'),
-    iconName: 'ios-calendar',
-    navigateToScreen: NavigationNames.AppointmentScreen,
-  },
-  {
     title: getString('Blog'),
     iconName: 'ios-book',
   },

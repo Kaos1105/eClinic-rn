@@ -98,11 +98,7 @@ export const CalendarScreen: React.FC<{}> = (props) => {
               <Ionicons name='ios-cafe' size={32} color={Theme.colors.black} />
               <Text style={styles.emptyDataTitle}>{getString('No Appointment')}</Text>
               <View style={styles.emptyDataButtonContainer}>
-                <Button
-                  title={getString('New Appointment')}
-                  type='outline'
-                  onPress={onPressNewAppointment}
-                />
+                <Button title={getString('New Appointment')} onPress={onPressNewAppointment} />
               </View>
             </View>
           );

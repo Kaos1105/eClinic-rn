@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 import { Theme } from '../../theme';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Divider, DoctorItemRow, Button } from '../../components';
 import { ConfirmAppointmentModal } from '../../modals';
 import moment from 'moment';
@@ -10,6 +10,7 @@ import { doctorsList } from '../../datas';
 import ReactNativeModal from 'react-native-modal';
 import { DoctorModel, AppointmentTimeModal } from '../../models-demo';
 import { useLocalization } from '../../localization';
+import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 
 type TProps = {};
 
@@ -35,7 +36,7 @@ const TIMES: AppointmentTimeModal[] = [
 ];
 
 const AppoinmentTime: React.FC<{
-  doctor: DoctorModel;
+  doctor: CM_EMPLOYEE_ENTITY;
   times: AppointmentTimeModal[];
   onTimeSelected: (model: AppointmentTimeModal) => void;
 }> = (props) => {
@@ -70,6 +71,9 @@ const AppoinmentTime: React.FC<{
 export const NewAppointmentScreen: React.FC<TProps> = (props) => {
   const navigation = useNavigation();
   const { getString } = useLocalization();
+  const route = useRoute();
+
+  const model = JSON.parse(route.params['param']) as CM_EMPLOYEE_ENTITY;
 
   const [appointmentModal, setAppointmentModal] = useState({
     isVisible: false,
@@ -114,7 +118,7 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
         disabledDateNumberStyle={{ color: 'grey' }}
       />
       <Divider style={{ marginTop: 12 }} />
-      <Text style={styles.sectionTitle}>{getString('Available Doctors')}</Text>
+      {/* <Text style={styles.sectionTitle}>{getString('Available Doctors')}</Text>
       <FlatList
         data={doctorsList}
         style={{ marginTop: 8 }}
@@ -132,6 +136,16 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
           />
         )}
         ItemSeparatorComponent={() => <Divider />}
+      /> */}
+      <AppoinmentTime
+        doctor={model}
+        times={TIMES}
+        onTimeSelected={(model: AppointmentTimeModal) => {
+          setAppointmentModal({
+            isVisible: true,
+            item: model,
+          });
+        }}
       />
       <ConfirmAppointmentModal
         isVisible={appointmentModal.isVisible}

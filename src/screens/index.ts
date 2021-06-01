@@ -9,4 +9,3 @@ export * from './departments';
 export * from './doctors';
 export * from './events';
 export * from './auth';
-export * from './eClinic_appointment';

@@ -21,8 +21,6 @@ export default {
   NewAppointmentScreen: 'NewAppointmentScreen',
   DoctorListScreen: 'DoctorListScreen',
   DoctorDetailScreen: 'DoctorDetailScreen',
-  AppointmentScreen: 'AppointmentScreen',
-  AppointmentItemEdit: 'AppointmentItemEdit',
 
   //Auth Screen
   SignInScreen: 'SignInScreen',

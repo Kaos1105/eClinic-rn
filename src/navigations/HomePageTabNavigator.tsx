@@ -21,8 +21,6 @@ import {
   DoctorDetailScreen,
   EventListScreen,
   SignInScreen,
-  AppointmentScreen,
-  AppointmentItemEdit,
   UserProfile,
 } from '../screens';
 import { ToolbarBrandLogo } from '../components';
@@ -146,16 +144,6 @@ const MenuTabStack = () => {
         name={NavigationNames.SignInScreen}
         component={SignInScreen}
         options={{ title: getString('Sign In') }}
-      />
-      <Stack.Screen
-        name={NavigationNames.AppointmentScreen}
-        component={AppointmentScreen}
-        options={{ title: getString('Appointment Screen') }}
-      />
-      <Stack.Screen
-        name={NavigationNames.AppointmentItemEdit}
-        component={AppointmentItemEdit}
-        options={{ title: getString('Appointment Edit') }}
       />
     </Stack.Navigator>
   );

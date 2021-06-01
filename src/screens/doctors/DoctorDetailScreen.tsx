@@ -8,11 +8,12 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Avatar, Divider } from '../../components';
+import { Avatar, Button, Divider } from '../../components';
 import { Theme } from '../../theme';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import AppConsts from '../../lib/appconst';
 import { observer } from 'mobx-react-lite';
+import NavigationNames from 'navigations/NavigationNames';
 
 type TProps = {};
 
@@ -69,7 +70,18 @@ export const DoctorDetailScreen: React.FC<TProps> = observer((props) => {
         <Divider />
         <Text style={styles.aboutText}>{model.notes}</Text>
       </View>
-
+      <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Appointment</Text>
+        <Divider />
+        <Button
+          title='New Appointment'
+          onPress={() => {
+            navigation.navigate(NavigationNames.NewAppointmentScreen, {
+              param: JSON.stringify(model),
+            });
+          }}
+        />
+      </View>
       {/* <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Rating</Text>
         <Divider />
