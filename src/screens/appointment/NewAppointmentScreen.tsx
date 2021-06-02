@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Theme } from '../../theme';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Divider, DoctorItemRow, Button } from '../../components';
+import { Divider, DoctorItemRow, Button, Loading } from '../../components';
 import { ConfirmAppointmentModal } from '../../modals';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
@@ -11,34 +11,17 @@ import { AppointmentTimeModal } from '../../models-demo';
 import { useLocalization } from '../../localization';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { ScrollView } from 'react-native-gesture-handler';
-import { da } from 'date-fns/locale';
+import { da, is } from 'date-fns/locale';
 import { splitTimeByInterval } from '../../utils/common';
 import reactotron from 'reactotron-react-native';
+import agent from 'service/api/agent';
 
 type TProps = {};
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
-const TIMES: AppointmentTimeModal[] = [
-  { time: '09:00', available: false },
-  { time: '09:30', available: false },
-  { time: '10:00', available: true },
-  { time: '10:30', available: true },
-  { time: '11:00', available: true },
-  { time: '11:30', available: true },
-  { time: '12:00', available: false },
-  { time: '13:00', available: true },
-  { time: '13:30', available: true },
-  { time: '14:00', available: true },
-  { time: '14:30', available: false },
-  { time: '15:00', available: false },
-  { time: '15:30', available: false },
-  { time: '16:00', available: true },
-  { time: '16:30', available: true },
-  { time: '17:00', available: false },
-];
-
 const AppoinmentTime: React.FC<{
+  isFetching: boolean;
   doctor: CM_EMPLOYEE_ENTITY;
   times: AppointmentTimeModal[];
   onTimeSelected: (model: AppointmentTimeModal) => void;
@@ -47,21 +30,25 @@ const AppoinmentTime: React.FC<{
     <View style={styles.itemContainer}>
       <DoctorItemRow item={props.doctor} style={styles.doctorItemRow} hideButton />
       <View style={styles.timeListWrapper}>
-        {TIMES.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.timeContainer,
-              {
-                opacity: item.available ? 1 : 0.4,
-              },
-            ]}
-            disabled={!item.available}
-            onPress={() => props.onTimeSelected({ ...item, doctor: props.doctor })}
-          >
-            <Text style={styles.timeText}>{item.time}</Text>
-          </TouchableOpacity>
-        ))}
+        {props.isFetching ? (
+          <Loading />
+        ) : (
+          props.times.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.timeContainer,
+                {
+                  opacity: item.available ? 1 : 0.4,
+                },
+              ]}
+              disabled={!item.available}
+              onPress={() => props.onTimeSelected({ ...item, doctor: props.doctor })}
+            >
+              <Text style={styles.timeText}>{item.time}</Text>
+            </TouchableOpacity>
+          ))
+        )}
       </View>
     </View>
   );
@@ -78,33 +65,63 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
     isVisible: false,
     item: null,
   });
+  const [originalAvailableTime, setOriginalAvailableTime] = useState<AppointmentTimeModal[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [markedDate, setMarkedDate] = useState({});
+  const [availableTime, setAvailableTime] = useState<AppointmentTimeModal[]>([]);
+  const [isFetchingAvailability, setIsFetchingAvailability] = useState(false);
 
   const currenDate = new Date();
 
   const maxDay = new Date(currenDate);
   maxDay.setDate(currenDate.getDate() + 15);
 
-  const onDayPress = (day: any) => {
-    setSelectedDate(new Date(day.dateString));
+  const onDayPress = async (day: any) => {
+    const selectedDate = new Date(day.dateString);
+    setSelectedDate(selectedDate);
     let markedDate = {};
     markedDate[`${day.dateString}`] = { selected: true, selectedColor: Theme.colors.tintColor };
     setMarkedDate(markedDate);
+    await checkAvailability(selectedDate);
+  };
+
+  const setUpAppointmentModal = () => {
+    const tempArr: AppointmentTimeModal[] = [];
+    const result = splitTimeByInterval(moment(model.starT_TIME), moment(model.enD_TIME), 0.5);
+    result.map((item) => {
+      tempArr.push({ time: item, available: true });
+    });
+    setAvailableTime(tempArr.reverse());
+    setOriginalAvailableTime(tempArr);
+  };
+
+  const checkAvailability = async (dateCheck: Date) => {
+    setIsFetchingAvailability(true);
+    const resp = await agent.EC_BOOKING_API.checkAvailable(model.emP_ID, dateCheck.toISOString());
+    let tempArrTime = [...originalAvailableTime];
+    resp.forEach((booked) => {
+      const beginTime = moment(booked.ngaybookfrom);
+      const endTime = moment(booked.ngaybookto);
+      tempArrTime.forEach((available, index) => {
+        const availableTime = moment(beginTime.format('MM/DD/yyyy') + ' ' + available.time);
+        if (availableTime.isBetween(beginTime, endTime, 'minutes', '[)')) {
+          tempArrTime[index] = { ...available, available: false };
+          //do not fucking do this
+          //available = false;
+          //or this
+          //tempArrTime[index].available = false;
+        }
+      });
+    });
+    setAvailableTime(tempArrTime);
+    setIsFetchingAvailability(false);
   };
 
   useEffect(() => {
     navigation.setOptions({
       title: 'New appointment',
     });
-    reactotron.log(model);
-    const result = splitTimeByInterval(
-      moment(model.starT_TIME),
-      moment(model.enD_TIME),
-      0.5,
-      new Date()
-    );
-    reactotron.log(result);
+    setUpAppointmentModal();
   }, []);
 
   return (
@@ -124,8 +141,9 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
       />
       <Divider style={{ marginTop: 12 }} />
       <AppoinmentTime
+        isFetching={isFetchingAvailability}
         doctor={model}
-        times={TIMES}
+        times={availableTime}
         onTimeSelected={(model: AppointmentTimeModal) => {
           setAppointmentModal({
             isVisible: true,
@@ -161,13 +179,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Theme.colors.black,
   },
-  doctorItemRow: { marginStart: 16, marginEnd: 8, paddingVertical: 0 },
+  doctorItemRow: { margin: 10, paddingVertical: 0 },
   itemContainer: { paddingVertical: 12 },
   flatListStyle: { marginTop: 16, marginBottom: 4 },
   timeListWrapper: {
+    paddingHorizontal: 12,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   columnWrapperStyle: { marginHorizontal: 12 },
   timeContainer: {
@@ -178,7 +197,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
-
     borderWidth: 0.3,
     borderColor: '#c2c2c2',
   },

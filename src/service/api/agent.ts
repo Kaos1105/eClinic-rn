@@ -20,6 +20,8 @@ import {
   DM_CHUYENKHOA_ENTITY,
   IPagedResultDtoOfDM_CHUYENKHOA_ENTITY,
 } from 'models/DM_CHUYENKHOA_ENTITY';
+import moment from 'moment';
+import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
 
 var qs = require('qs');
 //axios response error handler
@@ -211,6 +213,15 @@ const EC_PHONGKHAM_API = {
       .then(responseBodyResult),
 };
 
+const EC_BOOKING_API = {
+  checkAvailable: (doctorId: string, dateCheck: string): Promise<Array<EC_BOOKING_ENTITY>> =>
+    httpNetCore
+      .get('/api/LichHen/EC_LICHHEN_CheckAvailable', {
+        params: { bacSyId: doctorId, checkDate: dateCheck },
+      })
+      .then(responseBodyResult),
+};
+
 const CM_EMPLOYEE_API = {
   list: (input: CM_EMPLOYEE_ENTITY): Promise<IPagedResultDtoOfCM_EMPLOYEE_ENTITY> =>
     httpNetCore.post('/api/Employee/CM_EMPLOYEE_Search_Admin', input).then(responseBodyResult),
@@ -229,4 +240,5 @@ export default {
   CM_EMPLOYEE_API,
   DM_CHUYENKHOA_API,
   MapGeocoding,
+  EC_BOOKING_API,
 };

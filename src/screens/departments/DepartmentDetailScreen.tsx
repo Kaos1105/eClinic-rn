@@ -1,24 +1,11 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import { DepartmentModel } from '../../models-demo';
 import { Theme } from '../../theme';
-import { HtmlView, Divider, NewsPostItemRow, TouchableHighlight, Button } from '../../components';
+import { Divider, Button } from '../../components';
 import { useLocalization } from '../../localization';
-import moment from 'moment';
-import { PhotoViewerModal } from '../../modals';
 import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
 import NavigationNames from 'navigations/NavigationNames';
-import reactotron from 'reactotron-react-native';
 import { observer } from 'mobx-react-lite';
 
 type TProps = {};
