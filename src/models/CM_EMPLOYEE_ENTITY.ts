@@ -8,6 +8,8 @@ export interface ICM_EMPLOYEE_ENTITY {
   recorD_STATUS?: string | undefined;
   hinhdaidien?: string | undefined;
   notes?: string | undefined;
+  starT_TIME?: moment.Moment | undefined;
+  enD_TIME?: moment.Moment | undefined;
   totalCount?: number | undefined;
   tenanT_ID?: string | undefined;
   top?: number | undefined;
@@ -27,6 +29,8 @@ export class CM_EMPLOYEE_ENTITY implements ICM_EMPLOYEE_ENTITY {
   recorD_STATUS?: string | undefined;
   hinhdaidien?: string | undefined;
   notes?: string | undefined;
+  starT_TIME?: moment.Moment | undefined;
+  enD_TIME?: moment.Moment | undefined;
   totalCount?: number | undefined;
   tenanT_ID?: string | undefined;
   top?: number | undefined;

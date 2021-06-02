@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 type TProps = {
   item: CM_EMPLOYEE_ENTITY;
   style?: ViewStyle;
+  hideButton?: boolean;
 };
 
 export const DoctorItemRow: React.FC<TProps> = (props) => {
@@ -39,8 +40,9 @@ export const DoctorItemRow: React.FC<TProps> = (props) => {
           <Text style={styles.specialtyText}>{props.item.chuyenkhoA_TEN}</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.iconContainer}>
-        {/* <AirbnbRating
+      {!props.hideButton && (
+        <TouchableOpacity style={styles.iconContainer}>
+          {/* <AirbnbRating
               showRating={false}
               count={5}
               size={17}
@@ -48,10 +50,11 @@ export const DoctorItemRow: React.FC<TProps> = (props) => {
               selectedColor={'orange'}
               defaultRating={props.item.rating}
             /> */}
-        {/* <TouchableOpacity onPress={() => setVisibleModal(true)}> */}
-        <Text style={{ fontSize: 12, position: 'relative' }}>Đặt lịch</Text>
-        <Ionicons size={24} name='md-add' color={Theme.colors.primaryColorDark} />
-      </TouchableOpacity>
+          {/* <TouchableOpacity onPress={() => setVisibleModal(true)}> */}
+          <Text style={{ fontSize: 12, position: 'relative' }}>Đặt lịch</Text>
+          <Ionicons size={24} name='md-add' color={Theme.colors.primaryColorDark} />
+        </TouchableOpacity>
+      )}
       {/* <DoctorDetailsBottomSheet
         doctor={props.item}
         isVisible={visibleModal}

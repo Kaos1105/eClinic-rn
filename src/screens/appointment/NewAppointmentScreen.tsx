@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import CalendarStrip from 'react-native-calendar-strip';
 import { Theme } from '../../theme';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Divider, DoctorItemRow, Button } from '../../components';
 import { ConfirmAppointmentModal } from '../../modals';
+import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
-import { doctorsList } from '../../datas';
 import ReactNativeModal from 'react-native-modal';
-import { DoctorModel, AppointmentTimeModal } from '../../models-demo';
+import { AppointmentTimeModal } from '../../models-demo';
 import { useLocalization } from '../../localization';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
+import { ScrollView } from 'react-native-gesture-handler';
+import { da } from 'date-fns/locale';
 
 type TProps = {};
 
@@ -42,15 +43,11 @@ const AppoinmentTime: React.FC<{
 }> = (props) => {
   return (
     <View style={styles.itemContainer}>
-      <DoctorItemRow item={props.doctor} style={styles.doctorItemRow} />
-      <FlatList
-        data={TIMES}
-        numColumns={4}
-        style={styles.flatListStyle}
-        columnWrapperStyle={styles.columnWrapperStyle}
-        keyExtractor={(item, index) => `key${index}ForTime`}
-        renderItem={({ item }) => (
+      <DoctorItemRow item={props.doctor} style={styles.doctorItemRow} hideButton />
+      <View style={styles.timeListWrapper}>
+        {TIMES.map((item, index) => (
           <TouchableOpacity
+            key={index}
             style={[
               styles.timeContainer,
               {
@@ -62,8 +59,8 @@ const AppoinmentTime: React.FC<{
           >
             <Text style={styles.timeText}>{item.time}</Text>
           </TouchableOpacity>
-        )}
-      />
+        ))}
+      </View>
     </View>
   );
 };
@@ -80,63 +77,42 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
     item: null,
   });
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [markedDate, setMarkedDate] = useState({});
+
+  const currenDate = new Date();
+
+  const maxDay = new Date(currenDate);
+  maxDay.setDate(currenDate.getDate() + 15);
+
+  const onDayPress = (day: any) => {
+    setSelectedDate(new Date(day.dateString));
+    let markedDate = {};
+    markedDate[`${day.dateString}`] = { selected: true, selectedColor: Theme.colors.tintColor };
+    setMarkedDate(markedDate);
+  };
 
   useEffect(() => {
     navigation.setOptions({
-      title: moment().format('MMMM YYYY'),
-      headerStyle: {
-        elevation: 0,
-        shadowOpacity: 0,
-        borderBottomWidth: 0,
-      },
+      title: 'New appointment',
     });
   }, []);
 
   return (
-    <View style={styles.container}>
-      <CalendarStrip
-        calendarAnimation={{ type: 'sequence', duration: 30 }}
-        style={styles.calendar}
-        calendarHeaderStyle={{
-          display: 'none',
+    <ScrollView style={styles.container}>
+      <Calendar
+        theme={{
+          arrowColor: Theme.colors.tintColor,
+          todayTextColor: Theme.colors.primaryColorDark,
         }}
-        onWeekChanged={(date: Date) => {
-          navigation.setOptions({
-            title: moment(date).format('MMMM YYYY'),
-          });
-        }}
-        onDateSelected={(date: Date) => setSelectedDate(date)}
-        dateNumberStyle={{ color: Theme.colors.gray }}
-        dateNameStyle={{ color: Theme.colors.gray }}
-        highlightDateNumberStyle={{
-          color: Theme.colors.primaryColor,
-        }}
-        highlightDateNameStyle={{
-          color: Theme.colors.primaryColor,
-        }}
-        disabledDateNameStyle={{ color: 'grey' }}
-        disabledDateNumberStyle={{ color: 'grey' }}
+        minDate={currenDate}
+        maxDate={maxDay}
+        onDayPress={onDayPress}
+        markedDates={markedDate}
+        monthFormat={'MM yyyy'}
+        disableAllTouchEventsForDisabledDays={true}
+        enableSwipeMonths={true}
       />
       <Divider style={{ marginTop: 12 }} />
-      {/* <Text style={styles.sectionTitle}>{getString('Available Doctors')}</Text>
-      <FlatList
-        data={doctorsList}
-        style={{ marginTop: 8 }}
-        keyExtractor={(item, index) => `key${index}ForDoctors`}
-        renderItem={({ item }) => (
-          <AppoinmentTime
-            doctor={item}
-            times={TIMES}
-            onTimeSelected={(model: AppointmentTimeModal) => {
-              setAppointmentModal({
-                isVisible: true,
-                item: model,
-              });
-            }}
-          />
-        )}
-        ItemSeparatorComponent={() => <Divider />}
-      /> */}
       <AppoinmentTime
         doctor={model}
         times={TIMES}
@@ -158,7 +134,7 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
           })
         }
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -178,6 +154,11 @@ const styles = StyleSheet.create({
   doctorItemRow: { marginStart: 16, marginEnd: 8, paddingVertical: 0 },
   itemContainer: { paddingVertical: 12 },
   flatListStyle: { marginTop: 16, marginBottom: 4 },
+  timeListWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
   columnWrapperStyle: { marginHorizontal: 12 },
   timeContainer: {
     backgroundColor: Theme.colors.grayForBoxBackground,
