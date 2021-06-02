@@ -1,7 +1,8 @@
 import * as abpTypings from '../lib/abp';
 
 import { L } from '../lib/abpUtility';
-import abp from '../lib/abp'
+import abp from '../lib/abp';
+import moment from 'moment';
 //import { routers } from '../components/Router/router.config';
 
 //declare var abp: any;
@@ -82,7 +83,12 @@ class Utils {
   setLocalization() {
     if (!abp.utils.getCookieValue('Abp.Localization.CultureName')) {
       let language = navigator.language;
-      abp.utils.setCookieValue('Abp.Localization.CultureName', language, new Date(new Date().getTime() + 5 * 365 * 86400000), abp.appPath);
+      abp.utils.setCookieValue(
+        'Abp.Localization.CultureName',
+        language,
+        new Date(new Date().getTime() + 5 * 365 * 86400000),
+        abp.appPath
+      );
     }
   }
 

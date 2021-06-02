@@ -12,6 +12,8 @@ import { useLocalization } from '../../localization';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { ScrollView } from 'react-native-gesture-handler';
 import { da } from 'date-fns/locale';
+import { splitTimeByInterval } from '../../utils/common';
+import reactotron from 'reactotron-react-native';
 
 type TProps = {};
 
@@ -95,6 +97,14 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
     navigation.setOptions({
       title: 'New appointment',
     });
+    reactotron.log(model);
+    const result = splitTimeByInterval(
+      moment(model.starT_TIME),
+      moment(model.enD_TIME),
+      0.5,
+      new Date()
+    );
+    reactotron.log(result);
   }, []);
 
   return (
