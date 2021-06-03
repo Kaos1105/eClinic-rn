@@ -16,14 +16,8 @@ const Stack = createStackNavigator();
 const App: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const [appLoaded, setAppLoaded] = useState(false);
-  const {
-    fireBaseToken,
-    loadAsyncStorage,
-    toastToggle,
-    getToast,
-    fireBaseRefreshToken,
-    setToastData,
-  } = rootStore.commonStore;
+  const { fireBaseToken, loadAsyncStorage, toastToggle, getToast, fireBaseRefreshToken } =
+    rootStore.commonStore;
   const { getUser, checkExpireTime, isLoggedIn, user, logout, getRefreshToken } =
     rootStore.fireBaseAuthStore;
   const { login } = rootStore.authenticationStore;
@@ -32,8 +26,8 @@ const App: React.FC = () => {
 
   const logInFirebase = async () => {
     //login firebase
-    let asyncStorageLoaded = await loadAsyncStorage();
-    if (asyncStorageLoaded) {
+    let initialLoad = await loadAsyncStorage();
+    if (initialLoad) {
       checkExpireTime();
       if (fireBaseToken) {
         await getUser(fireBaseToken).catch(() => logout());

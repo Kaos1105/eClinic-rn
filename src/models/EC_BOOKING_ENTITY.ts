@@ -1,7 +1,7 @@
 export interface IEC_BOOKING_ENTITY {
   bookinG_ID?: string | undefined;
-  ngaybookto?: moment.Moment | undefined;
-  ngaybookfrom?: moment.Moment | undefined;
+  ngaybookto?: moment.Moment | undefined | string;
+  ngaybookfrom?: moment.Moment | undefined | string;
   lydodenkham?: string | undefined;
   bacsykhaM_ID?: string | undefined;
   ghichu?: string | undefined;
@@ -17,7 +17,7 @@ export interface IEC_BOOKING_ENTITY {
   diach?: string | undefined;
   quanhuyeN_ID?: string | undefined;
   thoigiantiepnhan?: moment.Moment | undefined;
-  ngaysinh?: moment.Moment | undefined;
+  ngaysinh?: moment.Moment | undefined | string;
   dienthoai?: string | undefined;
   email?: string | undefined;
   recorD_STATUS?: string | undefined;
@@ -35,8 +35,8 @@ export interface IEC_BOOKING_ENTITY {
 
 export class EC_BOOKING_ENTITY implements IEC_BOOKING_ENTITY {
   bookinG_ID?: string | undefined;
-  ngaybookto?: moment.Moment | undefined;
-  ngaybookfrom?: moment.Moment | undefined;
+  ngaybookto?: moment.Moment | undefined | string;
+  ngaybookfrom?: moment.Moment | undefined | string;
   lydodenkham?: string | undefined;
   bacsykhaM_ID?: string | undefined;
   ghichu?: string | undefined;
@@ -52,15 +52,13 @@ export class EC_BOOKING_ENTITY implements IEC_BOOKING_ENTITY {
   diach?: string | undefined;
   quanhuyeN_ID?: string | undefined;
   thoigiantiepnhan?: moment.Moment | undefined;
-  ngaysinh?: moment.Moment | undefined;
+  ngaysinh?: moment.Moment | undefined | string;
   dienthoai?: string | undefined;
   email?: string | undefined;
   recorD_STATUS?: string | undefined;
   tenanT_ID?: string | undefined;
   trangthai?: string | undefined;
   tenBacSi?: string | undefined;
-  thoiGianDen?: string | undefined;
-  thoiGianDi?: string | undefined;
   trangthaI_NAME?: string | undefined;
   top?: number | undefined;
   sorting?: string | undefined;

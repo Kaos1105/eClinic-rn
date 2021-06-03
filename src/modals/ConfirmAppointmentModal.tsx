@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { ReactNativeModal } from 'react-native-modal';
 import { useLocalization } from '../localization';
@@ -7,6 +7,13 @@ import { Button } from '../components/buttons/Button';
 import { Divider } from '../components/divider';
 import { AppointmentTimeModal } from '../models-demo';
 import moment from 'moment';
+import { Formik } from 'formik';
+import { FormTextInput } from '../components/formInput';
+import * as yup from 'yup';
+import { RootStoreContext } from 'stores/rootStore';
+import { Loading } from '../components/ui';
+import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
+import reactotron from 'reactotron-react-native';
 
 type TProps = {
   item?: AppointmentTimeModal;
@@ -15,13 +22,41 @@ type TProps = {
   onDismissModal: () => void;
 };
 
+const appointmentValidationScheme = yup.object().shape({
+  ghichu: yup.string().required('Note is required'),
+  lydodenkham: yup.string().required('Symptom is required'),
+});
+
 export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
   const { getString } = useLocalization();
+  //Store
+  const rootStore = useContext(RootStoreContext);
+  const { user } = rootStore.fireBaseAuthStore;
+  const { currentUser, getUser } = rootStore.usersStore;
+  //State
+  const [appLoaded, setAppLoaded] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      // getUser(user.phoneNumber).then(() => {
+      //   setAppLoaded(true);
+      // });
+    }
+    setAppLoaded(true);
+  }, [currentUser]);
+
+  const handleSubmit = (values: EC_BOOKING_ENTITY) => {
+    // let profile: IUserData = { ...values };
+    // editUser(profile).then(() => {
+    //   setToastData('success', 'Success', 'Update profile successfully');
+    // });
+    reactotron.log(values);
+  };
 
   if (props.item === null) {
     return null;
   }
-
+  if (!appLoaded) return <Loading />;
   return (
     <ReactNativeModal
       isVisible={props.isVisible}
@@ -32,19 +67,100 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
     >
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
-          <Text style={styles.titleText}>{getString('Appoinment Details')}</Text>
+          <Text style={styles.titleText}>{getString('Appointment Details')}</Text>
           <View style={styles.doctorContainer}>
             <Text style={{ color: Theme.colors.gray }}>{getString('Doctor')}</Text>
-            <Text style={styles.doctorName}>{props.item.doctor.fullName}</Text>
-            <Text style={styles.doctorTitle}>{props.item.doctor.title}</Text>
+            <Text style={styles.doctorName}>{props.item.doctor.emP_NAME}</Text>
+            <Text style={styles.doctorTitle}>{props.item.doctor.chuyenkhoA_TEN}</Text>
           </View>
           <Divider />
           <View style={styles.timeContainer}>
             <Text style={styles.timeText}>{props.item.time}</Text>
             <Text style={styles.dateText}>{moment(props.selectedDate).format('LL')}</Text>
           </View>
-          <Button title={getString('CONFIRM')} />
-          <Button title={getString('CANCEL')} type='outline' style={{ marginTop: 8 }} />
+          <Divider />
+          {!currentUser ? (
+            <View>
+              <Text style={{ marginTop: 20, fontSize: 20, fontWeight: 'bold' }}>
+                Please update your profile first
+              </Text>
+              <Button
+                style={{ marginTop: 8 }}
+                title={getString('Update user profile')}
+                onPress={() => {}}
+              />
+            </View>
+          ) : (
+            <Formik
+              initialValues={{
+                ngaybookto: props.item.time,
+                ngaybookfrom: props.item.time,
+                lydodenkham: '',
+                bacsykhaM_ID: props.item.doctor.emP_ID,
+                ghichu: '',
+                hovaten: currentUser.fullName,
+                gioitinh: currentUser.gender,
+                diachi: currentUser.address,
+                ngaysinh: moment(currentUser.dateOfBirth),
+                dienthoai: currentUser.phoneNumber,
+                recorD_STATUS: '1',
+                trangthai: 'CKB',
+              }}
+              validationSchema={appointmentValidationScheme}
+              onSubmit={handleSubmit}
+            >
+              {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
+                <View>
+                  <View style={{ marginBottom: 25 }}>
+                    <FormTextInput
+                      onInputChange={handleChange('lydodenkham')}
+                      onInputBlur={handleBlur('lydodenkham')}
+                      value={values.lydodenkham}
+                      label='Triệu chứng'
+                      error={errors.lydodenkham}
+                      touched={touched.lydodenkham}
+                      placeholder='Triệu chứng'
+                      keyboardType='default'
+                    />
+                    <FormTextInput
+                      onInputChange={handleChange('ghichu')}
+                      onInputBlur={handleBlur('ghichu')}
+                      value={values.ghichu}
+                      label='Ghi chú'
+                      error={errors.ghichu}
+                      touched={touched.ghichu}
+                      placeholder='Ghi chú cho bác sĩ'
+                      keyboardType='default'
+                    />
+                    <Divider />
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      marginBottom: 20,
+                    }}
+                  >
+                    <Button
+                      style={{ marginTop: 8 }}
+                      disabled={!isValid}
+                      title={getString('CONFIRM')}
+                      onPress={() => {
+                        handleSubmit();
+                        props.onDismissModal();
+                      }}
+                    />
+                    <Button
+                      title={getString('CANCEL')}
+                      type='outline'
+                      style={{ marginTop: 8 }}
+                      onPress={props.onDismissModal}
+                    />
+                  </View>
+                </View>
+              )}
+            </Formik>
+          )}
         </View>
       </SafeAreaView>
     </ReactNativeModal>
@@ -85,7 +201,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   timeContainer: {
-    paddingVertical: 36,
+    paddingVertical: 12,
     marginBottom: 12,
     alignItems: 'center',
   },

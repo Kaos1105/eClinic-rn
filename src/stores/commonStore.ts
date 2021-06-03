@@ -102,14 +102,14 @@ export default class CommonStore {
         AsyncStorage.getItem('expiryDate'),
       ]);
       runInAction(() => {
-        this.fireBaseToken = storageData[0];
-        this.fireBaseRefreshToken = storageData[1];
-        this.userId = storageData[2];
-        this.expiryDate = storageData[3];
+        if (storageData.length > 0) {
+          this.fireBaseToken = storageData[0];
+          this.fireBaseRefreshToken = storageData[1];
+          this.userId = storageData[2];
+          this.expiryDate = storageData[3];
+        }
       });
-      if (storageData.length > 0) {
-        return true;
-      }
+      return true;
     } catch (err) {
       // console.log(err);
       return false;

@@ -103,9 +103,9 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
       const beginTime = moment(booked.ngaybookfrom);
       const endTime = moment(booked.ngaybookto);
       tempArrTime.forEach((available, index) => {
-        const availableTime = moment(beginTime.format('MM/DD/yyyy') + ' ' + available.time);
+        const availableTime = moment(beginTime.format('YYYY-MM-DD') + ' ' + available.time);
         if (availableTime.isBetween(beginTime, endTime, 'minutes', '[)')) {
-          tempArrTime[index] = { ...available, available: false };
+          tempArrTime[index] = { ...available, available: false, fromDate: availableTime.format() };
           //do not fucking do this
           //available = false;
           //or this
@@ -123,6 +123,10 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
     });
     setUpAppointmentModal();
   }, []);
+
+  useEffect(() => {
+    onDayPress({ dateString: moment().format('YYYY-MM-DD') });
+  }, [originalAvailableTime]);
 
   return (
     <ScrollView style={styles.container}>
@@ -155,12 +159,12 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
         isVisible={appointmentModal.isVisible}
         item={appointmentModal.item}
         selectedDate={selectedDate}
-        onDismissModal={() =>
+        onDismissModal={() => {
           setAppointmentModal({
             isVisible: false,
             item: appointmentModal.item,
-          })
-        }
+          });
+        }}
       />
     </ScrollView>
   );

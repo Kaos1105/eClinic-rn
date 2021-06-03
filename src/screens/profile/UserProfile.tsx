@@ -34,6 +34,7 @@ export const UserProfile = observer(() => {
   const profileValidationScheme = yup.object().shape({
     fullName: yup.string().required('Full name is required'),
     address: yup.string().required('Address is required'),
+    email: yup.string().required('Email is required'),
     dateOfBirth: yup.string().required('Date of birth is required'),
   });
 
@@ -52,6 +53,7 @@ export const UserProfile = observer(() => {
               phoneNumber: user?.phoneNumber ?? '',
               fullName: currentUser?.fullName ?? '',
               address: currentUser?.address ?? '',
+              email: currentUser?.email ?? '',
               gender: currentUser?.gender ?? genderOptions[0].value,
               dateOfBirth: currentUser?.dateOfBirth.toString() ?? '',
             }}
@@ -76,13 +78,22 @@ export const UserProfile = observer(() => {
                   onInputChange={handleChange('fullName')}
                   onInputBlur={handleBlur('fullName')}
                   value={values.fullName}
-                  label='Full Namer'
+                  label='Full Name'
                   error={errors.fullName}
                   touched={touched.fullName}
                   placeholder='Full name'
                   keyboardType='default'
                 />
-
+                <FormTextInput
+                  onInputChange={handleChange('email')}
+                  onInputBlur={handleBlur('email')}
+                  value={values.email}
+                  label='Email'
+                  error={errors.email}
+                  touched={touched.email}
+                  placeholder='Email'
+                  keyboardType='default'
+                />
                 <FormTextInput
                   onInputChange={handleChange('address')}
                   onInputBlur={handleBlur('address')}
