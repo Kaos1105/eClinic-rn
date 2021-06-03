@@ -138,30 +138,6 @@ httpNetCore.interceptors.request.use(
 const responseBody = (response: AxiosResponse) => response.data;
 const responseBodyResult = (response: AxiosResponse) => response.data.result;
 
-// const sleep = (ms: number) => (response: AxiosResponse) =>
-//   new Promise<AxiosResponse>((resolve) => setTimeout(() => resolve(response), ms));
-
-// const requests = {
-//   get: (url: string) => axios.get(url).then(responseBody),
-//   post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
-//   put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
-//   delete: (url: string) => axios.delete(url).then(responseBody),
-// };
-
-// const requests = {
-//   get: (url: string) => http.get(url).then(responseBody),
-//   post: (url: string, body: {}) => http.post(url, body).then(responseBody),
-//   put: (url: string, body: {}) => http.put(url, body).then(responseBody),
-//   delete: (url: string) => http.delete(url).then(responseBody),
-//   postForm: (url: string, file: Blob) => {
-//     let formData = new FormData();
-//     formData.append('File', file);
-//     return axios
-//       .post(url, formData, { headers: { 'Content-type': 'multipart/form-data' } })
-//       .then(responseBody);
-//   },
-// };
-
 const Users = {
   details: (id: string): Promise<IUserData | undefined> =>
     httpFirebaseDb.get(`/users/${id}.json`).then(responseBody),
@@ -220,6 +196,10 @@ const EC_BOOKING_API = {
         params: { bacSyId: doctorId, checkDate: dateCheck },
       })
       .then(responseBodyResult),
+  bookingIns: (
+    input: EC_BOOKING_ENTITY
+  ): Promise<{ ID: string; BENHNHAN_ID: string; Result: string; ErrorDesc: string }> =>
+    httpNetCore.post('/api/LichHen/EC_LichHen_Ins', input).then(responseBodyResult),
 };
 
 const CM_EMPLOYEE_API = {

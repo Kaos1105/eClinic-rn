@@ -1,7 +1,7 @@
 export interface IUserData {
   phoneNumber: string;
   email: string;
-  patientId?: string;
+  BENHNHAN_ID?: string;
   fullName: string;
   gender: string;
   address: string;

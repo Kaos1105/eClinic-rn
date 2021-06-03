@@ -107,13 +107,17 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
           tempArrTime[index] = {
             ...available,
             available: false,
-            fromDate: availableTime.format(),
-            toDate: availableTime.add(0.5, 'hour').format(),
           };
           //do not fucking do this
           //available = false;
           //or this
           //tempArrTime[index].available = false;
+        } else {
+          tempArrTime[index] = {
+            ...available,
+            fromDate: availableTime.format(),
+            toDate: availableTime.add(0.5, 'hour').format(),
+          };
         }
       });
     });

@@ -60,7 +60,16 @@ export const UserProfile = observer(() => {
             validationSchema={profileValidationScheme}
             onSubmit={handleSubmit}
           >
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+              isValid,
+              dirty,
+            }) => (
               <View style={styles.form}>
                 <FormTextInput
                   onInputChange={handleChange('phoneNumber')}
@@ -124,7 +133,7 @@ export const UserProfile = observer(() => {
                   options={genderOptions}
                 />
                 <Button
-                  disabled={!isValid}
+                  disabled={!isValid || !dirty}
                   style={{ marginTop: 10 }}
                   title='Save profile'
                   onPress={() => {

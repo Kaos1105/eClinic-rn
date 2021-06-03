@@ -16,6 +16,7 @@ import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
 import reactotron from 'reactotron-react-native';
 import { useNavigation } from '@react-navigation/native';
 import NavigationNames from 'navigations/NavigationNames';
+import agent from 'service/api/agent';
 
 type TProps = {
   item?: AppointmentTimeModal;
@@ -41,19 +42,18 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
 
   useEffect(() => {
     if (user) {
-      // getUser(user.phoneNumber).then(() => {
-      //   setAppLoaded(true);
-      // });
+      getUser(user.phoneNumber).then(() => {
+        setAppLoaded(true);
+      });
     }
     setAppLoaded(true);
   }, [currentUser]);
 
   const handleSubmit = (values: EC_BOOKING_ENTITY) => {
-    // let profile: IUserData = { ...values };
-    // editUser(profile).then(() => {
-    //   setToastData('success', 'Success', 'Update profile successfully');
-    // });
-    reactotron.log(values);
+    let bookingData: EC_BOOKING_ENTITY = { ...values };
+    agent.EC_BOOKING_API.bookingIns(bookingData).then((value) => {
+      reactotron.log(value);
+    });
   };
 
   if (props.item === null) {
@@ -90,15 +90,17 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
                 title={getString('Update user profile')}
                 onPress={() => {
                   props.onDismissModal();
-                  navigation.navigate(NavigationNames.ProfileTab);
+                  navigation.navigate(NavigationNames.ProfileTab, {
+                    screen: NavigationNames.UserProfile,
+                  });
                 }}
               />
             </View>
           ) : (
             <Formik
               initialValues={{
-                ngaybookto: props.item.time,
-                ngaybookfrom: props.item.time,
+                ngaybookto: props.item.toDate,
+                ngaybookfrom: props.item.fromDate,
                 lydodenkham: '',
                 bacsykhaM_ID: props.item.doctor.emP_ID,
                 ghichu: '',
@@ -109,11 +111,21 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
                 dienthoai: currentUser.phoneNumber,
                 recorD_STATUS: '1',
                 trangthai: 'CKB',
+                color: Theme.colors.tintColor,
               }}
               validationSchema={appointmentValidationScheme}
               onSubmit={handleSubmit}
             >
-              {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+                isValid,
+                dirty,
+              }) => (
                 <View>
                   <View style={{ marginBottom: 25 }}>
                     <FormTextInput
@@ -147,7 +159,7 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
                   >
                     <Button
                       style={{ marginTop: 8 }}
-                      disabled={!isValid}
+                      disabled={!isValid || !dirty}
                       title={getString('CONFIRM')}
                       onPress={() => {
                         handleSubmit();
