@@ -14,6 +14,8 @@ import { RootStoreContext } from 'stores/rootStore';
 import { Loading } from '../components/ui';
 import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
 import reactotron from 'reactotron-react-native';
+import { useNavigation } from '@react-navigation/native';
+import NavigationNames from 'navigations/NavigationNames';
 
 type TProps = {
   item?: AppointmentTimeModal;
@@ -29,6 +31,7 @@ const appointmentValidationScheme = yup.object().shape({
 
 export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
   const { getString } = useLocalization();
+  const navigation = useNavigation();
   //Store
   const rootStore = useContext(RootStoreContext);
   const { user } = rootStore.fireBaseAuthStore;
@@ -81,13 +84,14 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
           <Divider />
           {!currentUser ? (
             <View>
-              <Text style={{ marginTop: 20, fontSize: 20, fontWeight: 'bold' }}>
-                Please update your profile first
-              </Text>
+              <Text style={styles.guideText}>Please update your profile first</Text>
               <Button
                 style={{ marginTop: 8 }}
                 title={getString('Update user profile')}
-                onPress={() => {}}
+                onPress={() => {
+                  props.onDismissModal();
+                  navigation.navigate(NavigationNames.ProfileTab);
+                }}
               />
             </View>
           ) : (
@@ -217,4 +221,5 @@ const styles = StyleSheet.create({
     marginTop: 12,
     color: Theme.colors.black,
   },
+  guideText: { marginTop: 20, fontSize: 20, fontWeight: 'bold', alignSelf: 'center' },
 });

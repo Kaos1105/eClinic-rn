@@ -35,7 +35,7 @@ const axiosResponseConfig = (error) => {
     RootNavigation.navigate(NavigationNames.HomeScreen);
   }
   if (status === 400) {
-    Alert.alert('Unauthorized request');
+    // Alert.alert('Unauthorized request');
     RootNavigation.navigate(NavigationNames.HomeScreen);
   }
   if (status === 500) {

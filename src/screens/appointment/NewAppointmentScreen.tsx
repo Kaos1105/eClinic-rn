@@ -11,7 +11,6 @@ import { AppointmentTimeModal } from '../../models-demo';
 import { useLocalization } from '../../localization';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { ScrollView } from 'react-native-gesture-handler';
-import { da, is } from 'date-fns/locale';
 import { splitTimeByInterval } from '../../utils/common';
 import reactotron from 'reactotron-react-native';
 import agent from 'service/api/agent';
@@ -65,7 +64,7 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
     isVisible: false,
     item: null,
   });
-  const [originalAvailableTime, setOriginalAvailableTime] = useState<AppointmentTimeModal[]>([]);
+  const [originalAvailableTime, setOriginalAvailableTime] = useState<AppointmentTimeModal[]>(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [markedDate, setMarkedDate] = useState({});
   const [availableTime, setAvailableTime] = useState<AppointmentTimeModal[]>([]);
@@ -105,7 +104,12 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
       tempArrTime.forEach((available, index) => {
         const availableTime = moment(beginTime.format('YYYY-MM-DD') + ' ' + available.time);
         if (availableTime.isBetween(beginTime, endTime, 'minutes', '[)')) {
-          tempArrTime[index] = { ...available, available: false, fromDate: availableTime.format() };
+          tempArrTime[index] = {
+            ...available,
+            available: false,
+            fromDate: availableTime.format(),
+            toDate: availableTime.add(0.5, 'hour').format(),
+          };
           //do not fucking do this
           //available = false;
           //or this
@@ -125,7 +129,7 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    onDayPress({ dateString: moment().format('YYYY-MM-DD') });
+    if (originalAvailableTime) onDayPress({ dateString: moment().format('YYYY-MM-DD') });
   }, [originalAvailableTime]);
 
   return (
