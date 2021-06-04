@@ -28,12 +28,11 @@ const App: React.FC = () => {
     //login firebase
     let initialLoad = await loadAsyncStorage();
     if (initialLoad) {
-      const isExpiredTime = checkExpireTime();
-      if (!isExpiredTime) {
+      checkExpireTime();
+      if (fireBaseToken) {
         await getUser(fireBaseToken).catch(() => logout());
         setAppLoaded(true);
-      } else {
-        logout();
+      } else if (fireBaseToken === null) {
         await getRefreshToken(fireBaseRefreshToken).catch((error) => {
           Alert.alert('Token expire', 'Please try to login again');
           setAppLoaded(true);

@@ -17,12 +17,14 @@ import reactotron from 'reactotron-react-native';
 import { useNavigation } from '@react-navigation/native';
 import NavigationNames from 'navigations/NavigationNames';
 import agent from 'service/api/agent';
+import { IUserData } from 'models/userData';
 
 type TProps = {
   item?: AppointmentTimeModal;
   isVisible: boolean;
   selectedDate: Date;
   onDismissModal: () => void;
+  onSubmitBooking: () => void;
 };
 
 const appointmentValidationScheme = yup.object().shape({
@@ -36,9 +38,10 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
   //Store
   const rootStore = useContext(RootStoreContext);
   const { user } = rootStore.fireBaseAuthStore;
-  const { currentUser, getUser } = rootStore.usersStore;
+  const { currentUser, getUser, editUser } = rootStore.usersStore;
   //State
   const [appLoaded, setAppLoaded] = useState(false);
+  const [isBooking, setIsBooking] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -49,11 +52,15 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
     setAppLoaded(true);
   }, [currentUser]);
 
-  const handleSubmit = (values: EC_BOOKING_ENTITY) => {
+  const handleSubmit = async (values: EC_BOOKING_ENTITY) => {
     let bookingData: EC_BOOKING_ENTITY = { ...values };
-    agent.EC_BOOKING_API.bookingIns(bookingData).then((value) => {
-      reactotron.log(value);
-    });
+    setIsBooking(true);
+    let resp = await agent.EC_BOOKING_API.bookingIns(bookingData);
+    const userData: IUserData = { ...currentUser, BENHNHAN_ID: resp.BENHNHAN_ID };
+    if (currentUser.BENHNHAN_ID !== userData.BENHNHAN_ID) await editUser(userData);
+    setIsBooking(false);
+    props.onDismissModal();
+    props.onSubmitBooking();
   };
 
   if (props.item === null) {
@@ -65,8 +72,8 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
       isVisible={props.isVisible}
       swipeDirection={'down'}
       style={styles.modalView}
-      onSwipeComplete={props.onDismissModal}
-      onBackdropPress={props.onDismissModal}
+      // onSwipeComplete={props.onDismissModal}
+      // onBackdropPress={props.onDismissModal}
     >
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.container}>
@@ -104,6 +111,7 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
                 lydodenkham: '',
                 bacsykhaM_ID: props.item.doctor.emP_ID,
                 ghichu: '',
+                benhnhaN_ID: currentUser.BENHNHAN_ID,
                 hovaten: currentUser.fullName,
                 gioitinh: currentUser.gender,
                 diachi: currentUser.address,
@@ -159,15 +167,15 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
                   >
                     <Button
                       style={{ marginTop: 8 }}
-                      disabled={!isValid || !dirty}
+                      disabled={!isValid || !dirty || isBooking}
                       title={getString('CONFIRM')}
                       onPress={() => {
                         handleSubmit();
-                        props.onDismissModal();
                       }}
                     />
                     <Button
                       title={getString('CANCEL')}
+                      disabled={isBooking}
                       type='outline'
                       style={{ marginTop: 8 }}
                       onPress={props.onDismissModal}

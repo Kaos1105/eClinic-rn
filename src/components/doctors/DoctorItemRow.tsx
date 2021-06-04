@@ -41,7 +41,14 @@ export const DoctorItemRow: React.FC<TProps> = (props) => {
         </View>
       </TouchableOpacity>
       {!props.hideButton && (
-        <TouchableOpacity style={styles.iconContainer}>
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => {
+            navigation.navigate(NavigationNames.NewAppointmentScreen, {
+              param: JSON.stringify(props.item),
+            });
+          }}
+        >
           {/* <AirbnbRating
               showRating={false}
               count={5}

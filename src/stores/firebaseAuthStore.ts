@@ -62,9 +62,8 @@ export default class FireBaseAuthStore {
       let expireDate = new Date(expireString);
       let currentTime = new Date();
       if (expireDate < currentTime) {
-        return true;
+        this.logout();
       } else {
-        return false;
       }
     }
   };

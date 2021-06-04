@@ -167,6 +167,9 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
         isVisible={appointmentModal.isVisible}
         item={appointmentModal.item}
         selectedDate={selectedDate}
+        onSubmitBooking={() => {
+          checkAvailability(selectedDate);
+        }}
         onDismissModal={() => {
           setAppointmentModal({
             isVisible: false,
