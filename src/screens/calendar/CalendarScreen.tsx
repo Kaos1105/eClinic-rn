@@ -32,7 +32,7 @@ export const CalendarScreen: React.FC<{}> = (props) => {
   const [items, setItems] = useState({});
 
   const onPressNewAppointment = () => {
-    navigation.navigate(NavigationNames.NewAppointmentScreen);
+    navigation.navigate(NavigationNames.DoctorListScreen);
   };
   const onPressToday = () => {
     const today = new Date();
