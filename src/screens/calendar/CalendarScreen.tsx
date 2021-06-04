@@ -11,16 +11,11 @@ import { FabButton, Button } from '../../components/buttons';
 import { globalAppointmentDate, globalAppointment } from '../../services-demo/DashboardService';
 import { useLocalization } from '../../localization';
 import { Theme } from '../../theme';
+import reactotron from 'reactotron-react-native';
 
 type IState = {
   selectedDate: string;
   items: any;
-};
-
-const weeklyAppointment = moment(globalAppointmentDate).format('YYYY-MM-DD');
-
-const datas = {
-  [weeklyAppointment]: [{ date: weeklyAppointment, title: '' }],
 };
 
 export const CalendarScreen: React.FC<{}> = (props) => {
@@ -39,6 +34,8 @@ export const CalendarScreen: React.FC<{}> = (props) => {
     refAgenda.current.chooseDay(today);
   };
 
+  const onDayPress = async (day: any) => {};
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -48,7 +45,6 @@ export const CalendarScreen: React.FC<{}> = (props) => {
       ),
     });
   }, []);
-
   return (
     <View style={styles.container}>
       <Agenda
@@ -56,24 +52,15 @@ export const CalendarScreen: React.FC<{}> = (props) => {
         items={items}
         loadItemsForMonth={(month) => {}}
         onCalendarToggled={(calendarOpened) => {}}
-        onDayPress={(day) => {
-          setSelectedDate(day.dateString);
-          setItems({ [day.dateString]: datas[day.dateString] });
-        }}
+        onDayPress={onDayPress}
         onDayChange={(day) => {}}
         selected={selectedDate}
-        pastScrollRange={25}
-        futureScrollRange={25}
+        pastScrollRange={3}
+        futureScrollRange={3}
         rowHasChanged={(r1, r2) => {
-          return true;
+          return r1.text !== r2.text;
         }}
         hideKnob={false}
-        markedDates={{
-          [weeklyAppointment]: {
-            marked: true,
-            dotColor: Theme.colors.primaryColor,
-          },
-        }}
         onRefresh={() => {}}
         refreshing={false}
         refreshControl={null}
@@ -81,9 +68,7 @@ export const CalendarScreen: React.FC<{}> = (props) => {
           agendaKnobColor: '#dcdcdc',
           selectedDayBackgroundColor: Theme.colors.primaryColor,
         }}
-        renderEmptyDate={() => {
-          return <Text>-</Text>;
-        }}
+        renderEmptyDate={() => <View />}
         renderDay={(day, item) => <View />}
         renderItem={(item, firstItemInDay) => {
           return (
@@ -104,7 +89,7 @@ export const CalendarScreen: React.FC<{}> = (props) => {
           );
         }}
       />
-      <FabButton onPress={onPressNewAppointment} />
+      {items && <FabButton onPress={onPressNewAppointment} />}
     </View>
   );
 };

@@ -2,7 +2,6 @@ import { createContext } from 'react';
 import { configure } from 'mobx';
 import AuthenticationStore from './authenticationStore';
 import CM_EMPLOYEE_Store from './CM_EMPLOYEE_Store';
-import EC_BOOKING_Store from './EC_BOOKING_Store';
 import FireBaseAuthStore from './firebaseAuthStore';
 import CommonStore from './commonStore';
 import UsersStore from './usersStore';
@@ -13,7 +12,6 @@ configure({ enforceActions: 'always' });
 
 export class RootStore {
   authenticationStore: AuthenticationStore;
-  eC_BOOKING_Store: EC_BOOKING_Store;
   cM_EMPLOYEE_Store: CM_EMPLOYEE_Store;
   fireBaseAuthStore: FireBaseAuthStore;
   commonStore: CommonStore;
@@ -24,7 +22,6 @@ export class RootStore {
   constructor() {
     this.cM_EMPLOYEE_Store = new CM_EMPLOYEE_Store(this);
     this.authenticationStore = new AuthenticationStore(this);
-    this.eC_BOOKING_Store = new EC_BOOKING_Store(this);
     this.fireBaseAuthStore = new FireBaseAuthStore(this);
     this.commonStore = new CommonStore(this);
     this.usersStore = new UsersStore(this);

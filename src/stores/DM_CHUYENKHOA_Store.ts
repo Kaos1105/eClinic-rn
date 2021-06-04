@@ -13,27 +13,8 @@ export default class DM_CHUYENKHOA_Store {
     this._rootStore = rootStore;
   }
 
-  //Field observable
-  // @observable dataArray = new Array<EC_PHONGKHAM_ENTITY>();
-
   //Paging
   @observable totalCount = 0;
-  @observable page = 1;
-
-  // @computed getTotalPages() {
-  //   return Math.ceil(this.totalCount / LIMIT);
-  // }
-
-  // @action setPages = (page: number) => {
-  //   this.page = page;
-  // };
-
-  //Filtering option
-  @action loadFilters = () => {
-    this.page = 1;
-    // this.dataArray = [];
-    this.loadList();
-  };
 
   //List
   @action loadList = async (input = new DM_CHUYENKHOA_ENTITY()) => {
