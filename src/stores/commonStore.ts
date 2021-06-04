@@ -23,6 +23,7 @@ export default class CommonStore {
   @observable fireBaseRefreshToken: string | null;
   @observable userId: string | null;
   @observable expiryDate: string | null;
+  @observable isLoaded = true;
 
   //toast data
   @observable toastToggle = false;
@@ -166,5 +167,9 @@ export default class CommonStore {
       new Date().getTime() + parseInt(authInfo.expires_in) * 1000
     );
     this.expiryDate = expirationDate.toISOString();
+  };
+
+  @action setIsLoaded = (loaded: boolean) => {
+    this.isLoaded = loaded;
   };
 }

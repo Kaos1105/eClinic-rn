@@ -10,12 +10,12 @@ import Toast from 'react-native-toast-message';
 import LoginModel from 'models/Login/loginModel';
 import AppConsts from '../lib/appconst';
 import { Alert } from 'react-native';
+import { LoadingModal } from '../components/ui';
 
 const Stack = createStackNavigator();
 
 const App: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
-  const [appLoaded, setAppLoaded] = useState(false);
   const { fireBaseToken, loadAsyncStorage, toastToggle, getToast, fireBaseRefreshToken } =
     rootStore.commonStore;
   const { getUser, checkExpireTime, isLoggedIn, user, logout, getRefreshToken } =
@@ -23,6 +23,7 @@ const App: React.FC = () => {
   const { login } = rootStore.authenticationStore;
 
   const [loggedInServer, setLoggedInServer] = useState(false);
+  const [appLoaded, setAppLoaded] = useState(false);
 
   const logInFirebase = async () => {
     //login firebase
@@ -35,8 +36,8 @@ const App: React.FC = () => {
       } else if (fireBaseToken === null) {
         await getRefreshToken(fireBaseRefreshToken).catch((error) => {
           Alert.alert('Token expire', 'Please try to login again');
-          setAppLoaded(true);
         });
+        setAppLoaded(true);
       }
     }
   };
@@ -82,6 +83,7 @@ const App: React.FC = () => {
         </Stack.Navigator>
       )}
       <Toast ref={(ref) => Toast.setRef(ref)} />
+      <LoadingModal />
     </NavigationContainer>
   );
 };

@@ -19,8 +19,8 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
   //Hook
   const rootStore = useContext(RootStoreContext);
   const { currentUserLocation, getUserLocation } = rootStore.usersStore;
+  const { isLoaded, setIsLoaded } = rootStore.commonStore;
   const { getString } = useLocalization();
-  const [appLoaded, setAppLoaded] = useState(false);
   const route = useRoute();
   const navigation = useNavigation();
 
@@ -33,6 +33,7 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
 
   const initialRun = async () => {
     //get user location
+    setIsLoaded(false);
     try {
       if (!currentUserLocation) {
         let location = await getUserLocation();
@@ -50,8 +51,8 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
       } else {
         Alert.alert('Location can not be found');
       }
-      setAppLoaded(true);
     } catch {}
+    setIsLoaded(true);
   };
 
   useEffect(() => {
@@ -59,8 +60,8 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
     initialRun();
   }, []);
 
-  if (!appLoaded) {
-    return <Loading />;
+  if (!isLoaded) {
+    return null;
   }
 
   return (

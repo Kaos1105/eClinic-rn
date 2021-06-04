@@ -52,7 +52,7 @@ type TProps = {};
 
 export const HomeScreen: React.FC<TProps> = observer((props) => {
   const rootStore = useContext(RootStoreContext);
-  const [appLoaded, setAppLoaded] = useState(false);
+  const { setIsLoaded, isLoaded } = rootStore.commonStore;
   const { loadList: loadListClinics } = rootStore.eC_PHONGKHAM_Store;
   const { loadList: loadListDoctors } = rootStore.cM_EMPLOYEE_Store;
   const { loadList: loadListSpecialties } = rootStore.dM_CHUYENKHOA_Store;
@@ -65,6 +65,7 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
 
   const initialRun = async () => {
     //get list data for home screen
+    setIsLoaded(false);
     try {
       const clinicList = await loadListClinics({ maxResultCount: 4 });
       setListClinics(clinicList);
@@ -72,21 +73,17 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
       setListDoctors(doctorList);
       const specialist = await loadListSpecialties({ maxResultCount: 4 });
       setListSpecialties(specialist);
-      setAppLoaded(true);
     } catch {
       Alert.alert('Error', 'Can not connect to server');
     }
+    setIsLoaded(true);
   };
 
   useEffect(() => {
+    const item = DashboardService.getDashboardItems();
+    setDashboardItem(item);
     //Load data from backend
     initialRun();
-  }, []);
-
-  useEffect(() => {
-    DashboardService.getDashboardItems().then((item) => {
-      setDashboardItem(item);
-    });
   }, []);
 
   const onClickMenu = (item: HomeMenuItemType) => {
@@ -103,10 +100,10 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
     }
   };
 
-  if (dashboardItem === null || !appLoaded) {
-    return <Loading />;
-  }
-
+  // if (dashboardItem === null || !appLoaded) {
+  //   return <Loading />;
+  // }
+  if (dashboardItem === null || !isLoaded) return null;
   return (
     <View>
       <ScrollView
@@ -226,7 +223,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  loadingScreen: {
+  LoadingModal: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,28 +1,29 @@
 import { FormDateTimeInput, FormTextInput, Button, FormPicker, Loading } from '../../components';
 import React, { useContext, useEffect, useState } from 'react';
-import { KeyboardAvoidingView, ScrollView, View, StyleSheet, Platform, Alert } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, View, StyleSheet, Platform } from 'react-native';
 import { Formik } from 'formik';
 import { genderOptions } from '../../utils/const';
 import { RootStoreContext } from 'stores/rootStore';
 import * as yup from 'yup';
 import { IUserData } from 'models/userData';
 import { observer } from 'mobx-react-lite';
-import Toast, { BaseToast } from 'react-native-toast-message';
-import { Theme } from '../../theme';
 
 export const UserProfile = observer(() => {
+  //Store
   const rootStore = useContext(RootStoreContext);
   const { user } = rootStore.fireBaseAuthStore;
   const { editUser, getUser, currentUser } = rootStore.usersStore;
-  const { setToastToggle, setToastData } = rootStore.commonStore;
-  const [appLoaded, setAppLoaded] = useState(false);
+  const { setToastData } = rootStore.commonStore;
+  const { isLoaded, setIsLoaded } = rootStore.commonStore;
 
   useEffect(() => {
-    if (user)
+    if (user && !currentUser) {
+      setIsLoaded(false);
       getUser(user.phoneNumber).then(() => {
-        setAppLoaded(true);
+        setIsLoaded(true);
       });
-  }, [currentUser]);
+    }
+  }, []);
 
   const handleSubmit = (values: IUserData) => {
     let profile: IUserData = { ...values };
@@ -38,7 +39,7 @@ export const UserProfile = observer(() => {
     dateOfBirth: yup.string().required('Date of birth is required'),
   });
 
-  if (!appLoaded) return <Loading />;
+  if (!isLoaded) return null;
 
   return (
     <>

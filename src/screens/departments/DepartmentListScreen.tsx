@@ -18,9 +18,8 @@ export const DepartmentListScreen: React.FC<TProps> = observer((props) => {
   //Hook
   const rootStore = useContext(RootStoreContext);
   const { loadList: loadListSpecialties, totalCount } = rootStore.dM_CHUYENKHOA_Store;
-
+  const { isLoaded, setIsLoaded } = rootStore.commonStore;
   //State
-  const [appLoaded, setAppLoaded] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [listData, setListData] = useState<DM_CHUYENKHOA_ENTITY[]>([]);
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
@@ -43,24 +42,25 @@ export const DepartmentListScreen: React.FC<TProps> = observer((props) => {
 
   const initialRun = async () => {
     //get list data for home screen
+    setIsLoaded(false);
     try {
       const resultList = await loadListSpecialties({ maxResultCount: 8 });
       setListData(resultList);
-      setAppLoaded(true);
     } catch {
       Alert.alert('Error', 'Can not connect to server');
     }
+    setIsLoaded(true);
   };
 
   const fetchWithFilter = async (input: CM_EMPLOYEE_ENTITY) => {
+    setIsLoaded(false);
     setFilterItem({ ...input, chuyenkhoA_TEN: input.chuyenkhoA_TEN });
-    setAppLoaded(false);
     const resultList = await loadListSpecialties({
       maxResultCount: 8,
       chuyenkhoA_TEN: input.chuyenkhoA_TEN,
     });
     setListData(resultList);
-    setAppLoaded(true);
+    setIsLoaded(true);
   };
 
   useEffect(() => {
@@ -76,9 +76,7 @@ export const DepartmentListScreen: React.FC<TProps> = observer((props) => {
         onSubmitFilter={fetchWithFilter}
         parentName={NavigationNames.DepartmentListScreen}
       />
-      {!appLoaded ? (
-        <Loading />
-      ) : (
+      {isLoaded && (
         <FlatList
           data={listData}
           onEndReachedThreshold={0.05}

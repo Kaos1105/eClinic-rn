@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Theme } from '../../theme';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Divider, DoctorItemRow, Button, Loading } from '../../components';
+import { Divider, DoctorItemRow, Loading } from '../../components';
 import { ConfirmAppointmentModal } from '../../modals';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
-import ReactNativeModal from 'react-native-modal';
 import { AppointmentTimeModal } from '../../models-demo';
 import { useLocalization } from '../../localization';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { ScrollView } from 'react-native-gesture-handler';
 import { splitTimeByInterval } from '../../utils/common';
-import reactotron from 'reactotron-react-native';
 import agent from 'service/api/agent';
 
 type TProps = {};

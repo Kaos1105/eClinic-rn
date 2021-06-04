@@ -39,18 +39,18 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
   const rootStore = useContext(RootStoreContext);
   const { user } = rootStore.fireBaseAuthStore;
   const { currentUser, getUser, editUser } = rootStore.usersStore;
+  const { isLoaded, setIsLoaded } = rootStore.commonStore;
   //State
-  const [appLoaded, setAppLoaded] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && !currentUser) {
+      setIsLoaded(false);
       getUser(user.phoneNumber).then(() => {
-        setAppLoaded(true);
+        setIsLoaded(true);
       });
     }
-    setAppLoaded(true);
-  }, [currentUser]);
+  }, []);
 
   const handleSubmit = async (values: EC_BOOKING_ENTITY) => {
     let bookingData: EC_BOOKING_ENTITY = { ...values };
@@ -66,7 +66,7 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
   if (props.item === null) {
     return null;
   }
-  if (!appLoaded) return <Loading />;
+  if (!isLoaded) return null;
   return (
     <ReactNativeModal
       isVisible={props.isVisible}

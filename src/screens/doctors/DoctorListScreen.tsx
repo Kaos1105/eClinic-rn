@@ -16,11 +16,11 @@ export const DoctorListScreen: React.FC<TProps> = observer(() => {
   //Hook
   const rootStore = useContext(RootStoreContext);
   const { loadList: loadListDoctors, totalCount } = rootStore.cM_EMPLOYEE_Store;
+  const { isLoaded, setIsLoaded } = rootStore.commonStore;
   const navigation = useNavigation();
   const route = useRoute();
 
   //State
-  const [appLoaded, setAppLoaded] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [listData, setListData] = useState<CM_EMPLOYEE_ENTITY[]>([]);
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
@@ -28,6 +28,7 @@ export const DoctorListScreen: React.FC<TProps> = observer(() => {
 
   //Params
   const initialRun = async () => {
+    setIsLoaded(false);
     //get Param
     let parseParam = new EC_PHONGKHAM_ENTITY();
     if (route.params && route.params['param']) {
@@ -43,10 +44,10 @@ export const DoctorListScreen: React.FC<TProps> = observer(() => {
         maxResultCount: 6,
       });
       setListData(resultList);
-      setAppLoaded(true);
     } catch {
       Alert.alert('Error', 'Can not connect to server');
     }
+    setIsLoaded(true);
   };
 
   const fetchMore = async () => {
@@ -66,13 +67,13 @@ export const DoctorListScreen: React.FC<TProps> = observer(() => {
   };
 
   const fetchWithFilter = async (input: CM_EMPLOYEE_ENTITY) => {
+    setIsLoaded(false);
     setFilterItem({
       ...input,
       chuyenkhoA_ID: input.chuyenkhoA_ID,
       tenanT_ID: input.tenanT_ID,
       emP_NAME: input.emP_NAME,
     });
-    setAppLoaded(false);
     const resultList = await loadListDoctors({
       maxResultCount: 6,
       chuyenkhoA_ID: input.chuyenkhoA_ID,
@@ -80,7 +81,7 @@ export const DoctorListScreen: React.FC<TProps> = observer(() => {
       emP_NAME: input.emP_NAME,
     });
     setListData(resultList);
-    setAppLoaded(true);
+    setIsLoaded(true);
   };
 
   useEffect(() => {
@@ -97,9 +98,7 @@ export const DoctorListScreen: React.FC<TProps> = observer(() => {
         onSubmitFilter={fetchWithFilter}
         parentName={NavigationNames.DoctorListScreen}
       />
-      {!appLoaded ? (
-        <Loading />
-      ) : (
+      {isLoaded && (
         <FlatList
           data={listData}
           onEndReachedThreshold={0.05}

@@ -20,16 +20,28 @@ export const globalAppointment: AppointmentModel = {
   locationName: 'Central Hospital',
 };
 
+// export default class DashboardService {
+//   public static getDashboardItems(): Promise<DashboardItemsModel> {
+//     return new Promise((resolve, reject) => {
+//       const model: DashboardItemsModel = {
+//         appointment: globalAppointment,
+//         campaigns: campaignList,
+//         doctors: doctorsList,
+//         departments: departmentList,
+//       };
+//       resolve(model);
+//     });
+//   }
+// }
+
 export default class DashboardService {
-  public static getDashboardItems(): Promise<DashboardItemsModel> {
-    return new Promise((resolve, reject) => {
-      const model: DashboardItemsModel = {
-        appointment: globalAppointment,
-        campaigns: campaignList,
-        doctors: doctorsList,
-        departments: departmentList,
-      };
-      resolve(model);
-    });
-  }
+  public static getDashboardItems = (): DashboardItemsModel => {
+    const model: DashboardItemsModel = {
+      appointment: globalAppointment,
+      campaigns: campaignList,
+      doctors: doctorsList,
+      departments: departmentList,
+    };
+    return model;
+  };
 }

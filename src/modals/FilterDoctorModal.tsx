@@ -36,7 +36,7 @@ const ICON_TOP = 8;
 
 export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
   const rootStore = useContext(RootStoreContext);
-  const [appLoaded, setAppLoaded] = useState(false);
+  const [componentLoaded, setComponentLoaded] = useState(false);
   const { loadList: loadListClinics, totalCount: clinicsCount } = rootStore.eC_PHONGKHAM_Store;
   const { loadList: loadListSpecialties, totalCount: specialtiesCount } =
     rootStore.dM_CHUYENKHOA_Store;
@@ -123,7 +123,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
         const specialtiesList = await loadListSpecialties({ maxResultCount: 4 });
         setListSpecialties(specialtiesList);
       }
-      setAppLoaded(true);
+      setComponentLoaded(true);
     } catch {
       Alert.prompt('Error', 'Can not connect to server');
     }
@@ -167,7 +167,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
     setParamSpecialty();
   }, [props.paramSpecialty]);
 
-  if (!appLoaded) {
+  if (!componentLoaded) {
     return (
       <View style={{ maxHeight: 100, paddingTop: 20 }}>
         <Loading color='gray' />

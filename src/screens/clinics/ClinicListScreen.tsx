@@ -17,10 +17,10 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   //Hook
   const rootStore = useContext(RootStoreContext);
   const { loadList: loadListClinics, totalCount } = rootStore.eC_PHONGKHAM_Store;
+  const { isLoaded, setIsLoaded } = rootStore.commonStore;
   const route = useRoute();
 
   //State
-  const [appLoaded, setAppLoaded] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [listData, setListData] = useState<EC_PHONGKHAM_ENTITY[]>([]);
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
@@ -28,6 +28,7 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
   //Params
   const initialRun = async () => {
     //get Param
+    setIsLoaded(false);
     let parseParam = new DM_CHUYENKHOA_ENTITY();
     if (route.params && route.params['param']) {
       parseParam = { ...(JSON.parse(route.params['param']) as DM_CHUYENKHOA_ENTITY) };
@@ -41,10 +42,10 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
         maxResultCount: 5,
       });
       setListData(resultList);
-      setAppLoaded(true);
     } catch {
       Alert.alert('Error', 'Can not connect to server');
     }
+    setIsLoaded(true);
   };
 
   const fetchMore = async () => {
@@ -64,14 +65,14 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
 
   const fetchWithFilter = async (input: CM_EMPLOYEE_ENTITY) => {
     setFilterItem({ ...input, phongkhaM_TENDAYDU: input.phongkhaM_TENDAYDU });
-    setAppLoaded(false);
+    setIsLoaded(false);
     const resultList = await loadListClinics({
       maxResultCount: 5,
       chuyenkhoA_ID: input.chuyenkhoA_ID,
       phongkhaM_TENDAYDU: input.phongkhaM_TENDAYDU,
     });
     setListData(resultList);
-    setAppLoaded(true);
+    setIsLoaded(true);
   };
 
   useEffect(() => {
@@ -90,9 +91,7 @@ export const ClinicListScreen: React.FC<TProps> = observer((props) => {
         onSubmitFilter={fetchWithFilter}
         parentName={NavigationNames.ClinicListScreen}
       />
-      {!appLoaded ? (
-        <Loading />
-      ) : (
+      {isLoaded && (
         <FlatList
           data={listData}
           onEndReachedThreshold={0.05}
