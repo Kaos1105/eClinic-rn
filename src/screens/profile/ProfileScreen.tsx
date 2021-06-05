@@ -7,10 +7,11 @@ import { useLocalization } from '../../localization';
 import NavigationNames from '../../navigations/NavigationNames';
 import { useNavigation } from '@react-navigation/native';
 import { RootStoreContext } from 'stores/rootStore';
+import { observer } from 'mobx-react-lite';
 
 type TProps = {};
 
-export const ProfileScreen: React.FC<TProps> = (props) => {
+export const ProfileScreen: React.FC<TProps> = observer((props) => {
   const { getString } = useLocalization();
   const profilesOption = [
     {
@@ -73,8 +74,7 @@ export const ProfileScreen: React.FC<TProps> = (props) => {
         <Avatar
           imageStyle={styles.imageStyle}
           source={{
-            uri:
-              'https://raw.githubusercontent.com/publsoft/publsoft.github.io/master/projects/dentist-demo/assets/images/profile_photo.png',
+            uri: 'https://raw.githubusercontent.com/publsoft/publsoft.github.io/master/projects/dentist-demo/assets/images/profile_photo.png',
           }}
         />
         <Text style={styles.nameText}>Büşra Mutlu</Text>
@@ -114,7 +114,7 @@ export const ProfileScreen: React.FC<TProps> = (props) => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+});
 const styles = StyleSheet.create({
   container: { flex: 1 },
   flex1: { flex: 1 },

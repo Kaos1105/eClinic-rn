@@ -3,25 +3,28 @@ import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import moment from 'moment';
 import { AppointmentModel } from '../../models-demo';
 import { Theme } from '../../theme';
+import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
+import reactotron from 'reactotron-react-native';
 
 type TProps = {
-  item: AppointmentModel;
+  item: EC_BOOKING_ENTITY;
   style?: ViewStyle;
 };
 
 export const CalendarItemRow: React.FC<TProps> = (props) => {
+  reactotron.log(props.item);
   return (
-    <View style={[styles.root, props.style]}>
+    <View style={[styles.root]}>
       <View style={styles.leftEffect} />
       <View style={styles.textContent}>
-        <Text style={styles.textTitle}>{props.item.title}</Text>
-        <Text style={styles.textDoctor}>{props.item.doctor.fullName}</Text>
+        <Text style={styles.textTitle}>{props.item.trangthaI_NAME}</Text>
+        <Text style={styles.textDoctor}>{props.item.bacsykhaM_ID}</Text>
         <Text style={styles.textDate}>
-          {moment(props.item.appointmentDate).format('MM/DD/YYYY dddd')}
+          {moment(props.item.ngaybookfrom).format('MM/DD/YYYY dddd')}
         </Text>
       </View>
       <View style={styles.timeContent}>
-        <Text style={styles.textTime}>{moment(props.item.appointmentDate).format('LT')}</Text>
+        <Text style={styles.textTime}>{moment(props.item.ngaybookfrom).format('LT')}</Text>
       </View>
     </View>
   );

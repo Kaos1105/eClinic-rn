@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
@@ -12,20 +12,37 @@ import { globalAppointmentDate, globalAppointment } from '../../services-demo/Da
 import { useLocalization } from '../../localization';
 import { Theme } from '../../theme';
 import reactotron from 'reactotron-react-native';
+import agent from 'service/api/agent';
+import { RootStoreContext } from 'stores/rootStore';
+import { observer } from 'mobx-react-lite';
+import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
 
 type IState = {
   selectedDate: string;
   items: any;
 };
 
-export const CalendarScreen: React.FC<{}> = (props) => {
+const weeklyAppointment = moment(globalAppointmentDate).format('YYYY-MM-DD');
+
+const datas = {
+  [weeklyAppointment]: [{ date: weeklyAppointment, title: '' }],
+};
+
+export const CalendarScreen: React.FC<{}> = observer((props) => {
+  //Hook
   const refAgenda = useRef<Agenda>();
   const navigation = useNavigation();
   const { getString } = useLocalization();
 
+  //Store
+  const rootStore = useContext(RootStoreContext);
+  const { user } = rootStore.fireBaseAuthStore;
+  const { currentUser, getUser } = rootStore.usersStore;
+  const { isLoaded, setIsLoaded } = rootStore.commonStore;
+  //State
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
+  const [bookings, setBookings] = useState<EC_BOOKING_ENTITY[]>([]);
   const [items, setItems] = useState({});
-
   const onPressNewAppointment = () => {
     navigation.navigate(NavigationNames.DoctorListScreen);
   };
@@ -34,8 +51,34 @@ export const CalendarScreen: React.FC<{}> = (props) => {
     refAgenda.current.chooseDay(today);
   };
 
-  const onDayPress = async (day: any) => {};
+  const onDayPress = async (day: any) => {
+    const selectedDate = new Date(day.dateString);
+    setSelectedDate(day.dateString);
+    await fetchListBooking(selectedDate);
+  };
 
+  const fetchListBooking = async (dateCheck: Date) => {
+    setIsLoaded(false);
+    const resp = await agent.EC_BOOKING_API.getBookingByDate(
+      currentUser.BENHNHAN_ID,
+      dateCheck.toISOString()
+    );
+    setBookings(resp);
+    setItems({ [moment(dateCheck).format('YYYY-MM-DD')]: [...resp] });
+    setIsLoaded(true);
+  };
+
+  //Initial Load
+  useEffect(() => {
+    if (user && !currentUser) {
+      setIsLoaded(false);
+      getUser(user.phoneNumber).then(() => {
+        setIsLoaded(true);
+      });
+    }
+  }, []);
+
+  //set Header option
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -70,11 +113,19 @@ export const CalendarScreen: React.FC<{}> = (props) => {
         }}
         renderEmptyDate={() => <View />}
         renderDay={(day, item) => <View />}
-        renderItem={(item, firstItemInDay) => {
+        renderItem={(item: EC_BOOKING_ENTITY, firstItemInDay) => {
           return (
-            <View style={{ marginVertical: 8 }}>
-              <CalendarItemRow style={styles.calendarItem} item={globalAppointment} />
+            <View
+              style={{
+                marginVertical: 8,
+              }}
+            >
+              <CalendarItemRow style={styles.calendarItem} item={item} />
+              {/* <Text>{item.bookinG_ID}</Text> */}
             </View>
+            // <View style={{ marginVertical: 8 }}>
+            //   <Text>{item.bacsykhaM_ID}</Text>
+            // </View>
           );
         }}
         renderEmptyData={() => {
@@ -89,10 +140,10 @@ export const CalendarScreen: React.FC<{}> = (props) => {
           );
         }}
       />
-      {items && <FabButton onPress={onPressNewAppointment} />}
+      {bookings && <FabButton onPress={onPressNewAppointment} />}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

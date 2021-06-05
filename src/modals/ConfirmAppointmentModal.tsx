@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import NavigationNames from 'navigations/NavigationNames';
 import agent from 'service/api/agent';
 import { IUserData } from 'models/userData';
+import { observer } from 'mobx-react-lite';
 
 type TProps = {
   item?: AppointmentTimeModal;
@@ -32,7 +33,7 @@ const appointmentValidationScheme = yup.object().shape({
   lydodenkham: yup.string().required('Symptom is required'),
 });
 
-export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
+export const ConfirmAppointmentModal: React.FC<TProps> = observer((props) => {
   const { getString } = useLocalization();
   const navigation = useNavigation();
   //Store
@@ -189,7 +190,7 @@ export const ConfirmAppointmentModal: React.FC<TProps> = (props) => {
       </SafeAreaView>
     </ReactNativeModal>
   );
-};
+});
 
 const styles = StyleSheet.create({
   safeAreaContainer: {

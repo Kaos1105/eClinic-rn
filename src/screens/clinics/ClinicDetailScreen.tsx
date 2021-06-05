@@ -33,9 +33,9 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
 
   const initialRun = async () => {
     //get user location
-    setIsLoaded(false);
     try {
       if (!currentUserLocation) {
+        setIsLoaded(false);
         let location = await getUserLocation();
         let clinicById = await agent.EC_PHONGKHAM_API.details(
           model.phongkhaM_ID,

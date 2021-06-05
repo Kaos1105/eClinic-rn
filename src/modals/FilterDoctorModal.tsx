@@ -194,18 +194,18 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
           </TouchableOpacity>
         </View>
         <View style={{ flexDirection: 'row', paddingHorizontal: 10, flexWrap: 'wrap' }}>
-          {filterItem.chuyenkhoA_TEN && props.filterSpecialty && (
+          {filterItem.chuyenkhoA_TEN && props.filterSpecialty ? (
             <Text style={styles.previewFilterTag}>
               {filterItem.chuyenkhoA_TEN}
               <Ionicons name='checkmark' size={14} color='white' />
             </Text>
-          )}
-          {filterItem.phongkhaM_TEN && props.filterClinic && (
+          ) : null}
+          {filterItem.phongkhaM_TEN && props.filterClinic ? (
             <Text style={styles.previewFilterTag}>
               {filterItem.phongkhaM_TEN}
               <Ionicons name='checkmark' size={14} color='white' />
             </Text>
-          )}
+          ) : null}
         </View>
       </View>
 

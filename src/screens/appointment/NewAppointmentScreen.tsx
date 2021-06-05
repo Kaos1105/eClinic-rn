@@ -12,6 +12,7 @@ import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { ScrollView } from 'react-native-gesture-handler';
 import { splitTimeByInterval } from '../../utils/common';
 import agent from 'service/api/agent';
+import reactotron from 'reactotron-react-native';
 
 type TProps = {};
 
@@ -92,10 +93,25 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
     setOriginalAvailableTime(tempArr);
   };
 
+  const recheckAvailability = (dateCheck: Date, appointmentModalArr: AppointmentTimeModal[]) => {
+    const selectedDate = moment(dateCheck);
+    appointmentModalArr.forEach((item, index) => {
+      const availableTime = moment(selectedDate.format('YYYY-MM-DD') + ' ' + item.time);
+      appointmentModalArr[index] = {
+        ...item,
+        fromDate: availableTime.format(),
+        toDate: availableTime.add(0.5, 'hour').format(),
+      };
+    });
+    return appointmentModalArr;
+  };
+
   const checkAvailability = async (dateCheck: Date) => {
     setIsFetchingAvailability(true);
     const resp = await agent.EC_BOOKING_API.checkAvailable(model.emP_ID, dateCheck.toISOString());
-    let tempArrTime = [...originalAvailableTime];
+
+    const tempArrTime = recheckAvailability(dateCheck, [...originalAvailableTime]);
+
     resp.forEach((booked) => {
       const beginTime = moment(booked.ngaybookfrom);
       const endTime = moment(booked.ngaybookto);
@@ -113,12 +129,6 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
           //available = false;
           //or this
           //tempArrTime[index].available = false;
-        } else {
-          tempArrTime[index] = {
-            ...available,
-            fromDate: availableTime.format(),
-            toDate: availableTime.add(0.5, 'hour').format(),
-          };
         }
       });
     });
