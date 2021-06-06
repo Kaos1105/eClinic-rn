@@ -22,12 +22,6 @@ type IState = {
   items: any;
 };
 
-const weeklyAppointment = moment(globalAppointmentDate).format('YYYY-MM-DD');
-
-const datas = {
-  [weeklyAppointment]: [{ date: weeklyAppointment, title: '' }],
-};
-
 export const CalendarScreen: React.FC<{}> = observer((props) => {
   //Hook
   const refAgenda = useRef<Agenda>();

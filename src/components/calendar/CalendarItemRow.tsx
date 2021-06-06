@@ -11,20 +11,60 @@ type TProps = {
   style?: ViewStyle;
 };
 
+const appointmentStatusConst = {
+  finished: 'DKB',
+  cancel: 'HL',
+  unfinished: 'CKB',
+};
+
+const getRootStyleStatus = (status: string) => {
+  switch (status) {
+    case appointmentStatusConst.cancel:
+      return [styles.root, styles.rootCancel];
+    case appointmentStatusConst.finished:
+      return [styles.root, styles.rootDone];
+    case appointmentStatusConst.unfinished:
+      return [styles.root];
+  }
+};
+
+const getLeftEffectStyleStatus = (status: string) => {
+  switch (status) {
+    case appointmentStatusConst.cancel:
+      return [styles.leftEffect, styles.leftEffectCancel];
+    case appointmentStatusConst.finished:
+      return [styles.leftEffect, styles.leftEffectDone];
+    case appointmentStatusConst.unfinished:
+      return [styles.leftEffect];
+  }
+};
+
+const getTimeStyleStatus = (status: string) => {
+  switch (status) {
+    case appointmentStatusConst.cancel:
+      return [styles.textTime, styles.textTimeCancel];
+    case appointmentStatusConst.finished:
+      return [styles.textTime, styles.textTimeDone];
+    case appointmentStatusConst.unfinished:
+      return [styles.textTime];
+  }
+};
+
 export const CalendarItemRow: React.FC<TProps> = (props) => {
-  reactotron.log(props.item);
   return (
-    <View style={[styles.root]}>
-      <View style={styles.leftEffect} />
+    <View style={getRootStyleStatus(props.item.trangthai)}>
+      <View style={getLeftEffectStyleStatus(props.item.trangthai)} />
       <View style={styles.textContent}>
         <Text style={styles.textTitle}>{props.item.trangthaI_NAME}</Text>
-        <Text style={styles.textDoctor}>{props.item.bacsykhaM_ID}</Text>
+        <Text style={styles.textDoctor}>{props.item.tenBacSi}</Text>
         <Text style={styles.textDate}>
-          {moment(props.item.ngaybookfrom).format('MM/DD/YYYY dddd')}
+          {moment(props.item.ngaybookfrom).format('DD/MM/YYYY dddd')}
         </Text>
       </View>
       <View style={styles.timeContent}>
-        <Text style={styles.textTime}>{moment(props.item.ngaybookfrom).format('LT')}</Text>
+        <Text style={getTimeStyleStatus(props.item.trangthai)}>
+          {moment(props.item.ngaybookfrom).format('LT')}
+        </Text>
       </View>
     </View>
   );
@@ -38,12 +78,24 @@ const styles = StyleSheet.create({
     marginEnd: 16,
     flexDirection: 'row',
   },
+  rootDone: {
+    backgroundColor: Theme.colors.calendarItemDone.backgroundColor,
+  },
+  rootCancel: {
+    backgroundColor: Theme.colors.calendarItemCancel.backgroundColor,
+  },
   leftEffect: {
     borderTopStartRadius: 4,
     borderBottomStartRadius: 4,
     width: 4,
     height: '100%',
     backgroundColor: Theme.colors.calendarItem.leftColor,
+  },
+  leftEffectDone: {
+    backgroundColor: Theme.colors.calendarItemDone.leftColor,
+  },
+  leftEffectCancel: {
+    backgroundColor: Theme.colors.calendarItemCancel.leftColor,
   },
   textContent: {
     flex: 1,
@@ -70,5 +122,11 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '600',
     color: Theme.colors.calendarItem.timeColor,
+  },
+  textTimeDone: {
+    color: Theme.colors.calendarItemDone.timeColor,
+  },
+  textTimeCancel: {
+    color: Theme.colors.calendarItemCancel.timeColor,
   },
 });
