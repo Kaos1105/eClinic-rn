@@ -64,12 +64,7 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
 
   //Initial Load
   useEffect(() => {
-    if (user && !currentUser) {
-      setIsLoaded(false);
-      getUser(user.phoneNumber).then(() => {
-        setIsLoaded(true);
-      });
-    }
+    fetchListBooking(new Date());
   }, []);
 
   //set Header option
@@ -82,6 +77,9 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
       ),
     });
   }, []);
+
+  if (!isLoaded) return null;
+
   return (
     <View style={styles.container}>
       <Agenda

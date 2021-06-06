@@ -51,6 +51,7 @@ export default class FireBaseAuthStore {
       runInAction(() => {
         this.user = user;
       });
+      return user;
     } catch (error) {
       console.log(error);
     }

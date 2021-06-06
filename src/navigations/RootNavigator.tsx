@@ -21,6 +21,7 @@ const App: React.FC = () => {
   const { getUser, checkExpireTime, isLoggedIn, user, logout, getRefreshToken } =
     rootStore.fireBaseAuthStore;
   const { login } = rootStore.authenticationStore;
+  const { getUser: getProfile, currentUser } = rootStore.usersStore;
 
   const [loggedInServer, setLoggedInServer] = useState(false);
   const [appLoaded, setAppLoaded] = useState(false);
@@ -31,7 +32,9 @@ const App: React.FC = () => {
     if (initialLoad) {
       checkExpireTime();
       if (fireBaseToken) {
-        await getUser(fireBaseToken).catch(() => logout());
+        await getUser(fireBaseToken)
+          .then((resp) => getProfile(resp.phoneNumber))
+          .catch(() => logout());
         setAppLoaded(true);
       } else if (fireBaseToken === null) {
         await getRefreshToken(fireBaseRefreshToken).catch((error) => {
@@ -51,7 +54,7 @@ const App: React.FC = () => {
     let loggedIn = await login(loginModel).catch((error) => {
       Alert.alert('Error', 'Can not connect to server');
     });
-    setLoggedInServer(loggedInServer);
+    setLoggedInServer(true);
   };
 
   useEffect(() => {
@@ -69,7 +72,7 @@ const App: React.FC = () => {
     }
   }, [toastToggle]);
 
-  if (!appLoaded) return <SplashScreen />;
+  if (!appLoaded && !loggedInServer) return <SplashScreen />;
 
   return (
     <NavigationContainer ref={RootNavigation.navigationRef}>
