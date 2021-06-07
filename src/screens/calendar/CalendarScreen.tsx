@@ -8,9 +8,9 @@ import moment from 'moment';
 import { CalendarItemRow } from '../../components';
 import NavigationNames from '../../navigations/NavigationNames';
 import { FabButton, Button } from '../../components/buttons';
-import { globalAppointmentDate, globalAppointment } from '../../services-demo/DashboardService';
 import { useLocalization } from '../../localization';
 import { Theme } from '../../theme';
+import { DetailAppointmentModal } from '../../modals';
 import reactotron from 'reactotron-react-native';
 import agent from 'service/api/agent';
 import { RootStoreContext } from 'stores/rootStore';
@@ -30,13 +30,16 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
 
   //Store
   const rootStore = useContext(RootStoreContext);
-  const { user } = rootStore.fireBaseAuthStore;
-  const { currentUser, getUser } = rootStore.usersStore;
+  const { currentUser } = rootStore.usersStore;
   const { isLoaded, setIsLoaded } = rootStore.commonStore;
   //State
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
-  const [bookings, setBookings] = useState<EC_BOOKING_ENTITY[]>([]);
   const [items, setItems] = useState({});
+  const [appointmentModal, setAppointmentModal] = useState({
+    isVisible: false,
+    item: null,
+  });
+
   const onPressNewAppointment = () => {
     navigation.navigate(NavigationNames.DoctorListScreen);
   };
@@ -57,8 +60,8 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
       currentUser.BENHNHAN_ID,
       dateCheck.toISOString()
     );
-    setBookings(resp);
-    setItems({ [moment(dateCheck).format('YYYY-MM-DD')]: [...resp] });
+    if (resp.length > 0) setItems({ [moment(dateCheck).format('YYYY-MM-DD')]: [...resp] });
+    else setItems(null);
     setIsLoaded(true);
   };
 
@@ -112,7 +115,16 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
                 marginVertical: 8,
               }}
             >
-              <CalendarItemRow style={styles.calendarItem} item={item} />
+              <CalendarItemRow
+                style={styles.calendarItem}
+                item={item}
+                onPressBooking={() => {
+                  setAppointmentModal({
+                    isVisible: true,
+                    item: item,
+                  });
+                }}
+              />
               {/* <Text>{item.bookinG_ID}</Text> */}
             </View>
             // <View style={{ marginVertical: 8 }}>
@@ -132,7 +144,20 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
           );
         }}
       />
-      {bookings && <FabButton onPress={onPressNewAppointment} />}
+      {items && <FabButton onPress={onPressNewAppointment} />}
+      <DetailAppointmentModal
+        isVisible={appointmentModal.isVisible}
+        item={appointmentModal.item}
+        onSubmitBooking={() => {
+          fetchListBooking(new Date(selectedDate));
+        }}
+        onDismissModal={() => {
+          setAppointmentModal({
+            isVisible: false,
+            item: appointmentModal.item,
+          });
+        }}
+      />
     </View>
   );
 });

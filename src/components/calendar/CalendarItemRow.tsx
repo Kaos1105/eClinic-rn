@@ -5,13 +5,15 @@ import { AppointmentModel } from '../../models-demo';
 import { Theme } from '../../theme';
 import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
 import reactotron from 'reactotron-react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type TProps = {
   item: EC_BOOKING_ENTITY;
   style?: ViewStyle;
+  onPressBooking: () => void;
 };
 
-const appointmentStatusConst = {
+export const appointmentStatusConst = {
   finished: 'DKB',
   cancel: 'HL',
   unfinished: 'CKB',
@@ -52,7 +54,10 @@ const getTimeStyleStatus = (status: string) => {
 
 export const CalendarItemRow: React.FC<TProps> = (props) => {
   return (
-    <View style={getRootStyleStatus(props.item.trangthai)}>
+    <TouchableOpacity
+      style={getRootStyleStatus(props.item.trangthai)}
+      onPress={props.onPressBooking}
+    >
       <View style={getLeftEffectStyleStatus(props.item.trangthai)} />
       <View style={styles.textContent}>
         <Text style={styles.textTitle}>{props.item.trangthaI_NAME}</Text>
@@ -66,7 +71,7 @@ export const CalendarItemRow: React.FC<TProps> = (props) => {
           {moment(props.item.ngaybookfrom).format('LT')}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

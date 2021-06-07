@@ -206,6 +206,10 @@ const EC_BOOKING_API = {
     input: EC_BOOKING_ENTITY
   ): Promise<{ ID: string; BENHNHAN_ID: string; Result: string; ErrorDesc: string }> =>
     httpNetCore.post('/api/LichHen/EC_LichHen_Ins', input).then(responseBodyResult),
+  bookingUpd: (
+    input: EC_BOOKING_ENTITY
+  ): Promise<{ ids: string; result: string; errorDesc: string }> =>
+    httpNetCore.post('/api/LichHen/EC_LichHen_Upd', input).then(responseBodyResult),
 };
 
 const CM_EMPLOYEE_API = {

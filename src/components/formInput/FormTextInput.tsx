@@ -12,6 +12,7 @@ interface IProps extends TextInputProps {
   label: string;
   error: string;
   touched: boolean;
+  editable?: boolean;
   onInputBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onInputChange: (text: string) => void;
 }
@@ -21,6 +22,7 @@ export const FormTextInput: React.FC<IProps> = (props) => {
       <Text style={styles.label}>{props.label}</Text>
       <TextInput
         {...props}
+        editable={props.editable}
         style={styles.input}
         onChangeText={props.onInputChange}
         onBlur={props.onInputBlur}

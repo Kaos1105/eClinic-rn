@@ -4,3 +4,4 @@ export * from './PhotoViewerModal';
 export * from './StoryViewerModal';
 export * from './ConfirmAppointmentModal';
 export * from './FilterDoctorModal';
+export * from './DetailAppointmentModal';

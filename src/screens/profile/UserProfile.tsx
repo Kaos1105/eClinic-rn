@@ -16,6 +16,15 @@ export const UserProfile = observer(() => {
   const { setToastData } = rootStore.commonStore;
   const { isLoaded, setIsLoaded } = rootStore.commonStore;
 
+  useEffect(() => {
+    if (user && !currentUser) {
+      setIsLoaded(false);
+      getUser(user.phoneNumber).then(() => {
+        setIsLoaded(true);
+      });
+    }
+  }, []);
+
   const handleSubmit = (values: IUserData) => {
     let profile: IUserData = { ...values };
     editUser(profile).then(() => {
