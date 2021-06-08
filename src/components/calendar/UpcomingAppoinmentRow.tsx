@@ -1,31 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { Theme } from '../../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { Avatar } from '../avatar';
-import { AppointmentModel } from '../../models-demo/AppointmentModel';
 import moment from 'moment';
+import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
+import agent from 'service/api/agent';
+import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
+import AppConsts from '../../lib/appconst';
 
 type TProps = {
   style?: ViewStyle;
-  item: AppointmentModel;
+  item: EC_BOOKING_ENTITY;
 };
 
 export const UpcomingAppoinmentRow: React.FC<TProps> = (props) => {
+  const [clinic, setClinic] = useState<EC_PHONGKHAM_ENTITY>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (props.item?.tenanT_ID) {
+      agent.EC_PHONGKHAM_API.details(props.item.tenanT_ID).then((result) => {
+        setClinic(result);
+        setIsLoaded(true);
+      });
+    }
+  }, [props.item?.tenanT_ID]);
+
   return (
     <View style={[styles.container, props.style]}>
-      <Avatar
-        source={{
-          uri: props.item.doctor.imageUrl,
-        }}
-        status={props.item.doctor.isOnline ? 'online' : 'bussy'}
-      />
+      <Avatar source={{ uri: `${AppConsts.remoteServiceBaseUrl}/${clinic.hinhdaidien}` }} />
       <View style={styles.rows}>
-        <Text style={styles.titleText}>{props.item.title}</Text>
-        <Text style={styles.doctorNameText}>{props.item.doctor.fullName}</Text>
+        <Text style={styles.titleText}>{props.item.trangthaI_NAME}</Text>
+        <Text style={styles.doctorNameText}>{props.item.tenBacSi}</Text>
+        <Text style={styles.doctorNameText}>{clinic.phongkhaM_TENDAYDU}</Text>
         <Text style={styles.locationText}>
-          {`${moment(props.item.appointmentDate).format('LT')} ${props.item.locationName}`}
+          {`${moment(props.item.ngaybookfrom).format('DD/MM/YYYY HH:mm')}`}
         </Text>
+        <Text style={styles.locationText}>{clinic.diachI_1}</Text>
       </View>
       <View style={styles.notification}>
         <Ionicons name='ios-notifications' color='white' size={20} />

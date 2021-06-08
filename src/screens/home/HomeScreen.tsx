@@ -27,7 +27,7 @@ import { observer } from 'mobx-react-lite';
 const generateMenuItems = (getString: (key: string) => string): HomeMenuItemType[] => [
   {
     row1: getString('Book an Appoinment'),
-    row2: getString('6 Doctors are available'),
+    row2: getString('Go to Doctor Screen'),
     iconName: 'md-alarm',
     iconBack: '#73CEC1',
     action: 'BookAnAppoinment',
@@ -57,7 +57,7 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
   const { loadList: loadListDoctors } = rootStore.cM_EMPLOYEE_Store;
   const { loadList: loadListSpecialties } = rootStore.dM_CHUYENKHOA_Store;
   const navigation = useNavigation();
-  const { getString, changeLanguage } = useLocalization();
+  const { getString } = useLocalization();
   const [dashboardItem, setDashboardItem] = useState<DashboardItemsModel>(null);
   const [listClinics, setListClinics] = useState<EC_PHONGKHAM_ENTITY[]>([]);
   const [listDoctors, setListDoctors] = useState<CM_EMPLOYEE_ENTITY[]>([]);
@@ -89,7 +89,7 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
   const onClickMenu = (item: HomeMenuItemType) => {
     switch (item.action) {
       case 'BookAnAppoinment':
-        navigation.navigate(NavigationNames.NewAppointmentScreen);
+        navigation.navigate(NavigationNames.DoctorListScreen);
         break;
       // case 'LabTestsAtHome':
       //   navigation.navigate(NavigationName);
@@ -111,10 +111,10 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <UpcomingAppoinmentRow
+        {/* <UpcomingAppoinmentRow
           style={styles.upcomingAppoinmentRow}
           item={dashboardItem.appointment}
-        />
+        /> */}
         <SectionHeader title={getString('What are you looking for?')} />
         {/* <FlatList
           data={generateMenuItems(getString)}

@@ -26,12 +26,7 @@ export const ProfileScreen: React.FC<TProps> = observer((props) => {
       subtitle: getString('Appointments'),
       iconName: 'md-calendar',
       iconColor: '#2D9CDB',
-    },
-    {
-      title: getString('Medical'),
-      subtitle: getString('Programs'),
-      iconName: 'ios-medkit',
-      iconColor: '#27AE60',
+      navigateToScreen: NavigationNames.CalendarScreen,
     },
     {
       title: getString('Notifications'),
@@ -71,14 +66,8 @@ export const ProfileScreen: React.FC<TProps> = observer((props) => {
   return (
     <SafeAreaView style={styles.flex1}>
       <ScrollView style={styles.flex1} contentContainerStyle={styles.scrollContainer}>
-        <Avatar
-          imageStyle={styles.imageStyle}
-          source={{
-            uri: 'https://raw.githubusercontent.com/publsoft/publsoft.github.io/master/projects/dentist-demo/assets/images/profile_photo.png',
-          }}
-        />
+        <Text style={styles.daysText}>Hello</Text>
         <Text style={styles.nameText}>Büşra Mutlu</Text>
-        <Text style={styles.daysText}>13. days</Text>
 
         <View style={{ marginTop: 24 }}>
           {profilesOption.map((item, index) => {
@@ -132,7 +121,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 22,
     fontWeight: '600',
-    marginTop: 16,
+    marginTop: 6,
     color: Theme.colors.black,
   },
   daysText: {

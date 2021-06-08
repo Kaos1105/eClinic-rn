@@ -110,17 +110,18 @@ const CalendarTabStack = () => {
 // };
 
 const ProfileTabStack = () => {
+  const { getString } = useLocalization();
   return (
     <Stack.Navigator headerMode='screen' screenOptions={stackScreenOptions}>
       <Stack.Screen
         name={NavigationNames.ProfileScreen}
         component={ProfileScreen}
-        options={{ headerShown: false }}
+        options={{ title: getString('Profile') }}
       />
       <Stack.Screen
         name={NavigationNames.UserProfile}
         component={UserProfile}
-        options={{ headerShown: true }}
+        options={{ title: getString('User Profile') }}
       />
     </Stack.Navigator>
   );
@@ -149,21 +150,24 @@ const MenuTabStack = () => {
   );
 };
 
-const HomePageTabNavigator = () => (
-  <Tab.Navigator
-    screenOptions={tabScreenOptions}
-    tabBarOptions={{
-      activeTintColor: Theme.colors.primaryColor,
-      inactiveTintColor: Theme.colors.gray,
-    }}
-  >
-    <Tab.Screen name={NavigationNames.HomeTab} component={HomeTabStack} />
-    <Tab.Screen name={NavigationNames.CalendarTab} component={CalendarTabStack} />
-    {/* <Tab.Screen name={NavigationNames.MediaTab} component={MediaTabStack} /> */}
-    <Tab.Screen name={NavigationNames.ProfileTab} component={ProfileTabStack} />
-    <Tab.Screen name={NavigationNames.MenuTab} component={MenuTabStack} />
-  </Tab.Navigator>
-);
+const HomePageTabNavigator = () => {
+  const { getString } = useLocalization();
+  return (
+    <Tab.Navigator
+      screenOptions={tabScreenOptions}
+      tabBarOptions={{
+        activeTintColor: Theme.colors.primaryColor,
+        inactiveTintColor: Theme.colors.gray,
+      }}
+    >
+      <Tab.Screen name={NavigationNames.HomeTab} component={HomeTabStack} />
+      <Tab.Screen name={NavigationNames.CalendarTab} component={CalendarTabStack} />
+      {/* <Tab.Screen name={NavigationNames.MediaTab} component={MediaTabStack} /> */}
+      <Tab.Screen name={NavigationNames.ProfileTab} component={ProfileTabStack} />
+      <Tab.Screen name={NavigationNames.MenuTab} component={MenuTabStack} />
+    </Tab.Navigator>
+  );
+};
 
 // const AuthStackNavigator = createStackNavigator();
 

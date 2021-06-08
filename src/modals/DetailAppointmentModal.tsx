@@ -56,7 +56,7 @@ export const DetailAppointmentModal: React.FC<TProps> = observer((props) => {
   };
 
   const handleCancel = async () => {
-    let bookingData: EC_BOOKING_ENTITY = { ...props.item, trangthai: 'HL', bacsykhaM_ID: null };
+    let bookingData: EC_BOOKING_ENTITY = { ...props.item, trangthai: 'HL' };
     setIsBooking(true);
     let resp = await agent.EC_BOOKING_API.bookingUpd(bookingData);
     reactotron.log(resp);
@@ -70,7 +70,6 @@ export const DetailAppointmentModal: React.FC<TProps> = observer((props) => {
   };
 
   useEffect(() => {
-    console.log(props.item?.tenanT_ID);
     if (props.item?.tenanT_ID) {
       agent.EC_PHONGKHAM_API.details(props.item.tenanT_ID).then((result) => {
         setClinic(result);
