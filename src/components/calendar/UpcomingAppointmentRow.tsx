@@ -8,41 +8,58 @@ import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
 import agent from 'service/api/agent';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import AppConsts from '../../lib/appconst';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import NavigationNames from 'navigations/NavigationNames';
 
 type TProps = {
   style?: ViewStyle;
   item: EC_BOOKING_ENTITY;
 };
 
-export const UpcomingAppoinmentRow: React.FC<TProps> = (props) => {
+export const UpcomingAppointmentRow: React.FC<TProps> = (props) => {
+  //Hook
+  const navigation = useNavigation();
+
   const [clinic, setClinic] = useState<EC_PHONGKHAM_ENTITY>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     if (props.item?.tenanT_ID) {
       agent.EC_PHONGKHAM_API.details(props.item.tenanT_ID).then((result) => {
         setClinic(result);
-        setIsLoaded(true);
       });
     }
   }, [props.item?.tenanT_ID]);
 
+  if (props.item === null || clinic === null)
+    return (
+      <View style={[styles.container, styles.emptyContainer]}>
+        <Ionicons name='medical' size={24} color={Theme.colors.tintColor} />
+        <Text style={{ paddingLeft: 10 }}>There is no new Appointment</Text>
+      </View>
+    );
+
   return (
-    <View style={[styles.container, props.style]}>
+    <TouchableOpacity
+      style={[styles.container, props.style]}
+      onPress={() => {
+        navigation.navigate(NavigationNames.CalendarTab, {
+          screen: NavigationNames.CalendarScreen,
+          params: { model: JSON.stringify(props.item) },
+        });
+      }}
+    >
       <Avatar source={{ uri: `${AppConsts.remoteServiceBaseUrl}/${clinic.hinhdaidien}` }} />
       <View style={styles.rows}>
         <Text style={styles.titleText}>{props.item.trangthaI_NAME}</Text>
-        <Text style={styles.doctorNameText}>{props.item.tenBacSi}</Text>
+        <Text style={[styles.doctorNameText, { fontWeight: 'bold' }]}>{props.item.tenBacSi}</Text>
         <Text style={styles.doctorNameText}>{clinic.phongkhaM_TENDAYDU}</Text>
-        <Text style={styles.locationText}>
+        <Text style={[styles.locationText, { color: Theme.colors.calendarItem.timeColor }]}>
           {`${moment(props.item.ngaybookfrom).format('DD/MM/YYYY HH:mm')}`}
         </Text>
         <Text style={styles.locationText}>{clinic.diachI_1}</Text>
       </View>
-      <View style={styles.notification}>
-        <Ionicons name='ios-notifications' color='white' size={20} />
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -53,6 +70,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     flexDirection: 'row',
   },
+  emptyContainer: {
+    marginHorizontal: 10,
+    alignItems: 'center',
+  },
   rows: {
     flex: 1,
     paddingHorizontal: 12,
@@ -61,12 +82,12 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 16,
     fontWeight: '600',
-    color: Theme.colors.black,
+    color: Theme.colors.primaryColorDark,
   },
   doctorNameText: {
     marginTop: 3,
     fontSize: 14,
-    color: Theme.colors.gray,
+    color: Theme.colors.black,
   },
   locationText: {
     marginTop: 3,

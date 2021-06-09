@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, View, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {
-  UpcomingAppoinmentRow,
+  UpcomingAppointmentRow,
   DashboardMenuItemRow,
   Divider,
   SectionHeader,
@@ -23,6 +23,9 @@ import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { DM_CHUYENKHOA_ENTITY } from 'models/DM_CHUYENKHOA_ENTITY';
 import { observer } from 'mobx-react-lite';
+import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
+import agent from 'service/api/agent';
+import reactotron from 'reactotron-react-native';
 
 const generateMenuItems = (getString: (key: string) => string): HomeMenuItemType[] => [
   {
@@ -51,17 +54,22 @@ const generateMenuItems = (getString: (key: string) => string): HomeMenuItemType
 type TProps = {};
 
 export const HomeScreen: React.FC<TProps> = observer((props) => {
+  //Store
   const rootStore = useContext(RootStoreContext);
   const { setIsLoaded, isLoaded } = rootStore.commonStore;
   const { loadList: loadListClinics } = rootStore.eC_PHONGKHAM_Store;
   const { loadList: loadListDoctors } = rootStore.cM_EMPLOYEE_Store;
   const { loadList: loadListSpecialties } = rootStore.dM_CHUYENKHOA_Store;
+  const { currentUser } = rootStore.usersStore;
   const navigation = useNavigation();
   const { getString } = useLocalization();
+
+  //State
   const [dashboardItem, setDashboardItem] = useState<DashboardItemsModel>(null);
   const [listClinics, setListClinics] = useState<EC_PHONGKHAM_ENTITY[]>([]);
   const [listDoctors, setListDoctors] = useState<CM_EMPLOYEE_ENTITY[]>([]);
   const [listSpecialties, setListSpecialties] = useState<DM_CHUYENKHOA_ENTITY[]>([]);
+  const [nextBooking, setNextBooking] = useState<EC_BOOKING_ENTITY>(null);
 
   const initialRun = async () => {
     //get list data for home screen
@@ -69,8 +77,10 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
     try {
       const clinicList = await loadListClinics({ maxResultCount: 4 });
       setListClinics(clinicList);
+
       const doctorList = await loadListDoctors({ maxResultCount: 4 });
       setListDoctors(doctorList);
+
       const specialist = await loadListSpecialties({ maxResultCount: 4 });
       setListSpecialties(specialist);
     } catch {
@@ -85,6 +95,18 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
     //Load data from backend
     initialRun();
   }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      agent.EC_BOOKING_API.getNextBooking(currentUser.BENHNHAN_ID, new Date().toISOString()).then(
+        (result) => {
+          if (result.length > 0) {
+            setNextBooking(result[0]);
+          }
+        }
+      );
+    }
+  }, [currentUser]);
 
   const onClickMenu = (item: HomeMenuItemType) => {
     switch (item.action) {
@@ -111,10 +133,7 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        {/* <UpcomingAppoinmentRow
-          style={styles.upcomingAppoinmentRow}
-          item={dashboardItem.appointment}
-        /> */}
+        <UpcomingAppointmentRow style={styles.UpcomingAppointmentRow} item={nextBooking} />
         <SectionHeader title={getString('What are you looking for?')} />
         {/* <FlatList
           data={generateMenuItems(getString)}
@@ -208,7 +227,7 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 24,
   },
-  upcomingAppoinmentRow: {
+  UpcomingAppointmentRow: {
     marginHorizontal: 16,
   },
   doctorsContainer: {

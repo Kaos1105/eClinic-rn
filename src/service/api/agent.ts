@@ -202,6 +202,12 @@ const EC_BOOKING_API = {
         params: { benhNhanId: patientId, checkDate: dateCheck },
       })
       .then(responseBodyResult),
+  getNextBooking: (patientId: string, dateCheck: string): Promise<Array<EC_BOOKING_ENTITY>> =>
+    httpNetCore
+      .get('/api/LichHen/EC_LICHHEN_GetNext', {
+        params: { benhNhanId: patientId, checkDate: dateCheck },
+      })
+      .then(responseBodyResult),
   bookingIns: (
     input: EC_BOOKING_ENTITY
   ): Promise<{ ID: string; BENHNHAN_ID: string; Result: string; ErrorDesc: string }> =>

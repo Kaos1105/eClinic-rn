@@ -1,2 +1,2 @@
-export * from "./UpcomingAppoinmentRow";
-export * from "./CalendarItemRow";
+export * from './UpcomingAppointmentRow';
+export * from './CalendarItemRow';

@@ -18,10 +18,10 @@ const App: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const { fireBaseToken, loadAsyncStorage, toastToggle, getToast, fireBaseRefreshToken } =
     rootStore.commonStore;
-  const { getUser, checkExpireTime, isLoggedIn, user, logout, getRefreshToken } =
+  const { getUser, checkExpireTime, isLoggedIn, user, getRefreshToken } =
     rootStore.fireBaseAuthStore;
   const { login } = rootStore.authenticationStore;
-  const { getUser: getProfile, currentUser } = rootStore.usersStore;
+  const { getUser: getProfile } = rootStore.usersStore;
 
   const [loggedInServer, setLoggedInServer] = useState(false);
   const [appLoaded, setAppLoaded] = useState(false);
@@ -32,9 +32,8 @@ const App: React.FC = () => {
     if (initialLoad) {
       checkExpireTime();
       if (fireBaseToken) {
-        await getUser(fireBaseToken)
-          .then((resp) => getProfile(resp.phoneNumber))
-          .catch(() => logout());
+        let resp = await getUser(fireBaseToken);
+        await getProfile(resp.phoneNumber);
         setAppLoaded(true);
       } else if (fireBaseToken === null) {
         await getRefreshToken(fireBaseRefreshToken).catch((error) => {

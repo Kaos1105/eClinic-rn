@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Agenda } from 'react-native-calendars';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
@@ -17,17 +17,19 @@ import { RootStoreContext } from 'stores/rootStore';
 import { observer } from 'mobx-react-lite';
 import { EC_BOOKING_ENTITY } from 'models/EC_BOOKING_ENTITY';
 
-type IState = {
-  selectedDate: string;
-  items: any;
-};
-
 export const CalendarScreen: React.FC<{}> = observer((props) => {
   //Hook
   const refAgenda = useRef<Agenda>();
   const navigation = useNavigation();
+  const route = useRoute();
   const { getString } = useLocalization();
 
+  //Navigate param
+
+  const model =
+    route.params && route.params['model']
+      ? (JSON.parse(route.params['model']) as EC_BOOKING_ENTITY)
+      : null;
   //Store
   const rootStore = useContext(RootStoreContext);
   const { currentUser } = rootStore.usersStore;
@@ -67,8 +69,15 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
 
   //Initial Load
   useEffect(() => {
-    fetchListBooking(new Date());
-  }, []);
+    if (route.params && route.params['model']) {
+      const model = JSON.parse(route.params['model']) as EC_BOOKING_ENTITY;
+      const dateString = model.ngaybookfrom.toString();
+      setSelectedDate(dateString);
+      fetchListBooking(new Date(model.ngaybookfrom.toString()));
+    } else {
+      fetchListBooking(new Date(selectedDate));
+    }
+  }, [route.params]);
 
   //set Header option
   useEffect(() => {

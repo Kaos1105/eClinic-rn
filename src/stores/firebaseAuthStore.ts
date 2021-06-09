@@ -53,7 +53,7 @@ export default class FireBaseAuthStore {
       });
       return user;
     } catch (error) {
-      console.log(error);
+      this.logout();
     }
   };
 
