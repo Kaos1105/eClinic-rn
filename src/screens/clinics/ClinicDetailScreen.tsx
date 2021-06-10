@@ -49,7 +49,7 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
         setClinicLocation(result.geometry.location);
         setClinicAddress(result.formatted_address);
       } else {
-        Alert.alert('Location can not be found');
+        Alert.alert('Không thể xác định vị trí phòng khám');
       }
     } catch {}
     setIsLoaded(true);
@@ -80,7 +80,7 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
         <Text style={styles.doctorInfoTitle}>{model.chuyenkhoA_TEN}</Text>
       </View>
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Info</Text>
+        <Text style={styles.sectionTitle}>{getString('Info')}</Text>
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
             <Ionicons name='person' color={Theme.colors.tintColor} size={18} />
@@ -123,12 +123,12 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
         </View>
       </View>
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Details</Text>
+        <Text style={styles.sectionTitle}>{getString('Details')}</Text>
         <Divider />
         <Text style={styles.aboutText}>{model.gioithieu}</Text>
       </View>
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Location</Text>
+        <Text style={styles.sectionTitle}>{getString('Location')}</Text>
         <Map
           currentUserLocation={currentUserLocation}
           targetLocation={clinicLocation}
@@ -136,10 +136,10 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
         />
       </View>
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Doctors</Text>
+        <Text style={styles.sectionTitle}>{getString('Clinic Doctors')}</Text>
         <Divider />
         <Button
-          title='Doctor list screen'
+          title={getString('Doctors list screen')}
           onPress={() => {
             navigation.navigate(NavigationNames.DoctorListScreen, {
               param: JSON.stringify(model),

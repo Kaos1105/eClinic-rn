@@ -63,7 +63,7 @@ export const CalendarItemRow: React.FC<TProps> = (props) => {
         <Text style={styles.textTitle}>{props.item.trangthaI_NAME}</Text>
         <Text style={styles.textDoctor}>{props.item.tenBacSi}</Text>
         <Text style={styles.textDate}>
-          {moment(props.item.ngaybookfrom).format('DD/MM/YYYY dddd')}
+          {moment(props.item.ngaybookfrom).format('DD/MM/YYYY ddd')}
         </Text>
       </View>
       <View style={styles.timeContent}>

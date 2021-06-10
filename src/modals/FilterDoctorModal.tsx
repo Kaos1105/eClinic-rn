@@ -54,11 +54,11 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
   const searchPlaceholder = () => {
     switch (props.parentName) {
       case NavigationNames.ClinicListScreen:
-        return 'Clinic name';
+        return getString('Clinic name');
       case NavigationNames.DepartmentListScreen:
-        return 'Specialty name';
+        return getString('Specialty name');
       case NavigationNames.DoctorListScreen:
-        return 'Doctor name';
+        return getString('Doctor name');
       default:
         break;
     }
@@ -125,7 +125,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
       }
       setComponentLoaded(true);
     } catch {
-      Alert.prompt('Error', 'Can not connect to server');
+      Alert.prompt('Lỗi', 'Không thể kết nối đến server');
     }
   };
 
@@ -190,7 +190,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
           </View>
           <TouchableOpacity style={styles.filterButton} onPress={() => setIsModalVisible(true)}>
             <Ionicons name='filter' style={{ marginHorizontal: 5 }} size={20} color='black' />
-            <Text>Filter</Text>
+            <Text>{getString('Filter')}</Text>
           </TouchableOpacity>
         </View>
         <View style={{ flexDirection: 'row', paddingHorizontal: 10, flexWrap: 'wrap' }}>
@@ -243,7 +243,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
             <ScrollView style={styles.filterContainer}>
               {props.filterSpecialty && (
                 <View style={styles.sectionContainer}>
-                  <Text style={styles.sectionTitle}>Specialty</Text>
+                  <Text style={styles.sectionTitle}>{getString('Specialty')}</Text>
                   <Divider />
                   <View style={styles.filterListWrapper}>
                     {listSpecialties.map((item, index) => (
@@ -278,7 +278,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
                     <Button
                       disabled={isFetchingSpecialty}
                       style={{ paddingHorizontal: 5, paddingVertical: 3, alignSelf: 'center' }}
-                      title='Show more'
+                      title={getString('See More')}
                       onPress={fetchMoreSpecialty}
                     />
                   )}
@@ -286,7 +286,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
               )}
               {props.filterClinic && (
                 <View style={styles.sectionContainer}>
-                  <Text style={styles.sectionTitle}>Clinic</Text>
+                  <Text style={styles.sectionTitle}>{getString('Clinic')}</Text>
                   <Divider />
                   <View style={styles.filterListWrapper}>
                     {listClinics.map((item, index) => (
@@ -321,7 +321,7 @@ export const FilterDoctorModal: React.FC<TProps> = observer((props) => {
                     <Button
                       disabled={isFetchingClinic}
                       style={{ paddingHorizontal: 5, paddingVertical: 3, alignSelf: 'center' }}
-                      title='Show more'
+                      title={getString('See More')}
                       onPress={fetchMoreClinic}
                     />
                   )}

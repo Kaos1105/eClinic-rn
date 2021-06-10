@@ -24,12 +24,6 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
   const route = useRoute();
   const { getString } = useLocalization();
 
-  //Navigate param
-
-  const model =
-    route.params && route.params['model']
-      ? (JSON.parse(route.params['model']) as EC_BOOKING_ENTITY)
-      : null;
   //Store
   const rootStore = useContext(RootStoreContext);
   const { currentUser } = rootStore.usersStore;
@@ -71,9 +65,9 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
   useEffect(() => {
     if (route.params && route.params['model']) {
       const model = JSON.parse(route.params['model']) as EC_BOOKING_ENTITY;
-      const dateString = model.ngaybookfrom.toString();
+      const dateString = model.ngaybookfrom.toString().split('T')[0];
       setSelectedDate(dateString);
-      fetchListBooking(new Date(model.ngaybookfrom.toString()));
+      fetchListBooking(new Date(dateString));
     } else {
       fetchListBooking(new Date(selectedDate));
     }

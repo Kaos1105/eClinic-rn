@@ -7,6 +7,7 @@ import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import AppConsts from '../../lib/appconst';
 import NavigationNames from 'navigations/NavigationNames';
 import { useNavigation } from '@react-navigation/native';
+import { useLocalization } from '../../localization';
 
 type TProps = {
   item: CM_EMPLOYEE_ENTITY;
@@ -17,6 +18,8 @@ type TProps = {
 export const DoctorItemRow: React.FC<TProps> = (props) => {
   const [visibleModal, setVisibleModal] = useState(false);
   const navigation = useNavigation();
+
+  const { getString } = useLocalization();
   return (
     <>
       <TouchableOpacity
@@ -58,7 +61,7 @@ export const DoctorItemRow: React.FC<TProps> = (props) => {
               defaultRating={props.item.rating}
             /> */}
           {/* <TouchableOpacity onPress={() => setVisibleModal(true)}> */}
-          <Text style={{ fontSize: 12, position: 'relative' }}>Đặt lịch</Text>
+          <Text style={{ fontSize: 12, position: 'relative' }}>{getString('Booking')}</Text>
           <Ionicons size={24} name='md-add' color={Theme.colors.primaryColorDark} />
         </TouchableOpacity>
       )}

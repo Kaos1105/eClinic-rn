@@ -13,6 +13,7 @@ import { Theme } from '../../theme';
 import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import AppConsts from '../../lib/appconst';
 import { observer } from 'mobx-react-lite';
+import { useLocalization } from '../../localization';
 import NavigationNames from 'navigations/NavigationNames';
 
 type TProps = {};
@@ -24,6 +25,7 @@ export const DoctorDetailScreen: React.FC<TProps> = observer((props) => {
   const [toolbarTitleHided, setToolbarTitleHided] = useState(true);
 
   const model = JSON.parse(route.params['model']) as CM_EMPLOYEE_ENTITY;
+  const { getString } = useLocalization();
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const y = event.nativeEvent.contentOffset.y;
@@ -66,15 +68,15 @@ export const DoctorDetailScreen: React.FC<TProps> = observer((props) => {
         <Text style={styles.doctorInfoTitle}>{model.phongkhaM_TEN}</Text>
       </View>
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Details</Text>
+        <Text style={styles.sectionTitle}>{getString('Details')}</Text>
         <Divider />
         <Text style={styles.aboutText}>{model.notes}</Text>
       </View>
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Appointment</Text>
+        <Text style={styles.sectionTitle}>{getString('Appointments')}</Text>
         <Divider />
         <Button
-          title='New Appointment'
+          title={getString('New Appointment')}
           onPress={() => {
             navigation.navigate(NavigationNames.NewAppointmentScreen, {
               param: JSON.stringify(model),

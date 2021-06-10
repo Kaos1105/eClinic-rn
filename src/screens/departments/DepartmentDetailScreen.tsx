@@ -33,15 +33,15 @@ export const DepartmentDetailScreen: React.FC<TProps> = observer((props) => {
           <Text style={styles.titleText}>{model.chuyenkhoA_TEN}</Text>
         </View>
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Details</Text>
+          <Text style={styles.sectionTitle}>{getString('Details')}</Text>
           <Divider />
           <Text style={styles.aboutText}>{model.mota}</Text>
         </View>
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Doctors</Text>
+          <Text style={styles.sectionTitle}>{getString('Specialty Clinics')}</Text>
           <Divider />
           <Button
-            title='Clinic list screen'
+            title={getString('Clinics list screen')}
             onPress={() => {
               navigation.navigate(NavigationNames.ClinicListScreen, {
                 param: JSON.stringify(model),

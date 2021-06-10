@@ -1,38 +1,32 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView
-} from "react-native";
-import { ReactNativeModal } from "react-native-modal";
-import { Theme } from "../theme";
-import { useLocalization } from "../localization";
-import { Divider } from "../components/divider";
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { ReactNativeModal } from 'react-native-modal';
+import { Theme } from '../theme';
+import { useLocalization } from '../localization';
+import { Divider } from '../components/divider';
 
 const LangButton: React.FC<{
   title: string;
   isSelected: boolean;
   onPress: () => void;
-}> = props => (
+}> = (props) => (
   <TouchableOpacity
     onPress={props.onPress}
     style={[
       styles.langContainer,
       !props.isSelected && {
-        backgroundColor: "white",
+        backgroundColor: 'white',
         borderColor: Theme.colors.gray,
-        borderWidth: 1
-      }
+        borderWidth: 1,
+      },
     ]}
   >
     <Text
       style={[
         styles.langBoxTitleText,
         !props.isSelected && {
-          color: Theme.colors.black
-        }
+          color: Theme.colors.black,
+        },
       ]}
     >
       {props.title}
@@ -45,12 +39,12 @@ type TProps = {
   onDismissModal: () => void;
 };
 
-export const SettingsBottomSheet: React.FC<TProps> = props => {
+export const SettingsBottomSheet: React.FC<TProps> = (props) => {
   const { getString, currentLanguage, changeLanguage } = useLocalization();
   return (
     <ReactNativeModal
       isVisible={props.isVisible}
-      swipeDirection={"down"}
+      swipeDirection={'down'}
       style={styles.modal}
       onSwipeComplete={props.onDismissModal}
       onBackdropPress={props.onDismissModal}
@@ -58,19 +52,17 @@ export const SettingsBottomSheet: React.FC<TProps> = props => {
       <SafeAreaView style={styles.safeAreaContainer}>
         <View style={styles.modalContainer}>
           <View style={styles.langRow}>
-            <Text style={styles.langText}>
-              {getString("Selected Language")}
-            </Text>
+            <Text style={styles.langText}>{getString('Selected Language')}</Text>
             <View style={styles.langBoxes}>
               <LangButton
-                title="EN"
-                isSelected={currentLanguage() === "en"}
-                onPress={() => changeLanguage("en")}
+                title='EN'
+                isSelected={currentLanguage() === 'en'}
+                onPress={() => changeLanguage('en')}
               />
               <LangButton
-                title="TR"
-                isSelected={currentLanguage() === "tr"}
-                onPress={() => changeLanguage("tr")}
+                title='VI'
+                isSelected={currentLanguage() === 'vi'}
+                onPress={() => changeLanguage('vi')}
               />
             </View>
           </View>
@@ -83,41 +75,41 @@ export const SettingsBottomSheet: React.FC<TProps> = props => {
 
 const styles = StyleSheet.create({
   modal: {
-    justifyContent: "flex-end",
-    margin: 0
+    justifyContent: 'flex-end',
+    margin: 0,
   },
   safeAreaContainer: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderTopStartRadius: 24,
     borderTopEndRadius: 24,
-    minHeight: 300
+    minHeight: 300,
   },
   modalContainer: {
-    padding: 24
+    padding: 24,
   },
   langContainer: {
     width: 36,
     height: 36,
-    backgroundColor: "red",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 4,
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   langRow: {
-    flexDirection: "row",
-    alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  langBoxes: { flexDirection: "row" },
+  langBoxes: { flexDirection: 'row' },
   langText: {
     flex: 1,
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 15,
-    color: Theme.colors.black
+    color: Theme.colors.black,
   },
   langBoxTitleText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 13
-  }
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 13,
+  },
 });
