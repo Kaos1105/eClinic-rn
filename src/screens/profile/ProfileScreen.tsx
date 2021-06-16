@@ -12,11 +12,12 @@ import { observer } from 'mobx-react-lite';
 type TProps = {};
 
 export const ProfileScreen: React.FC<TProps> = observer((props) => {
+  //State
   const { getString } = useLocalization();
   const profilesOption = [
     {
       title: getString('My Profile'),
-      subtitle: '13. days',
+      subtitle: getString('Update profile'),
       iconName: 'person',
       iconColor: Theme.colors.primaryColor,
       navigateToScreen: NavigationNames.UserProfile,
@@ -36,7 +37,7 @@ export const ProfileScreen: React.FC<TProps> = observer((props) => {
     },
     {
       title: getString('Log Out'),
-      subtitle: getString('Required Sign in'),
+      subtitle: getString('Required Sign In'),
       iconName: 'log-out',
       iconColor: '#050505',
       navigateToScreen: NavigationNames.SignInScreen,
@@ -44,8 +45,10 @@ export const ProfileScreen: React.FC<TProps> = observer((props) => {
   ];
 
   const navigation = useNavigation();
+  //Store
   const rootStore = useContext(RootStoreContext);
-  const { logout } = rootStore.fireBaseAuthStore;
+  const { logout, user } = rootStore.fireBaseAuthStore;
+  const { currentUser } = rootStore.usersStore;
 
   const onPressMenuItemClick = (item: typeof profilesOption[0]) => {
     if (item.navigateToScreen) {
@@ -66,8 +69,8 @@ export const ProfileScreen: React.FC<TProps> = observer((props) => {
   return (
     <SafeAreaView style={styles.flex1}>
       <ScrollView style={styles.flex1} contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.daysText}>Hello</Text>
-        <Text style={styles.nameText}>Büşra Mutlu</Text>
+        <Text style={styles.daysText}>{getString('Hello')}</Text>
+        <Text style={styles.nameText}>{currentUser ? currentUser.fullName : user.phoneNumber}</Text>
 
         <View style={{ marginTop: 24 }}>
           {profilesOption.map((item, index) => {

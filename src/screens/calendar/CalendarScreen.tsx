@@ -53,7 +53,7 @@ export const CalendarScreen: React.FC<{}> = observer((props) => {
   const fetchListBooking = async (dateCheck: Date) => {
     setIsLoaded(false);
     const resp = await agent.EC_BOOKING_API.getBookingByDate(
-      currentUser.BENHNHAN_ID,
+      currentUser ? currentUser.BENHNHAN_ID : '',
       dateCheck.toISOString()
     );
     if (resp.length > 0) setItems({ [moment(dateCheck).format('YYYY-MM-DD')]: [...resp] });

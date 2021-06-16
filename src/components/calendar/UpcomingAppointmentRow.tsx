@@ -11,6 +11,7 @@ import AppConsts from '../../lib/appconst';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import NavigationNames from 'navigations/NavigationNames';
+import { useLocalization } from '../../localization';
 
 type TProps = {
   style?: ViewStyle;
@@ -20,6 +21,7 @@ type TProps = {
 export const UpcomingAppointmentRow: React.FC<TProps> = (props) => {
   //Hook
   const navigation = useNavigation();
+  const { getString } = useLocalization();
 
   const [clinic, setClinic] = useState<EC_PHONGKHAM_ENTITY>(null);
 
@@ -35,7 +37,7 @@ export const UpcomingAppointmentRow: React.FC<TProps> = (props) => {
     return (
       <View style={[styles.container, styles.emptyContainer]}>
         <Ionicons name='medical' size={24} color={Theme.colors.tintColor} />
-        <Text style={{ paddingLeft: 10 }}>There is no new Appointment</Text>
+        <Text style={{ paddingLeft: 10 }}>{getString('There is no new Appointment')}</Text>
       </View>
     );
 

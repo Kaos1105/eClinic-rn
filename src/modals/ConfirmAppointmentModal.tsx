@@ -82,16 +82,31 @@ export const ConfirmAppointmentModal: React.FC<TProps> = observer((props) => {
           {!currentUser ? (
             <View>
               <Text style={styles.guideText}>Please update your profile first</Text>
-              <Button
-                style={{ marginTop: 8 }}
-                title={getString('Update user profile')}
-                onPress={() => {
-                  props.onDismissModal();
-                  navigation.navigate(NavigationNames.ProfileTab, {
-                    screen: NavigationNames.UserProfile,
-                  });
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  marginBottom: 20,
                 }}
-              />
+              >
+                <Button
+                  style={{ marginTop: 8 }}
+                  title={getString('User profile')}
+                  onPress={() => {
+                    props.onDismissModal();
+                    navigation.navigate(NavigationNames.ProfileTab, {
+                      screen: NavigationNames.UserProfile,
+                    });
+                  }}
+                />
+                <Button
+                  title={getString('CLOSE')}
+                  disabled={isBooking}
+                  type='outline'
+                  style={{ marginTop: 8 }}
+                  onPress={props.onDismissModal}
+                />
+              </View>
             </View>
           ) : (
             <Formik

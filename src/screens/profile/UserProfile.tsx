@@ -1,4 +1,4 @@
-import { FormDateTimeInput, FormTextInput, Button, FormPicker, Loading } from '../../components';
+import { FormDateTimeInput, FormTextInput, Button, FormPicker } from '../../components';
 import React, { useContext, useEffect, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, View, StyleSheet, Platform } from 'react-native';
 import { Formik } from 'formik';
@@ -7,6 +7,7 @@ import { RootStoreContext } from 'stores/rootStore';
 import * as yup from 'yup';
 import { IUserData } from 'models/userData';
 import { observer } from 'mobx-react-lite';
+import { useLocalization } from '../../localization';
 
 export const UserProfile = observer(() => {
   //Store
@@ -15,6 +16,9 @@ export const UserProfile = observer(() => {
   const { editUser, getUser, currentUser } = rootStore.usersStore;
   const { setToastData } = rootStore.commonStore;
   const { isLoaded, setIsLoaded } = rootStore.commonStore;
+
+  //Hook
+  const { getString } = useLocalization();
 
   useEffect(() => {
     if (user && !currentUser) {
@@ -55,7 +59,7 @@ export const UserProfile = observer(() => {
               fullName: currentUser?.fullName ?? '',
               address: currentUser?.address ?? '',
               email: currentUser?.email ?? '',
-              gender: currentUser?.gender ?? genderOptions[0].value,
+              gender: currentUser?.gender ?? genderOptions(getString)[0].value,
               dateOfBirth: currentUser?.dateOfBirth.toString() ?? '',
             }}
             validationSchema={profileValidationScheme}
@@ -76,7 +80,7 @@ export const UserProfile = observer(() => {
                   onInputChange={handleChange('phoneNumber')}
                   onInputBlur={handleBlur('phoneNumber')}
                   value={values.phoneNumber}
-                  label='Phone Number'
+                  label={getString('Phone Number')}
                   editable={false}
                   error={errors.phoneNumber}
                   touched={touched.phoneNumber}
@@ -88,10 +92,10 @@ export const UserProfile = observer(() => {
                   onInputChange={handleChange('fullName')}
                   onInputBlur={handleBlur('fullName')}
                   value={values.fullName}
-                  label='Full Name'
+                  label={getString('Full Name')}
                   error={errors.fullName}
                   touched={touched.fullName}
-                  placeholder='Full name'
+                  placeholder={getString('Full Name')}
                   keyboardType='default'
                 />
                 <FormTextInput
@@ -108,10 +112,10 @@ export const UserProfile = observer(() => {
                   onInputChange={handleChange('address')}
                   onInputBlur={handleBlur('address')}
                   value={values.address}
-                  label='Address'
+                  label={getString('Address')}
                   error={errors.address}
                   touched={touched.address}
-                  placeholder='Address'
+                  placeholder={getString('Address')}
                   keyboardType='default'
                 />
                 <FormDateTimeInput
@@ -119,24 +123,24 @@ export const UserProfile = observer(() => {
                   onInputChange={handleChange('dateOfBirth')}
                   onInputBlur={handleBlur('dateOfBirth')}
                   value={values.dateOfBirth.toString()}
-                  label='Date of birth'
+                  label={getString('Date of birth')}
                   error={errors.dateOfBirth}
                   touched={touched.dateOfBirth}
-                  placeholder='Date of birth'
+                  placeholder={getString('Date of birth')}
                 />
                 <FormPicker
                   onInputChange={handleChange('gender')}
                   onInputBlur={handleBlur('gender')}
                   value={values.gender}
-                  label='Gender'
+                  label={getString('Gender')}
                   error={errors.gender}
                   touched={touched.gender}
-                  options={genderOptions}
+                  options={genderOptions(getString)}
                 />
                 <Button
                   disabled={!isValid || !dirty}
                   style={{ marginTop: 10 }}
-                  title='Save profile'
+                  title={getString('Save profile')}
                   onPress={() => {
                     handleSubmit();
                   }}

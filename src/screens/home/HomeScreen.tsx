@@ -84,7 +84,7 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
       const specialist = await loadListSpecialties({ maxResultCount: 4 });
       setListSpecialties(specialist);
     } catch {
-      Alert.alert('Lỗi', 'Không thể kết nối đên server');
+      Alert.alert(getString('Error'), getString('Can not connect to server'));
     }
     setIsLoaded(true);
   };
