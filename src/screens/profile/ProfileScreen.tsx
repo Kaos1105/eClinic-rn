@@ -53,9 +53,9 @@ export const ProfileScreen: React.FC<TProps> = observer((props) => {
   const onPressMenuItemClick = (item: typeof profilesOption[0]) => {
     if (item.navigateToScreen) {
       if (item.navigateToScreen === NavigationNames.SignInScreen) {
-        Alert.alert('Log out', 'Are you sure to log out', [
+        Alert.alert(getString('Logout'), getString('Are you sure to log out ?'), [
           {
-            text: 'Cancel',
+            text: getString('Cancel'),
             style: 'cancel',
           },
           { text: 'OK', onPress: () => logout() },

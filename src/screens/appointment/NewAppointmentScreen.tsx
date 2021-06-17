@@ -138,7 +138,7 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'New appointment',
+      title: getString('New Appointment'),
     });
     setUpAppointmentModal();
   }, []);

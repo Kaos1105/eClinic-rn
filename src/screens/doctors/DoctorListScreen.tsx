@@ -9,6 +9,7 @@ import { FilterDoctorModal } from '../../modals';
 import reactotron from 'reactotron-react-native';
 import { EC_PHONGKHAM_ENTITY } from 'models/EC_PHONGKHAM_ENTITY';
 import { observer } from 'mobx-react-lite';
+import { useLocalization } from '../../localization';
 
 type TProps = {};
 
@@ -18,6 +19,7 @@ export const DoctorListScreen: React.FC<TProps> = observer(() => {
   const { loadList: loadListDoctors, totalCount } = rootStore.cM_EMPLOYEE_Store;
   const { isLoaded, setIsLoaded } = rootStore.commonStore;
   const navigation = useNavigation();
+  const { getString } = useLocalization();
   const route = useRoute();
 
   //State
@@ -45,7 +47,7 @@ export const DoctorListScreen: React.FC<TProps> = observer(() => {
       });
       setListData(resultList);
     } catch {
-      Alert.alert('Error', 'Can not connect to server');
+      Alert.alert(getString('Error'), getString('Can not connect to server'));
     }
     setIsLoaded(true);
   };

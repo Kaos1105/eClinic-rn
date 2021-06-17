@@ -9,6 +9,7 @@ import { CM_EMPLOYEE_ENTITY } from 'models/CM_EMPLOYEE_ENTITY';
 import { FilterDoctorModal } from '../../modals';
 import reactotron from 'reactotron-react-native';
 import { observer } from 'mobx-react-lite';
+import { useLocalization } from '../../localization';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -25,6 +26,7 @@ export const DepartmentListScreen: React.FC<TProps> = observer((props) => {
   const [filterItem, setFilterItem] = useState<CM_EMPLOYEE_ENTITY>(new CM_EMPLOYEE_ENTITY());
 
   const navigation = useNavigation();
+  const { getString } = useLocalization();
 
   const fetchMore = async () => {
     if (isFetching || totalCount === listData.length) return;
@@ -47,7 +49,7 @@ export const DepartmentListScreen: React.FC<TProps> = observer((props) => {
       const resultList = await loadListSpecialties({ maxResultCount: 8 });
       setListData(resultList);
     } catch {
-      Alert.alert('Error', 'Can not connect to server');
+      Alert.alert(getString('Error'), getString('Can not connect to server'));
     }
     setIsLoaded(true);
   };

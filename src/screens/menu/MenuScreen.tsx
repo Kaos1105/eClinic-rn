@@ -9,23 +9,23 @@ import NavigationNames from '../../navigations/NavigationNames';
 import { useNavigation } from '@react-navigation/native';
 
 const getMenuItems = (getString: (key: string) => string) => [
-  {
-    title: getString('Events'),
-    iconName: 'ios-musical-notes',
-    navigateToScreen: NavigationNames.EventListScreen,
-  },
-  {
-    title: getString('Blog'),
-    iconName: 'ios-book',
-  },
-  {
-    title: getString('Youtube'),
-    iconName: 'logo-youtube',
-  },
-  {
-    title: getString('Instagram'),
-    iconName: 'logo-instagram',
-  },
+  // {
+  //   title: getString('Events'),
+  //   iconName: 'ios-musical-notes',
+  //   navigateToScreen: NavigationNames.EventListScreen,
+  // },
+  // {
+  //   title: getString('Blog'),
+  //   iconName: 'ios-book',
+  // },
+  // {
+  //   title: getString('Youtube'),
+  //   iconName: 'logo-youtube',
+  // },
+  // {
+  //   title: getString('Instagram'),
+  //   iconName: 'logo-instagram',
+  // },
   {
     title: getString('About Us'),
     iconName: 'ios-business',

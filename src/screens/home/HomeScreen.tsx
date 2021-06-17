@@ -134,7 +134,7 @@ export const HomeScreen: React.FC<TProps> = observer((props) => {
         nestedScrollEnabled={true}
       >
         <UpcomingAppointmentRow style={styles.UpcomingAppointmentRow} item={nextBooking} />
-        <SectionHeader title={getString('What are you looking for?')} />
+        <SectionHeader title={getString('What are you looking for ?')} />
         {/* <FlatList
           data={generateMenuItems(getString)}
           keyExtractor={(item, index) => `key${index}ForMenu`}

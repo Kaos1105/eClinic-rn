@@ -11,10 +11,14 @@ import LoginModel from 'models/Login/loginModel';
 import AppConsts from '../lib/appconst';
 import { Alert } from 'react-native';
 import { LoadingModal } from '../components/ui';
+import { useLocalization } from '../localization';
 
 const Stack = createStackNavigator();
 
 const App: React.FC = () => {
+  //Hook
+  const { getString } = useLocalization();
+
   const rootStore = useContext(RootStoreContext);
   const { fireBaseToken, loadAsyncStorage, toastToggle, getToast, fireBaseRefreshToken } =
     rootStore.commonStore;
@@ -37,7 +41,7 @@ const App: React.FC = () => {
         setAppLoaded(true);
       } else if (fireBaseToken === null) {
         await getRefreshToken(fireBaseRefreshToken).catch((error) => {
-          Alert.alert('Token expire', 'Please try to login again');
+          Alert.alert(getString('Please enter your phone number'));
         });
         setAppLoaded(true);
       }
@@ -51,7 +55,7 @@ const App: React.FC = () => {
     loginModel.password = AppConsts.adminCredential.password;
     loginModel.rememberMe = true;
     let loggedIn = await login(loginModel).catch((error) => {
-      Alert.alert('Error', 'Can not connect to server');
+      Alert.alert(getString('Error'), getString('Can not connect to server'));
     });
     setLoggedInServer(true);
   };

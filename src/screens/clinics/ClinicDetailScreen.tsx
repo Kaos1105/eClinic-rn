@@ -49,7 +49,7 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
         setClinicLocation(result.geometry.location);
         setClinicAddress(result.formatted_address);
       } else {
-        Alert.alert('Không thể xác định vị trí phòng khám');
+        Alert.alert('Can not locate Clinic location');
       }
     } catch {}
     setIsLoaded(true);

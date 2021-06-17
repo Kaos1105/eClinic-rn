@@ -55,12 +55,12 @@ export const SettingsBottomSheet: React.FC<TProps> = (props) => {
             <Text style={styles.langText}>{getString('Selected Language')}</Text>
             <View style={styles.langBoxes}>
               <LangButton
-                title='EN'
+                title={getString('English')}
                 isSelected={currentLanguage() === 'en'}
                 onPress={() => changeLanguage('en')}
               />
               <LangButton
-                title='VI'
+                title={getString('Vietnamese')}
                 isSelected={currentLanguage() === 'vi'}
                 onPress={() => changeLanguage('vi')}
               />
@@ -88,12 +88,12 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   langContainer: {
-    width: 36,
     height: 36,
-    backgroundColor: 'red',
+    backgroundColor: Theme.colors.primaryColorDark,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 4,
+    padding: 2,
     marginHorizontal: 4,
   },
   langRow: {

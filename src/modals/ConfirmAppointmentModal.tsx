@@ -81,7 +81,7 @@ export const ConfirmAppointmentModal: React.FC<TProps> = observer((props) => {
           <Divider />
           {!currentUser ? (
             <View>
-              <Text style={styles.guideText}>Please update your profile first</Text>
+              <Text style={styles.guideText}>{getString('Please update your profile')}</Text>
               <View
                 style={{
                   flexDirection: 'row',
@@ -91,7 +91,7 @@ export const ConfirmAppointmentModal: React.FC<TProps> = observer((props) => {
               >
                 <Button
                   style={{ marginTop: 8 }}
-                  title={getString('User profile')}
+                  title={getString('Update')}
                   onPress={() => {
                     props.onDismissModal();
                     navigation.navigate(NavigationNames.ProfileTab, {
