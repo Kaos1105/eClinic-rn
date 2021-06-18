@@ -70,7 +70,9 @@ export const ProfileScreen: React.FC<TProps> = observer((props) => {
     <SafeAreaView style={styles.flex1}>
       <ScrollView style={styles.flex1} contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.daysText}>{getString('Hello')}</Text>
-        <Text style={styles.nameText}>{currentUser ? currentUser.fullName : user.phoneNumber}</Text>
+        <Text style={styles.nameText}>
+          {currentUser ? currentUser.fullName : user?.phoneNumber}
+        </Text>
 
         <View style={{ marginTop: 24 }}>
           {profilesOption.map((item, index) => {
