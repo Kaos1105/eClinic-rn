@@ -103,5 +103,16 @@
   "Please update your profile": "Hãy cập nhật tài khoản cá nhân",
   "Update": "Cập nhật",
   "English": "Tiếng Anh",
-  "Vietnamese": "Tiếng Việt"
+  "Vietnamese": "Tiếng Việt",
+  "Send verification": "Gửi mã xác nhận",
+  "Must be only digits": "Chỉ được nhập chữ số",
+  "Phone number is Required": "Bắt buộc nhập số điện thoại",
+  "Must be exactly 10 digits": "Phải gồm 10 chứ số",
+  "Must be exactly 6 digits": "Phải gồm 6 chứ số",
+  "Verification code is Required": "Bắt buộc nhập mã xác nhận",
+  "Please enter the 6 digit verification code sent to your phone number": "Hãy nhập mã xác thực 6 chữ số đã được gửi đến số điện thoại của bạn",
+  "Change phone number": "Đổi số điện thoại",
+  "Submit verification":"Xác thực",
+  "Code": "Mã"
+
 }

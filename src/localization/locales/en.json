@@ -64,5 +64,14 @@
   "Clinics": "Clinics",
   "English": "English",
   "Vietnamese": "Vietnamese",
-  "Go to Doctor Screen": "Go to Doctor Screen"
+  "Go to Doctor Screen": "Go to Doctor Screen",
+  "Send verification": "Send verification",
+  "Must be only digits": "Must be only digits",
+  "Phone number is Required": "Phone number is Required",
+  "Must be exactly 10 digits": "Must be exactly 10 digits",
+  "Must be exactly 6 digits": "Must be exactly 6 digits",
+  "Verification code is Required": "Verification code is Required",
+  "Please enter the 6 digit verification code sent to your phone number": "Please enter the 6 digit verification code sent to your phone number",
+  "Change phone number": "Change phone number",
+  "Submit verification":"Submit verification"
 }

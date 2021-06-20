@@ -1,6 +1,6 @@
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from '../../common/fireBase';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { IFirebaseOptions } from 'expo-firebase-core';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,14 +11,28 @@ import { Theme } from '../../theme';
 import { RootStoreContext } from 'stores/rootStore';
 import { FireBaseAuthResponse } from 'models/firebaseAuth';
 import { observer } from 'mobx-react-lite';
+import { useLocalization } from '../../localization';
 
 export const SignInScreen = observer(() => {
+  //Hook
+  const { getString } = useLocalization();
+
+  //State
   const rootStore = useContext(RootStoreContext);
   const { login } = rootStore.fireBaseAuthStore;
 
   const [verificationId, setVerificationId] = useState(null);
   const [showVerifyInput, setShowVerifyInput] = useState(false);
   const reCaptchaVerifier = useRef(null);
+
+  useEffect(() => {
+    if (showVerifyInput) {
+      Alert.alert(
+        '',
+        getString('Please enter the 6 digit verification code sent to your phone number')
+      );
+    }
+  }, [showVerifyInput]);
 
   const sendVerification = (phoneNumber: string) => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
@@ -54,19 +68,19 @@ export const SignInScreen = observer(() => {
   const phoneNumberValidationSchema = yup.object().shape({
     phoneNumber: yup
       .string()
-      .matches(/^[0-9]+$/, 'Must be only digits')
-      .min(10, 'Must be exactly 10 digits')
-      .max(10, 'Must be exactly 10 digits')
-      .required('Phone number is Required'),
+      .matches(/^[0-9]+$/, getString('Must be only digits'))
+      .min(10, getString('Must be exactly 10 digits'))
+      .max(10, getString('Must be exactly 10 digits'))
+      .required(getString('Phone number is Required')),
   });
 
   const verificationValidationSchema = yup.object().shape({
     code: yup
       .string()
-      .matches(/^[0-9]+$/, 'Must be only digits')
-      .min(6, 'Must be exactly 10 digits')
-      .max(6, 'Must be exactly 10 digits')
-      .required('Verification code is Required'),
+      .matches(/^[0-9]+$/, getString('Must be only digits'))
+      .min(6, getString('Must be exactly 6 digits'))
+      .max(6, getString('Must be exactly 6 digits'))
+      .required(getString('Verification code is Required')),
   });
 
   const formikPhoneNumber = useFormik({
@@ -98,7 +112,7 @@ export const SignInScreen = observer(() => {
         attemptInvisibleVerification={false}
       />
       <LinearGradient
-        colors={['white', Theme.colors.primaryColor, Theme.colors.status.online]}
+        colors={['white', '#cffcf6', Theme.colors.primaryColor, Theme.colors.status.online]}
         style={styles.gradient}
       >
         <Image style={styles.image} source={require('../../../assets/logo.png')} />
@@ -110,10 +124,10 @@ export const SignInScreen = observer(() => {
                   onInputChange={formikPhoneNumber.handleChange('phoneNumber')}
                   onInputBlur={formikPhoneNumber.handleBlur('phoneNumber')}
                   value={formikPhoneNumber.values.phoneNumber}
-                  label='Phone Number'
+                  label={getString('Phone Number')}
                   error={formikPhoneNumber.errors.phoneNumber}
                   touched={formikPhoneNumber.touched.phoneNumber}
-                  placeholder='Phone Number'
+                  placeholder={getString('Phone Number')}
                   keyboardType='phone-pad'
                   autoCompleteType='tel'
                 />
@@ -122,7 +136,7 @@ export const SignInScreen = observer(() => {
                     !!formikPhoneNumber.errors.phoneNumber || !formikPhoneNumber.touched.phoneNumber
                   }
                   style={{ marginTop: 10 }}
-                  title='Send Verification'
+                  title={getString('Send verification')}
                   onPress={() => {
                     formikPhoneNumber.handleSubmit();
                   }}
@@ -134,20 +148,23 @@ export const SignInScreen = observer(() => {
                   onInputChange={formikVerificationCode.handleChange('code')}
                   onInputBlur={formikVerificationCode.handleBlur('code')}
                   value={formikVerificationCode.values.code}
-                  label='Code'
+                  label={getString('Code')}
                   error={formikVerificationCode.errors.code}
                   touched={formikVerificationCode.touched.code}
                 />
                 <Button
                   style={{ marginTop: 10 }}
-                  title='Change phone number'
+                  title={getString('Change phone number')}
                   onPress={() => {
                     setShowVerifyInput(false);
                   }}
                 />
                 <Button
+                  disabled={
+                    !!formikVerificationCode.errors.code || !formikVerificationCode.touched.code
+                  }
                   style={{ marginTop: 10 }}
-                  title='Confirm Verification'
+                  title={getString('Submit verification')}
                   onPress={() => {
                     formikVerificationCode.handleSubmit();
                   }}
@@ -172,6 +189,7 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     maxHeight: 400,
     padding: 20,
+    marginVertical: 40,
   },
   container: {
     flex: 1,
