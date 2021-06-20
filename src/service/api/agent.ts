@@ -32,11 +32,11 @@ const axiosResponseConfig = (error) => {
   const { status, config } = error.response;
   if (status === 404) {
     Alert.alert('Not found');
-    RootNavigation.navigate(NavigationNames.HomeScreen);
+    //RootNavigation.navigate(NavigationNames.HomeScreen);
   }
   if (status === 400) {
-    // Alert.alert('Unauthorized request');
-    RootNavigation.navigate(NavigationNames.HomeScreen);
+    Alert.alert('Unauthorized request');
+    //RootNavigation.navigate(NavigationNames.HomeScreen);
   }
   if (status === 500) {
     Alert.alert('SEVER ERROR-check the serve error for more info!');

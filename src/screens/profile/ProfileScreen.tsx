@@ -58,7 +58,12 @@ export const ProfileScreen: React.FC<TProps> = observer((props) => {
             text: getString('Cancel'),
             style: 'cancel',
           },
-          { text: 'OK', onPress: () => logout() },
+          {
+            text: 'OK',
+            onPress: () => {
+              logout();
+            },
+          },
         ]);
         return;
       }

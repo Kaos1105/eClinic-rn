@@ -120,6 +120,7 @@ export default class CommonStore {
   @action
   clearAuth = () => {
     this.fireBaseToken = null;
+    this.fireBaseRefreshToken = null;
     this.userId = null;
     this.expiryDate = null;
   };
