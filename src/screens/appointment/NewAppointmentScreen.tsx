@@ -112,11 +112,21 @@ export const NewAppointmentScreen: React.FC<TProps> = (props) => {
 
     const tempArrTime = recheckAvailability(dateCheck, [...originalAvailableTime]);
 
+    tempArrTime.forEach((timeModal, index) => {
+      if (moment(timeModal.toDate).isBefore(currenDate, 'minutes')) {
+        tempArrTime[index] = {
+          ...timeModal,
+          available: false,
+        };
+      }
+    });
+
     resp.forEach((booked) => {
       const beginTime = moment(booked.ngaybookfrom);
       const endTime = moment(booked.ngaybookto);
       tempArrTime.forEach((available, index) => {
         const availableTime = moment(beginTime.format('YYYY-MM-DD') + ' ' + available.time);
+
         if (
           availableTime.isBetween(beginTime, endTime, 'minutes', '[)') ||
           availableTime.isBefore(currenDate, 'minutes')

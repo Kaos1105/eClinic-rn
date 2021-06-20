@@ -19,6 +19,7 @@ import NavigationNames from 'navigations/NavigationNames';
 import agent from 'service/api/agent';
 import { IUserData } from 'models/userData';
 import { observer } from 'mobx-react-lite';
+import { Alert } from 'react-native';
 
 type TProps = {
   item?: AppointmentTimeModal;
@@ -40,6 +41,7 @@ export const ConfirmAppointmentModal: React.FC<TProps> = observer((props) => {
   const rootStore = useContext(RootStoreContext);
   const { user } = rootStore.fireBaseAuthStore;
   const { currentUser, getUser, editUser } = rootStore.usersStore;
+  const { setToastData } = rootStore.commonStore;
   //State
   const [isBooking, setIsBooking] = useState(false);
 
@@ -47,8 +49,13 @@ export const ConfirmAppointmentModal: React.FC<TProps> = observer((props) => {
     let bookingData: EC_BOOKING_ENTITY = { ...values };
     setIsBooking(true);
     let resp = await agent.EC_BOOKING_API.bookingIns(bookingData);
-    const userData: IUserData = { ...currentUser, BENHNHAN_ID: resp.BENHNHAN_ID };
-    if (currentUser.BENHNHAN_ID !== userData.BENHNHAN_ID) await editUser(userData);
+    if (resp.ErrorDesc) {
+      Alert.alert(getString('Error'), resp.ErrorDesc);
+    } else {
+      const userData: IUserData = { ...currentUser, BENHNHAN_ID: resp.BENHNHAN_ID };
+      if (currentUser.BENHNHAN_ID !== userData.BENHNHAN_ID) await editUser(userData);
+    }
+
     setIsBooking(false);
     props.onDismissModal();
     props.onSubmitBooking();
