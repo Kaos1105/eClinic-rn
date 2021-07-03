@@ -16,7 +16,12 @@ export const DashboardClinicsListItem: React.FC<TProps> = (props) => {
     <View style={styles.container}>
       <View style={styles.imageWrapper}>
         <Image
-          source={{ uri: `${AppConsts.remoteServiceBaseUrl}/${props.item.hinhdaidien}` }}
+          source={{
+            uri: `${AppConsts.remoteServiceBaseUrl}/${props.item.hinhdaidien.replace(
+              'wwwroot/',
+              ''
+            )}`,
+          }}
           style={styles.image}
         />
       </View>

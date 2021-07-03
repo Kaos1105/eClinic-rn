@@ -60,7 +60,7 @@ export const DoctorDetailScreen: React.FC<TProps> = observer((props) => {
       <View style={styles.headerContainer}>
         <Avatar
           source={{
-            uri: `${AppConsts.remoteServiceBaseUrl}/${model.hinhdaidien}`,
+            uri: `${AppConsts.remoteServiceBaseUrl}/${model.hinhdaidien.replace('wwwroot/', '')}`,
           }}
           imageStyle={styles.doctorPreviewImage}
         />

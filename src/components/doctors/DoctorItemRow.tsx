@@ -33,7 +33,10 @@ export const DoctorItemRow: React.FC<TProps> = (props) => {
         <Avatar
           // status={props.item.isOnline ? 'online' : null}
           source={{
-            uri: `${AppConsts.remoteServiceBaseUrl}/${props.item.hinhdaidien}`,
+            uri: `${AppConsts.remoteServiceBaseUrl}/${props.item.hinhdaidien.replace(
+              'wwwroot/',
+              ''
+            )}`,
           }}
           style={styles.avatar}
         />

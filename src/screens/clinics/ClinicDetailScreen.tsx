@@ -73,7 +73,9 @@ export const ClinicDetailScreen: React.FC<TProps> = observer((props) => {
     >
       <View style={styles.headerContainer}>
         <Image
-          source={{ uri: `${AppConsts.remoteServiceBaseUrl}/${model.hinhdaidien}` }}
+          source={{
+            uri: `${AppConsts.remoteServiceBaseUrl}/${model.hinhdaidien.replace('wwwroot/', '')}`,
+          }}
           style={styles.image}
         />
         <Text style={styles.doctorInfoFullName}>{model.phongkhaM_TENDAYDU}</Text>

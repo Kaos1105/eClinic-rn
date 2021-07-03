@@ -51,7 +51,11 @@ export const UpcomingAppointmentRow: React.FC<TProps> = (props) => {
         });
       }}
     >
-      <Avatar source={{ uri: `${AppConsts.remoteServiceBaseUrl}/${clinic.hinhdaidien}` }} />
+      <Avatar
+        source={{
+          uri: `${AppConsts.remoteServiceBaseUrl}/${clinic.hinhdaidien.replace('wwwroot/', '')}`,
+        }}
+      />
       <View style={styles.rows}>
         <Text style={styles.titleText}>{props.item.trangthaI_NAME}</Text>
         <Text style={[styles.doctorNameText, { fontWeight: 'bold' }]}>{props.item.tenBacSi}</Text>
